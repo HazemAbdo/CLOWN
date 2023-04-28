@@ -43,7 +43,10 @@
     CASE = 294,
     COLON = 295,
     DEFAULT = 296,
-    UMINUS = 297
+    ELIF = 297,
+    ENUM = 298,
+    NILL  = 299,
+    UMINUS = 300
   };
 %}
 
@@ -51,6 +54,7 @@
 "print"     { return PRINT; }
 "if"        { return IF; }
 "else"      { return ELSE; }
+"elif"      { return ELIF; }
 "while"     { return WHILE; }
 "for"       { return FOR; }
 "do"        { return DO; }
@@ -81,6 +85,8 @@
 "switch"    {return SWITCH;}
 "case"      {return CASE;}
 "default"   {return DEFAULT;}
+"enum"     {return ENUM;}
+"NULL"     {return NILL;}
 ":"         {return COLON;}
 ","         { return COMMA; }
 [ \t\n]     ; /* ignore whitespace */

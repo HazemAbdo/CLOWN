@@ -34,8 +34,8 @@
 /* Undocumented macros, especially those whose name start with YY_,
    are private implementation details.  Do not rely on them.  */
 
-#ifndef YY_YY_SIMPLE_TAB_H_INCLUDED
-# define YY_YY_SIMPLE_TAB_H_INCLUDED
+#ifndef YY_YY_Y_TAB_H_INCLUDED
+# define YY_YY_Y_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -94,6 +94,50 @@ extern int yydebug;
     UMINUS = 300
   };
 #endif
+/* Tokens.  */
+#define IDENTIFIER 258
+#define STRING 259
+#define INTEGER 260
+#define PRINT 261
+#define IF 262
+#define ELSE 263
+#define WHILE 264
+#define FOR 265
+#define DO 266
+#define BREAK 267
+#define CONTINUE 268
+#define RETURN 269
+#define ERROR 270
+#define ASSIGN 271
+#define PLUS 272
+#define MINUS 273
+#define TIMES 274
+#define DIVIDE 275
+#define LPAREN 276
+#define RPAREN 277
+#define SEMICOLON 278
+#define EQUAL 279
+#define NOTEQUAL 280
+#define GREATER 281
+#define GREATEREQUAL 282
+#define LESS 283
+#define LESSEQUAL 284
+#define COMMA 285
+#define LBRACE 286
+#define RBRACE 287
+#define FUNCTION 288
+#define CONST 289
+#define OR 290
+#define AND 291
+#define NOT 292
+#define SWITCH 293
+#define CASE 294
+#define COLON 295
+#define DEFAULT 296
+#define ELIF 297
+#define ENUM 298
+#define NILL 299
+#define UMINUS 300
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -115,4 +159,4 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-#endif /* !YY_YY_SIMPLE_TAB_H_INCLUDED  */
+#endif /* !YY_YY_Y_TAB_H_INCLUDED  */

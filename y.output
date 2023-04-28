@@ -1,7 +1,3 @@
-State 38 conflicts: 1 shift/reduce
-State 63 conflicts: 1 shift/reduce
-
-
 Grammar
 
     0 $accept: program $end
@@ -97,37 +93,34 @@ Grammar
 
    60 error_statement: ERROR SEMICOLON
 
-   61 identifier_error: IDENTIFIER SEMICOLON
-
-   62 expression: INTEGER
-   63           | STRING
-   64           | IDENTIFIER
-   65           | NILL
-   66           | LPAREN expression RPAREN
-   67           | expression PLUS expression
-   68           | expression MINUS expression
-   69           | expression TIMES expression
-   70           | expression DIVIDE expression
-   71           | expression EQUAL expression
-   72           | expression NOTEQUAL expression
-   73           | expression GREATER expression
-   74           | expression GREATEREQUAL expression
-   75           | expression LESS expression
-   76           | expression LESSEQUAL expression
-   77           | NOT expression
-   78           | expression OR expression
-   79           | expression AND expression
-   80           | MINUS expression
-   81           | identifier_error
+   61 expression: INTEGER
+   62           | STRING
+   63           | IDENTIFIER
+   64           | NILL
+   65           | LPAREN expression RPAREN
+   66           | expression PLUS expression
+   67           | expression MINUS expression
+   68           | expression TIMES expression
+   69           | expression DIVIDE expression
+   70           | expression EQUAL expression
+   71           | expression NOTEQUAL expression
+   72           | expression GREATER expression
+   73           | expression GREATEREQUAL expression
+   74           | expression LESS expression
+   75           | expression LESSEQUAL expression
+   76           | NOT expression
+   77           | expression OR expression
+   78           | expression AND expression
+   79           | MINUS expression
 
 
 Terminals, with rules where they appear
 
     $end (0) 0
     error (256)
-    IDENTIFIER <sval> (258) 19 20 22 23 24 25 29 35 38 39 40 61 64
-    STRING <sval> (259) 63
-    INTEGER <ival> (260) 62
+    IDENTIFIER <sval> (258) 19 20 22 23 24 25 29 35 38 39 40 63
+    STRING <sval> (259) 62
+    INTEGER <ival> (260) 61
     PRINT (261) 41
     IF (262) 42 43 44 45
     ELSE (263) 49
@@ -139,34 +132,34 @@ Terminals, with rules where they appear
     RETURN (269) 59
     ERROR (270) 60
     ASSIGN (271) 19 20 39 40
-    PLUS (272) 67
-    MINUS (273) 68 80
-    TIMES (274) 69
-    DIVIDE (275) 70
-    LPAREN (276) 22 25 29 42 43 44 45 48 50 51 56 66
-    RPAREN (277) 22 25 29 42 43 44 45 48 50 51 56 66
-    SEMICOLON (278) 19 25 35 40 41 51 53 55 56 57 58 59 60 61
-    EQUAL (279) 71
-    NOTEQUAL (280) 72
-    GREATER (281) 73
-    GREATEREQUAL (282) 74
-    LESS (283) 75
-    LESSEQUAL (284) 76
+    PLUS (272) 66
+    MINUS (273) 67 79
+    TIMES (274) 68
+    DIVIDE (275) 69
+    LPAREN (276) 22 25 29 42 43 44 45 48 50 51 56 65
+    RPAREN (277) 22 25 29 42 43 44 45 48 50 51 56 65
+    SEMICOLON (278) 19 25 35 40 41 51 53 55 56 57 58 59 60
+    EQUAL (279) 70
+    NOTEQUAL (280) 71
+    GREATER (281) 72
+    GREATEREQUAL (282) 73
+    LESS (283) 74
+    LESSEQUAL (284) 75
     COMMA (285) 23 26 37
     LBRACE (286) 22 29 35 42 43 44 45 48 49 50 51 56
     RBRACE (287) 22 29 35 42 43 44 45 48 49 50 51 56
     FUNCTION (288) 22
     CONST (289) 28
-    OR (290) 78
-    AND (291) 79
-    NOT (292) 77
+    OR (290) 77
+    AND (291) 78
+    NOT (292) 76
     SWITCH (293) 29
     CASE (294) 32
     COLON (295) 32 33
     DEFAULT (296) 33
     ELIF (297) 48
     ENUM (298) 35
-    NILL (299) 65
+    NILL (299) 64
     UMINUS (300)
 
 
@@ -267,12 +260,9 @@ Nonterminals, with rules where they appear
     error_statement (77)
         on left: 60
         on right: 13
-    identifier_error (78)
-        on left: 61
-        on right: 81
-    expression (79)
-        on left: 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81
-        on right: 19 26 27 32 39 41 42 43 44 45 48 50 51 56 59 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80
+    expression (78)
+        on left: 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79
+        on right: 19 26 27 32 39 41 42 43 44 45 48 50 51 56 59 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79
 
 
 State 0
@@ -340,8 +330,7 @@ State 2
     NOT         shift, and go to state 43
     NILL        shift, and go to state 44
 
-    identifier_error  go to state 45
-    expression        go to state 46
+    expression  go to state 45
 
 
 State 3
@@ -351,42 +340,42 @@ State 3
    44             | IF . LPAREN expression RPAREN LBRACE statement_list RBRACE else_statement
    45             | IF . LPAREN expression RPAREN LBRACE statement_list RBRACE elif_statement_list else_statement
 
-    LPAREN  shift, and go to state 47
+    LPAREN  shift, and go to state 46
 
 
 State 4
 
    50 while_statement: WHILE . LPAREN expression RPAREN LBRACE statement_list RBRACE
 
-    LPAREN  shift, and go to state 48
+    LPAREN  shift, and go to state 47
 
 
 State 5
 
    51 for_statement: FOR . LPAREN for_init expression SEMICOLON for_update RPAREN LBRACE statement_list RBRACE
 
-    LPAREN  shift, and go to state 49
+    LPAREN  shift, and go to state 48
 
 
 State 6
 
    56 do_statement: DO . LBRACE statement_list RBRACE WHILE LPAREN expression RPAREN SEMICOLON
 
-    LBRACE  shift, and go to state 50
+    LBRACE  shift, and go to state 49
 
 
 State 7
 
    57 break_statement: BREAK . SEMICOLON
 
-    SEMICOLON  shift, and go to state 51
+    SEMICOLON  shift, and go to state 50
 
 
 State 8
 
    58 continue_statement: CONTINUE . SEMICOLON
 
-    SEMICOLON  shift, and go to state 52
+    SEMICOLON  shift, and go to state 51
 
 
 State 9
@@ -401,31 +390,30 @@ State 9
     NOT         shift, and go to state 43
     NILL        shift, and go to state 44
 
-    identifier_error  go to state 45
-    expression        go to state 53
+    expression  go to state 52
 
 
 State 10
 
    60 error_statement: ERROR . SEMICOLON
 
-    SEMICOLON  shift, and go to state 54
+    SEMICOLON  shift, and go to state 53
 
 
 State 11
 
    22 function_declaration: FUNCTION . IDENTIFIER LPAREN function_parameters RPAREN LBRACE statement_list RBRACE
 
-    IDENTIFIER  shift, and go to state 55
+    IDENTIFIER  shift, and go to state 54
 
 
 State 12
 
    28 const_declaration: CONST . assignment_statement
 
-    IDENTIFIER  shift, and go to state 56
+    IDENTIFIER  shift, and go to state 55
 
-    assignment_statement       go to state 57
+    assignment_statement       go to state 56
     enum_assignment_statement  go to state 25
 
 
@@ -433,21 +421,21 @@ State 13
 
    29 switch_statement: SWITCH . LPAREN IDENTIFIER RPAREN LBRACE switch_statement_details RBRACE
 
-    LPAREN  shift, and go to state 58
+    LPAREN  shift, and go to state 57
 
 
 State 14
 
    35 enum_declaration: ENUM . IDENTIFIER LBRACE enum_item_list RBRACE SEMICOLON
 
-    IDENTIFIER  shift, and go to state 59
+    IDENTIFIER  shift, and go to state 58
 
 
 State 15
 
     0 $accept: program . $end
 
-    $end  shift, and go to state 60
+    $end  shift, and go to state 59
 
 
 State 16
@@ -472,7 +460,7 @@ State 16
 
     $default  reduce using rule 1 (program)
 
-    statement                  go to state 61
+    statement                  go to state 60
     assignment_statement       go to state 18
     function_declaration       go to state 19
     function_call              go to state 20
@@ -622,7 +610,7 @@ State 35
 
    40 enum_assignment_statement: IDENTIFIER IDENTIFIER . ASSIGN IDENTIFIER SEMICOLON
 
-    ASSIGN  shift, and go to state 62
+    ASSIGN  shift, and go to state 61
 
 
 State 36
@@ -630,7 +618,7 @@ State 36
    19 assignment_statement: IDENTIFIER ASSIGN . expression SEMICOLON
    20                     | IDENTIFIER ASSIGN . function_call
 
-    IDENTIFIER  shift, and go to state 63
+    IDENTIFIER  shift, and go to state 62
     STRING      shift, and go to state 39
     INTEGER     shift, and go to state 40
     MINUS       shift, and go to state 41
@@ -638,9 +626,8 @@ State 36
     NOT         shift, and go to state 43
     NILL        shift, and go to state 44
 
-    function_call     go to state 64
-    identifier_error  go to state 45
-    expression        go to state 65
+    function_call  go to state 63
+    expression     go to state 64
 
 
 State 37
@@ -655,39 +642,34 @@ State 37
     NOT         shift, and go to state 43
     NILL        shift, and go to state 44
 
-    function_arguments  go to state 66
-    identifier_error    go to state 45
-    expression          go to state 67
+    function_arguments  go to state 65
+    expression          go to state 66
 
 
 State 38
 
-   61 identifier_error: IDENTIFIER . SEMICOLON
-   64 expression: IDENTIFIER .
-
-    SEMICOLON  shift, and go to state 68
-
-    SEMICOLON  [reduce using rule 64 (expression)]
-    $default   reduce using rule 64 (expression)
-
-
-State 39
-
-   63 expression: STRING .
+   63 expression: IDENTIFIER .
 
     $default  reduce using rule 63 (expression)
 
 
-State 40
+State 39
 
-   62 expression: INTEGER .
+   62 expression: STRING .
 
     $default  reduce using rule 62 (expression)
 
 
+State 40
+
+   61 expression: INTEGER .
+
+    $default  reduce using rule 61 (expression)
+
+
 State 41
 
-   80 expression: MINUS . expression
+   79 expression: MINUS . expression
 
     IDENTIFIER  shift, and go to state 38
     STRING      shift, and go to state 39
@@ -697,13 +679,12 @@ State 41
     NOT         shift, and go to state 43
     NILL        shift, and go to state 44
 
-    identifier_error  go to state 45
-    expression        go to state 69
+    expression  go to state 67
 
 
 State 42
 
-   66 expression: LPAREN . expression RPAREN
+   65 expression: LPAREN . expression RPAREN
 
     IDENTIFIER  shift, and go to state 38
     STRING      shift, and go to state 39
@@ -713,13 +694,12 @@ State 42
     NOT         shift, and go to state 43
     NILL        shift, and go to state 44
 
-    identifier_error  go to state 45
-    expression        go to state 70
+    expression  go to state 68
 
 
 State 43
 
-   77 expression: NOT . expression
+   76 expression: NOT . expression
 
     IDENTIFIER  shift, and go to state 38
     STRING      shift, and go to state 39
@@ -729,56 +709,48 @@ State 43
     NOT         shift, and go to state 43
     NILL        shift, and go to state 44
 
-    identifier_error  go to state 45
-    expression        go to state 71
+    expression  go to state 69
 
 
 State 44
 
-   65 expression: NILL .
+   64 expression: NILL .
 
-    $default  reduce using rule 65 (expression)
+    $default  reduce using rule 64 (expression)
 
 
 State 45
 
-   81 expression: identifier_error .
+   41 print_statement: PRINT expression . SEMICOLON
+   66 expression: expression . PLUS expression
+   67           | expression . MINUS expression
+   68           | expression . TIMES expression
+   69           | expression . DIVIDE expression
+   70           | expression . EQUAL expression
+   71           | expression . NOTEQUAL expression
+   72           | expression . GREATER expression
+   73           | expression . GREATEREQUAL expression
+   74           | expression . LESS expression
+   75           | expression . LESSEQUAL expression
+   77           | expression . OR expression
+   78           | expression . AND expression
 
-    $default  reduce using rule 81 (expression)
+    PLUS          shift, and go to state 70
+    MINUS         shift, and go to state 71
+    TIMES         shift, and go to state 72
+    DIVIDE        shift, and go to state 73
+    SEMICOLON     shift, and go to state 74
+    EQUAL         shift, and go to state 75
+    NOTEQUAL      shift, and go to state 76
+    GREATER       shift, and go to state 77
+    GREATEREQUAL  shift, and go to state 78
+    LESS          shift, and go to state 79
+    LESSEQUAL     shift, and go to state 80
+    OR            shift, and go to state 81
+    AND           shift, and go to state 82
 
 
 State 46
-
-   41 print_statement: PRINT expression . SEMICOLON
-   67 expression: expression . PLUS expression
-   68           | expression . MINUS expression
-   69           | expression . TIMES expression
-   70           | expression . DIVIDE expression
-   71           | expression . EQUAL expression
-   72           | expression . NOTEQUAL expression
-   73           | expression . GREATER expression
-   74           | expression . GREATEREQUAL expression
-   75           | expression . LESS expression
-   76           | expression . LESSEQUAL expression
-   78           | expression . OR expression
-   79           | expression . AND expression
-
-    PLUS          shift, and go to state 72
-    MINUS         shift, and go to state 73
-    TIMES         shift, and go to state 74
-    DIVIDE        shift, and go to state 75
-    SEMICOLON     shift, and go to state 76
-    EQUAL         shift, and go to state 77
-    NOTEQUAL      shift, and go to state 78
-    GREATER       shift, and go to state 79
-    GREATEREQUAL  shift, and go to state 80
-    LESS          shift, and go to state 81
-    LESSEQUAL     shift, and go to state 82
-    OR            shift, and go to state 83
-    AND           shift, and go to state 84
-
-
-State 47
 
    42 if_statement: IF LPAREN . expression RPAREN LBRACE statement_list RBRACE
    43             | IF LPAREN . expression RPAREN LBRACE statement_list RBRACE elif_statement_list
@@ -793,11 +765,10 @@ State 47
     NOT         shift, and go to state 43
     NILL        shift, and go to state 44
 
-    identifier_error  go to state 45
-    expression        go to state 85
+    expression  go to state 83
 
 
-State 48
+State 47
 
    50 while_statement: WHILE LPAREN . expression RPAREN LBRACE statement_list RBRACE
 
@@ -809,23 +780,22 @@ State 48
     NOT         shift, and go to state 43
     NILL        shift, and go to state 44
 
-    identifier_error  go to state 45
-    expression        go to state 86
+    expression  go to state 84
 
 
-State 49
+State 48
 
    51 for_statement: FOR LPAREN . for_init expression SEMICOLON for_update RPAREN LBRACE statement_list RBRACE
 
-    IDENTIFIER  shift, and go to state 56
-    SEMICOLON   shift, and go to state 87
+    IDENTIFIER  shift, and go to state 55
+    SEMICOLON   shift, and go to state 85
 
-    assignment_statement       go to state 88
+    assignment_statement       go to state 86
     enum_assignment_statement  go to state 25
-    for_init                   go to state 89
+    for_init                   go to state 87
 
 
-State 50
+State 49
 
    56 do_statement: DO LBRACE . statement_list RBRACE WHILE LPAREN expression RPAREN SEMICOLON
 
@@ -844,7 +814,7 @@ State 50
     SWITCH      shift, and go to state 13
     ENUM        shift, and go to state 14
 
-    statement_list             go to state 90
+    statement_list             go to state 88
     statement                  go to state 17
     assignment_statement       go to state 18
     function_declaration       go to state 19
@@ -865,66 +835,66 @@ State 50
     error_statement            go to state 34
 
 
-State 51
+State 50
 
    57 break_statement: BREAK SEMICOLON .
 
     $default  reduce using rule 57 (break_statement)
 
 
-State 52
+State 51
 
    58 continue_statement: CONTINUE SEMICOLON .
 
     $default  reduce using rule 58 (continue_statement)
 
 
-State 53
+State 52
 
    59 return_statement: RETURN expression . SEMICOLON
-   67 expression: expression . PLUS expression
-   68           | expression . MINUS expression
-   69           | expression . TIMES expression
-   70           | expression . DIVIDE expression
-   71           | expression . EQUAL expression
-   72           | expression . NOTEQUAL expression
-   73           | expression . GREATER expression
-   74           | expression . GREATEREQUAL expression
-   75           | expression . LESS expression
-   76           | expression . LESSEQUAL expression
-   78           | expression . OR expression
-   79           | expression . AND expression
+   66 expression: expression . PLUS expression
+   67           | expression . MINUS expression
+   68           | expression . TIMES expression
+   69           | expression . DIVIDE expression
+   70           | expression . EQUAL expression
+   71           | expression . NOTEQUAL expression
+   72           | expression . GREATER expression
+   73           | expression . GREATEREQUAL expression
+   74           | expression . LESS expression
+   75           | expression . LESSEQUAL expression
+   77           | expression . OR expression
+   78           | expression . AND expression
 
-    PLUS          shift, and go to state 72
-    MINUS         shift, and go to state 73
-    TIMES         shift, and go to state 74
-    DIVIDE        shift, and go to state 75
-    SEMICOLON     shift, and go to state 91
-    EQUAL         shift, and go to state 77
-    NOTEQUAL      shift, and go to state 78
-    GREATER       shift, and go to state 79
-    GREATEREQUAL  shift, and go to state 80
-    LESS          shift, and go to state 81
-    LESSEQUAL     shift, and go to state 82
-    OR            shift, and go to state 83
-    AND           shift, and go to state 84
+    PLUS          shift, and go to state 70
+    MINUS         shift, and go to state 71
+    TIMES         shift, and go to state 72
+    DIVIDE        shift, and go to state 73
+    SEMICOLON     shift, and go to state 89
+    EQUAL         shift, and go to state 75
+    NOTEQUAL      shift, and go to state 76
+    GREATER       shift, and go to state 77
+    GREATEREQUAL  shift, and go to state 78
+    LESS          shift, and go to state 79
+    LESSEQUAL     shift, and go to state 80
+    OR            shift, and go to state 81
+    AND           shift, and go to state 82
 
 
-State 54
+State 53
 
    60 error_statement: ERROR SEMICOLON .
 
     $default  reduce using rule 60 (error_statement)
 
 
-State 55
+State 54
 
    22 function_declaration: FUNCTION IDENTIFIER . LPAREN function_parameters RPAREN LBRACE statement_list RBRACE
 
-    LPAREN  shift, and go to state 92
+    LPAREN  shift, and go to state 90
 
 
-State 56
+State 55
 
    19 assignment_statement: IDENTIFIER . ASSIGN expression SEMICOLON
    20                     | IDENTIFIER . ASSIGN function_call
@@ -934,219 +904,239 @@ State 56
     ASSIGN      shift, and go to state 36
 
 
-State 57
+State 56
 
    28 const_declaration: CONST assignment_statement .
 
     $default  reduce using rule 28 (const_declaration)
 
 
-State 58
+State 57
 
    29 switch_statement: SWITCH LPAREN . IDENTIFIER RPAREN LBRACE switch_statement_details RBRACE
 
-    IDENTIFIER  shift, and go to state 93
+    IDENTIFIER  shift, and go to state 91
 
 
-State 59
+State 58
 
    35 enum_declaration: ENUM IDENTIFIER . LBRACE enum_item_list RBRACE SEMICOLON
 
-    LBRACE  shift, and go to state 94
+    LBRACE  shift, and go to state 92
 
 
-State 60
+State 59
 
     0 $accept: program $end .
 
     $default  accept
 
 
-State 61
+State 60
 
     3 statement_list: statement_list statement .
 
     $default  reduce using rule 3 (statement_list)
 
 
-State 62
+State 61
 
    40 enum_assignment_statement: IDENTIFIER IDENTIFIER ASSIGN . IDENTIFIER SEMICOLON
 
-    IDENTIFIER  shift, and go to state 95
+    IDENTIFIER  shift, and go to state 93
+
+
+State 62
+
+   25 function_call: IDENTIFIER . LPAREN function_arguments RPAREN SEMICOLON
+   63 expression: IDENTIFIER .
+
+    LPAREN  shift, and go to state 37
+
+    $default  reduce using rule 63 (expression)
 
 
 State 63
-
-   25 function_call: IDENTIFIER . LPAREN function_arguments RPAREN SEMICOLON
-   61 identifier_error: IDENTIFIER . SEMICOLON
-   64 expression: IDENTIFIER .
-
-    LPAREN     shift, and go to state 37
-    SEMICOLON  shift, and go to state 68
-
-    SEMICOLON  [reduce using rule 64 (expression)]
-    $default   reduce using rule 64 (expression)
-
-
-State 64
 
    20 assignment_statement: IDENTIFIER ASSIGN function_call .
 
     $default  reduce using rule 20 (assignment_statement)
 
 
-State 65
+State 64
 
    19 assignment_statement: IDENTIFIER ASSIGN expression . SEMICOLON
-   67 expression: expression . PLUS expression
-   68           | expression . MINUS expression
-   69           | expression . TIMES expression
-   70           | expression . DIVIDE expression
-   71           | expression . EQUAL expression
-   72           | expression . NOTEQUAL expression
-   73           | expression . GREATER expression
-   74           | expression . GREATEREQUAL expression
-   75           | expression . LESS expression
-   76           | expression . LESSEQUAL expression
-   78           | expression . OR expression
-   79           | expression . AND expression
+   66 expression: expression . PLUS expression
+   67           | expression . MINUS expression
+   68           | expression . TIMES expression
+   69           | expression . DIVIDE expression
+   70           | expression . EQUAL expression
+   71           | expression . NOTEQUAL expression
+   72           | expression . GREATER expression
+   73           | expression . GREATEREQUAL expression
+   74           | expression . LESS expression
+   75           | expression . LESSEQUAL expression
+   77           | expression . OR expression
+   78           | expression . AND expression
 
-    PLUS          shift, and go to state 72
-    MINUS         shift, and go to state 73
-    TIMES         shift, and go to state 74
-    DIVIDE        shift, and go to state 75
-    SEMICOLON     shift, and go to state 96
-    EQUAL         shift, and go to state 77
-    NOTEQUAL      shift, and go to state 78
-    GREATER       shift, and go to state 79
-    GREATEREQUAL  shift, and go to state 80
-    LESS          shift, and go to state 81
-    LESSEQUAL     shift, and go to state 82
-    OR            shift, and go to state 83
-    AND           shift, and go to state 84
+    PLUS          shift, and go to state 70
+    MINUS         shift, and go to state 71
+    TIMES         shift, and go to state 72
+    DIVIDE        shift, and go to state 73
+    SEMICOLON     shift, and go to state 94
+    EQUAL         shift, and go to state 75
+    NOTEQUAL      shift, and go to state 76
+    GREATER       shift, and go to state 77
+    GREATEREQUAL  shift, and go to state 78
+    LESS          shift, and go to state 79
+    LESSEQUAL     shift, and go to state 80
+    OR            shift, and go to state 81
+    AND           shift, and go to state 82
 
 
-State 66
+State 65
 
    25 function_call: IDENTIFIER LPAREN function_arguments . RPAREN SEMICOLON
    26 function_arguments: function_arguments . COMMA expression
 
-    RPAREN  shift, and go to state 97
-    COMMA   shift, and go to state 98
+    RPAREN  shift, and go to state 95
+    COMMA   shift, and go to state 96
 
 
-State 67
+State 66
 
    27 function_arguments: expression .
-   67 expression: expression . PLUS expression
-   68           | expression . MINUS expression
-   69           | expression . TIMES expression
-   70           | expression . DIVIDE expression
-   71           | expression . EQUAL expression
-   72           | expression . NOTEQUAL expression
-   73           | expression . GREATER expression
-   74           | expression . GREATEREQUAL expression
-   75           | expression . LESS expression
-   76           | expression . LESSEQUAL expression
-   78           | expression . OR expression
-   79           | expression . AND expression
+   66 expression: expression . PLUS expression
+   67           | expression . MINUS expression
+   68           | expression . TIMES expression
+   69           | expression . DIVIDE expression
+   70           | expression . EQUAL expression
+   71           | expression . NOTEQUAL expression
+   72           | expression . GREATER expression
+   73           | expression . GREATEREQUAL expression
+   74           | expression . LESS expression
+   75           | expression . LESSEQUAL expression
+   77           | expression . OR expression
+   78           | expression . AND expression
 
-    PLUS          shift, and go to state 72
-    MINUS         shift, and go to state 73
-    TIMES         shift, and go to state 74
-    DIVIDE        shift, and go to state 75
-    EQUAL         shift, and go to state 77
-    NOTEQUAL      shift, and go to state 78
-    GREATER       shift, and go to state 79
-    GREATEREQUAL  shift, and go to state 80
-    LESS          shift, and go to state 81
-    LESSEQUAL     shift, and go to state 82
-    OR            shift, and go to state 83
-    AND           shift, and go to state 84
+    PLUS          shift, and go to state 70
+    MINUS         shift, and go to state 71
+    TIMES         shift, and go to state 72
+    DIVIDE        shift, and go to state 73
+    EQUAL         shift, and go to state 75
+    NOTEQUAL      shift, and go to state 76
+    GREATER       shift, and go to state 77
+    GREATEREQUAL  shift, and go to state 78
+    LESS          shift, and go to state 79
+    LESSEQUAL     shift, and go to state 80
+    OR            shift, and go to state 81
+    AND           shift, and go to state 82
 
     $default  reduce using rule 27 (function_arguments)
 
 
+State 67
+
+   66 expression: expression . PLUS expression
+   67           | expression . MINUS expression
+   68           | expression . TIMES expression
+   69           | expression . DIVIDE expression
+   70           | expression . EQUAL expression
+   71           | expression . NOTEQUAL expression
+   72           | expression . GREATER expression
+   73           | expression . GREATEREQUAL expression
+   74           | expression . LESS expression
+   75           | expression . LESSEQUAL expression
+   77           | expression . OR expression
+   78           | expression . AND expression
+   79           | MINUS expression .
+
+    $default  reduce using rule 79 (expression)
+
+
 State 68
 
-   61 identifier_error: IDENTIFIER SEMICOLON .
+   65 expression: LPAREN expression . RPAREN
+   66           | expression . PLUS expression
+   67           | expression . MINUS expression
+   68           | expression . TIMES expression
+   69           | expression . DIVIDE expression
+   70           | expression . EQUAL expression
+   71           | expression . NOTEQUAL expression
+   72           | expression . GREATER expression
+   73           | expression . GREATEREQUAL expression
+   74           | expression . LESS expression
+   75           | expression . LESSEQUAL expression
+   77           | expression . OR expression
+   78           | expression . AND expression
 
-    $default  reduce using rule 61 (identifier_error)
+    PLUS          shift, and go to state 70
+    MINUS         shift, and go to state 71
+    TIMES         shift, and go to state 72
+    DIVIDE        shift, and go to state 73
+    RPAREN        shift, and go to state 97
+    EQUAL         shift, and go to state 75
+    NOTEQUAL      shift, and go to state 76
+    GREATER       shift, and go to state 77
+    GREATEREQUAL  shift, and go to state 78
+    LESS          shift, and go to state 79
+    LESSEQUAL     shift, and go to state 80
+    OR            shift, and go to state 81
+    AND           shift, and go to state 82
 
 
 State 69
 
-   67 expression: expression . PLUS expression
-   68           | expression . MINUS expression
-   69           | expression . TIMES expression
-   70           | expression . DIVIDE expression
-   71           | expression . EQUAL expression
-   72           | expression . NOTEQUAL expression
-   73           | expression . GREATER expression
-   74           | expression . GREATEREQUAL expression
-   75           | expression . LESS expression
-   76           | expression . LESSEQUAL expression
-   78           | expression . OR expression
-   79           | expression . AND expression
-   80           | MINUS expression .
+   66 expression: expression . PLUS expression
+   67           | expression . MINUS expression
+   68           | expression . TIMES expression
+   69           | expression . DIVIDE expression
+   70           | expression . EQUAL expression
+   71           | expression . NOTEQUAL expression
+   72           | expression . GREATER expression
+   73           | expression . GREATEREQUAL expression
+   74           | expression . LESS expression
+   75           | expression . LESSEQUAL expression
+   76           | NOT expression .
+   77           | expression . OR expression
+   78           | expression . AND expression
 
-    $default  reduce using rule 80 (expression)
+    $default  reduce using rule 76 (expression)
 
 
 State 70
 
-   66 expression: LPAREN expression . RPAREN
-   67           | expression . PLUS expression
-   68           | expression . MINUS expression
-   69           | expression . TIMES expression
-   70           | expression . DIVIDE expression
-   71           | expression . EQUAL expression
-   72           | expression . NOTEQUAL expression
-   73           | expression . GREATER expression
-   74           | expression . GREATEREQUAL expression
-   75           | expression . LESS expression
-   76           | expression . LESSEQUAL expression
-   78           | expression . OR expression
-   79           | expression . AND expression
+   66 expression: expression PLUS . expression
 
-    PLUS          shift, and go to state 72
-    MINUS         shift, and go to state 73
-    TIMES         shift, and go to state 74
-    DIVIDE        shift, and go to state 75
-    RPAREN        shift, and go to state 99
-    EQUAL         shift, and go to state 77
-    NOTEQUAL      shift, and go to state 78
-    GREATER       shift, and go to state 79
-    GREATEREQUAL  shift, and go to state 80
-    LESS          shift, and go to state 81
-    LESSEQUAL     shift, and go to state 82
-    OR            shift, and go to state 83
-    AND           shift, and go to state 84
+    IDENTIFIER  shift, and go to state 38
+    STRING      shift, and go to state 39
+    INTEGER     shift, and go to state 40
+    MINUS       shift, and go to state 41
+    LPAREN      shift, and go to state 42
+    NOT         shift, and go to state 43
+    NILL        shift, and go to state 44
+
+    expression  go to state 98
 
 
 State 71
 
-   67 expression: expression . PLUS expression
-   68           | expression . MINUS expression
-   69           | expression . TIMES expression
-   70           | expression . DIVIDE expression
-   71           | expression . EQUAL expression
-   72           | expression . NOTEQUAL expression
-   73           | expression . GREATER expression
-   74           | expression . GREATEREQUAL expression
-   75           | expression . LESS expression
-   76           | expression . LESSEQUAL expression
-   77           | NOT expression .
-   78           | expression . OR expression
-   79           | expression . AND expression
+   67 expression: expression MINUS . expression
 
-    $default  reduce using rule 77 (expression)
+    IDENTIFIER  shift, and go to state 38
+    STRING      shift, and go to state 39
+    INTEGER     shift, and go to state 40
+    MINUS       shift, and go to state 41
+    LPAREN      shift, and go to state 42
+    NOT         shift, and go to state 43
+    NILL        shift, and go to state 44
+
+    expression  go to state 99
 
 
 State 72
 
-   67 expression: expression PLUS . expression
+   68 expression: expression TIMES . expression
 
     IDENTIFIER  shift, and go to state 38
     STRING      shift, and go to state 39
@@ -1156,13 +1146,12 @@ State 72
     NOT         shift, and go to state 43
     NILL        shift, and go to state 44
 
-    identifier_error  go to state 45
-    expression        go to state 100
+    expression  go to state 100
 
 
 State 73
 
-   68 expression: expression MINUS . expression
+   69 expression: expression DIVIDE . expression
 
     IDENTIFIER  shift, and go to state 38
     STRING      shift, and go to state 39
@@ -1172,52 +1161,19 @@ State 73
     NOT         shift, and go to state 43
     NILL        shift, and go to state 44
 
-    identifier_error  go to state 45
-    expression        go to state 101
+    expression  go to state 101
 
 
 State 74
-
-   69 expression: expression TIMES . expression
-
-    IDENTIFIER  shift, and go to state 38
-    STRING      shift, and go to state 39
-    INTEGER     shift, and go to state 40
-    MINUS       shift, and go to state 41
-    LPAREN      shift, and go to state 42
-    NOT         shift, and go to state 43
-    NILL        shift, and go to state 44
-
-    identifier_error  go to state 45
-    expression        go to state 102
-
-
-State 75
-
-   70 expression: expression DIVIDE . expression
-
-    IDENTIFIER  shift, and go to state 38
-    STRING      shift, and go to state 39
-    INTEGER     shift, and go to state 40
-    MINUS       shift, and go to state 41
-    LPAREN      shift, and go to state 42
-    NOT         shift, and go to state 43
-    NILL        shift, and go to state 44
-
-    identifier_error  go to state 45
-    expression        go to state 103
-
-
-State 76
 
    41 print_statement: PRINT expression SEMICOLON .
 
     $default  reduce using rule 41 (print_statement)
 
 
-State 77
+State 75
 
-   71 expression: expression EQUAL . expression
+   70 expression: expression EQUAL . expression
 
     IDENTIFIER  shift, and go to state 38
     STRING      shift, and go to state 39
@@ -1227,13 +1183,42 @@ State 77
     NOT         shift, and go to state 43
     NILL        shift, and go to state 44
 
-    identifier_error  go to state 45
-    expression        go to state 104
+    expression  go to state 102
+
+
+State 76
+
+   71 expression: expression NOTEQUAL . expression
+
+    IDENTIFIER  shift, and go to state 38
+    STRING      shift, and go to state 39
+    INTEGER     shift, and go to state 40
+    MINUS       shift, and go to state 41
+    LPAREN      shift, and go to state 42
+    NOT         shift, and go to state 43
+    NILL        shift, and go to state 44
+
+    expression  go to state 103
+
+
+State 77
+
+   72 expression: expression GREATER . expression
+
+    IDENTIFIER  shift, and go to state 38
+    STRING      shift, and go to state 39
+    INTEGER     shift, and go to state 40
+    MINUS       shift, and go to state 41
+    LPAREN      shift, and go to state 42
+    NOT         shift, and go to state 43
+    NILL        shift, and go to state 44
+
+    expression  go to state 104
 
 
 State 78
 
-   72 expression: expression NOTEQUAL . expression
+   73 expression: expression GREATEREQUAL . expression
 
     IDENTIFIER  shift, and go to state 38
     STRING      shift, and go to state 39
@@ -1243,13 +1228,12 @@ State 78
     NOT         shift, and go to state 43
     NILL        shift, and go to state 44
 
-    identifier_error  go to state 45
-    expression        go to state 105
+    expression  go to state 105
 
 
 State 79
 
-   73 expression: expression GREATER . expression
+   74 expression: expression LESS . expression
 
     IDENTIFIER  shift, and go to state 38
     STRING      shift, and go to state 39
@@ -1259,13 +1243,12 @@ State 79
     NOT         shift, and go to state 43
     NILL        shift, and go to state 44
 
-    identifier_error  go to state 45
-    expression        go to state 106
+    expression  go to state 106
 
 
 State 80
 
-   74 expression: expression GREATEREQUAL . expression
+   75 expression: expression LESSEQUAL . expression
 
     IDENTIFIER  shift, and go to state 38
     STRING      shift, and go to state 39
@@ -1275,13 +1258,12 @@ State 80
     NOT         shift, and go to state 43
     NILL        shift, and go to state 44
 
-    identifier_error  go to state 45
-    expression        go to state 107
+    expression  go to state 107
 
 
 State 81
 
-   75 expression: expression LESS . expression
+   77 expression: expression OR . expression
 
     IDENTIFIER  shift, and go to state 38
     STRING      shift, and go to state 39
@@ -1291,13 +1273,12 @@ State 81
     NOT         shift, and go to state 43
     NILL        shift, and go to state 44
 
-    identifier_error  go to state 45
-    expression        go to state 108
+    expression  go to state 108
 
 
 State 82
 
-   76 expression: expression LESSEQUAL . expression
+   78 expression: expression AND . expression
 
     IDENTIFIER  shift, and go to state 38
     STRING      shift, and go to state 39
@@ -1307,122 +1288,89 @@ State 82
     NOT         shift, and go to state 43
     NILL        shift, and go to state 44
 
-    identifier_error  go to state 45
-    expression        go to state 109
+    expression  go to state 109
 
 
 State 83
-
-   78 expression: expression OR . expression
-
-    IDENTIFIER  shift, and go to state 38
-    STRING      shift, and go to state 39
-    INTEGER     shift, and go to state 40
-    MINUS       shift, and go to state 41
-    LPAREN      shift, and go to state 42
-    NOT         shift, and go to state 43
-    NILL        shift, and go to state 44
-
-    identifier_error  go to state 45
-    expression        go to state 110
-
-
-State 84
-
-   79 expression: expression AND . expression
-
-    IDENTIFIER  shift, and go to state 38
-    STRING      shift, and go to state 39
-    INTEGER     shift, and go to state 40
-    MINUS       shift, and go to state 41
-    LPAREN      shift, and go to state 42
-    NOT         shift, and go to state 43
-    NILL        shift, and go to state 44
-
-    identifier_error  go to state 45
-    expression        go to state 111
-
-
-State 85
 
    42 if_statement: IF LPAREN expression . RPAREN LBRACE statement_list RBRACE
    43             | IF LPAREN expression . RPAREN LBRACE statement_list RBRACE elif_statement_list
    44             | IF LPAREN expression . RPAREN LBRACE statement_list RBRACE else_statement
    45             | IF LPAREN expression . RPAREN LBRACE statement_list RBRACE elif_statement_list else_statement
-   67 expression: expression . PLUS expression
-   68           | expression . MINUS expression
-   69           | expression . TIMES expression
-   70           | expression . DIVIDE expression
-   71           | expression . EQUAL expression
-   72           | expression . NOTEQUAL expression
-   73           | expression . GREATER expression
-   74           | expression . GREATEREQUAL expression
-   75           | expression . LESS expression
-   76           | expression . LESSEQUAL expression
-   78           | expression . OR expression
-   79           | expression . AND expression
+   66 expression: expression . PLUS expression
+   67           | expression . MINUS expression
+   68           | expression . TIMES expression
+   69           | expression . DIVIDE expression
+   70           | expression . EQUAL expression
+   71           | expression . NOTEQUAL expression
+   72           | expression . GREATER expression
+   73           | expression . GREATEREQUAL expression
+   74           | expression . LESS expression
+   75           | expression . LESSEQUAL expression
+   77           | expression . OR expression
+   78           | expression . AND expression
 
-    PLUS          shift, and go to state 72
-    MINUS         shift, and go to state 73
-    TIMES         shift, and go to state 74
-    DIVIDE        shift, and go to state 75
-    RPAREN        shift, and go to state 112
-    EQUAL         shift, and go to state 77
-    NOTEQUAL      shift, and go to state 78
-    GREATER       shift, and go to state 79
-    GREATEREQUAL  shift, and go to state 80
-    LESS          shift, and go to state 81
-    LESSEQUAL     shift, and go to state 82
-    OR            shift, and go to state 83
-    AND           shift, and go to state 84
+    PLUS          shift, and go to state 70
+    MINUS         shift, and go to state 71
+    TIMES         shift, and go to state 72
+    DIVIDE        shift, and go to state 73
+    RPAREN        shift, and go to state 110
+    EQUAL         shift, and go to state 75
+    NOTEQUAL      shift, and go to state 76
+    GREATER       shift, and go to state 77
+    GREATEREQUAL  shift, and go to state 78
+    LESS          shift, and go to state 79
+    LESSEQUAL     shift, and go to state 80
+    OR            shift, and go to state 81
+    AND           shift, and go to state 82
 
 
-State 86
+State 84
 
    50 while_statement: WHILE LPAREN expression . RPAREN LBRACE statement_list RBRACE
-   67 expression: expression . PLUS expression
-   68           | expression . MINUS expression
-   69           | expression . TIMES expression
-   70           | expression . DIVIDE expression
-   71           | expression . EQUAL expression
-   72           | expression . NOTEQUAL expression
-   73           | expression . GREATER expression
-   74           | expression . GREATEREQUAL expression
-   75           | expression . LESS expression
-   76           | expression . LESSEQUAL expression
-   78           | expression . OR expression
-   79           | expression . AND expression
+   66 expression: expression . PLUS expression
+   67           | expression . MINUS expression
+   68           | expression . TIMES expression
+   69           | expression . DIVIDE expression
+   70           | expression . EQUAL expression
+   71           | expression . NOTEQUAL expression
+   72           | expression . GREATER expression
+   73           | expression . GREATEREQUAL expression
+   74           | expression . LESS expression
+   75           | expression . LESSEQUAL expression
+   77           | expression . OR expression
+   78           | expression . AND expression
 
-    PLUS          shift, and go to state 72
-    MINUS         shift, and go to state 73
-    TIMES         shift, and go to state 74
-    DIVIDE        shift, and go to state 75
-    RPAREN        shift, and go to state 113
-    EQUAL         shift, and go to state 77
-    NOTEQUAL      shift, and go to state 78
-    GREATER       shift, and go to state 79
-    GREATEREQUAL  shift, and go to state 80
-    LESS          shift, and go to state 81
-    LESSEQUAL     shift, and go to state 82
-    OR            shift, and go to state 83
-    AND           shift, and go to state 84
+    PLUS          shift, and go to state 70
+    MINUS         shift, and go to state 71
+    TIMES         shift, and go to state 72
+    DIVIDE        shift, and go to state 73
+    RPAREN        shift, and go to state 111
+    EQUAL         shift, and go to state 75
+    NOTEQUAL      shift, and go to state 76
+    GREATER       shift, and go to state 77
+    GREATEREQUAL  shift, and go to state 78
+    LESS          shift, and go to state 79
+    LESSEQUAL     shift, and go to state 80
+    OR            shift, and go to state 81
+    AND           shift, and go to state 82
 
 
-State 87
+State 85
 
    53 for_init: SEMICOLON .
 
     $default  reduce using rule 53 (for_init)
 
 
-State 88
+State 86
 
    52 for_init: assignment_statement .
 
     $default  reduce using rule 52 (for_init)
 
 
-State 89
+State 87
 
    51 for_statement: FOR LPAREN for_init . expression SEMICOLON for_update RPAREN LBRACE statement_list RBRACE
 
@@ -1434,11 +1382,10 @@ State 89
     NOT         shift, and go to state 43
     NILL        shift, and go to state 44
 
-    identifier_error  go to state 45
-    expression        go to state 114
+    expression  go to state 112
 
 
-State 90
+State 88
 
     3 statement_list: statement_list . statement
    56 do_statement: DO LBRACE statement_list . RBRACE WHILE LPAREN expression RPAREN SEMICOLON
@@ -1453,13 +1400,13 @@ State 90
     CONTINUE    shift, and go to state 8
     RETURN      shift, and go to state 9
     ERROR       shift, and go to state 10
-    RBRACE      shift, and go to state 115
+    RBRACE      shift, and go to state 113
     FUNCTION    shift, and go to state 11
     CONST       shift, and go to state 12
     SWITCH      shift, and go to state 13
     ENUM        shift, and go to state 14
 
-    statement                  go to state 61
+    statement                  go to state 60
     assignment_statement       go to state 18
     function_declaration       go to state 19
     function_call              go to state 20
@@ -1479,61 +1426,61 @@ State 90
     error_statement            go to state 34
 
 
-State 91
+State 89
 
    59 return_statement: RETURN expression SEMICOLON .
 
     $default  reduce using rule 59 (return_statement)
 
 
-State 92
+State 90
 
    22 function_declaration: FUNCTION IDENTIFIER LPAREN . function_parameters RPAREN LBRACE statement_list RBRACE
 
-    IDENTIFIER  shift, and go to state 116
+    IDENTIFIER  shift, and go to state 114
 
-    function_parameters  go to state 117
+    function_parameters  go to state 115
+
+
+State 91
+
+   29 switch_statement: SWITCH LPAREN IDENTIFIER . RPAREN LBRACE switch_statement_details RBRACE
+
+    RPAREN  shift, and go to state 116
+
+
+State 92
+
+   35 enum_declaration: ENUM IDENTIFIER LBRACE . enum_item_list RBRACE SEMICOLON
+
+    IDENTIFIER  shift, and go to state 117
+
+    enum_item_list  go to state 118
+    enum_item       go to state 119
 
 
 State 93
 
-   29 switch_statement: SWITCH LPAREN IDENTIFIER . RPAREN LBRACE switch_statement_details RBRACE
+   40 enum_assignment_statement: IDENTIFIER IDENTIFIER ASSIGN IDENTIFIER . SEMICOLON
 
-    RPAREN  shift, and go to state 118
+    SEMICOLON  shift, and go to state 120
 
 
 State 94
-
-   35 enum_declaration: ENUM IDENTIFIER LBRACE . enum_item_list RBRACE SEMICOLON
-
-    IDENTIFIER  shift, and go to state 119
-
-    enum_item_list  go to state 120
-    enum_item       go to state 121
-
-
-State 95
-
-   40 enum_assignment_statement: IDENTIFIER IDENTIFIER ASSIGN IDENTIFIER . SEMICOLON
-
-    SEMICOLON  shift, and go to state 122
-
-
-State 96
 
    19 assignment_statement: IDENTIFIER ASSIGN expression SEMICOLON .
 
     $default  reduce using rule 19 (assignment_statement)
 
 
-State 97
+State 95
 
    25 function_call: IDENTIFIER LPAREN function_arguments RPAREN . SEMICOLON
 
-    SEMICOLON  shift, and go to state 123
+    SEMICOLON  shift, and go to state 121
 
 
-State 98
+State 96
 
    26 function_arguments: function_arguments COMMA . expression
 
@@ -1545,456 +1492,455 @@ State 98
     NOT         shift, and go to state 43
     NILL        shift, and go to state 44
 
-    identifier_error  go to state 45
-    expression        go to state 124
+    expression  go to state 122
 
 
-State 99
+State 97
 
-   66 expression: LPAREN expression RPAREN .
+   65 expression: LPAREN expression RPAREN .
+
+    $default  reduce using rule 65 (expression)
+
+
+State 98
+
+   66 expression: expression . PLUS expression
+   66           | expression PLUS expression .
+   67           | expression . MINUS expression
+   68           | expression . TIMES expression
+   69           | expression . DIVIDE expression
+   70           | expression . EQUAL expression
+   71           | expression . NOTEQUAL expression
+   72           | expression . GREATER expression
+   73           | expression . GREATEREQUAL expression
+   74           | expression . LESS expression
+   75           | expression . LESSEQUAL expression
+   77           | expression . OR expression
+   78           | expression . AND expression
+
+    TIMES         shift, and go to state 72
+    DIVIDE        shift, and go to state 73
+    EQUAL         shift, and go to state 75
+    NOTEQUAL      shift, and go to state 76
+    GREATER       shift, and go to state 77
+    GREATEREQUAL  shift, and go to state 78
+    LESS          shift, and go to state 79
+    LESSEQUAL     shift, and go to state 80
+    OR            shift, and go to state 81
+    AND           shift, and go to state 82
 
     $default  reduce using rule 66 (expression)
 
 
-State 100
+State 99
 
-   67 expression: expression . PLUS expression
-   67           | expression PLUS expression .
-   68           | expression . MINUS expression
-   69           | expression . TIMES expression
-   70           | expression . DIVIDE expression
-   71           | expression . EQUAL expression
-   72           | expression . NOTEQUAL expression
-   73           | expression . GREATER expression
-   74           | expression . GREATEREQUAL expression
-   75           | expression . LESS expression
-   76           | expression . LESSEQUAL expression
-   78           | expression . OR expression
-   79           | expression . AND expression
+   66 expression: expression . PLUS expression
+   67           | expression . MINUS expression
+   67           | expression MINUS expression .
+   68           | expression . TIMES expression
+   69           | expression . DIVIDE expression
+   70           | expression . EQUAL expression
+   71           | expression . NOTEQUAL expression
+   72           | expression . GREATER expression
+   73           | expression . GREATEREQUAL expression
+   74           | expression . LESS expression
+   75           | expression . LESSEQUAL expression
+   77           | expression . OR expression
+   78           | expression . AND expression
 
-    TIMES         shift, and go to state 74
-    DIVIDE        shift, and go to state 75
-    EQUAL         shift, and go to state 77
-    NOTEQUAL      shift, and go to state 78
-    GREATER       shift, and go to state 79
-    GREATEREQUAL  shift, and go to state 80
-    LESS          shift, and go to state 81
-    LESSEQUAL     shift, and go to state 82
-    OR            shift, and go to state 83
-    AND           shift, and go to state 84
+    TIMES         shift, and go to state 72
+    DIVIDE        shift, and go to state 73
+    EQUAL         shift, and go to state 75
+    NOTEQUAL      shift, and go to state 76
+    GREATER       shift, and go to state 77
+    GREATEREQUAL  shift, and go to state 78
+    LESS          shift, and go to state 79
+    LESSEQUAL     shift, and go to state 80
+    OR            shift, and go to state 81
+    AND           shift, and go to state 82
 
     $default  reduce using rule 67 (expression)
 
 
-State 101
+State 100
 
-   67 expression: expression . PLUS expression
-   68           | expression . MINUS expression
-   68           | expression MINUS expression .
-   69           | expression . TIMES expression
-   70           | expression . DIVIDE expression
-   71           | expression . EQUAL expression
-   72           | expression . NOTEQUAL expression
-   73           | expression . GREATER expression
-   74           | expression . GREATEREQUAL expression
-   75           | expression . LESS expression
-   76           | expression . LESSEQUAL expression
-   78           | expression . OR expression
-   79           | expression . AND expression
+   66 expression: expression . PLUS expression
+   67           | expression . MINUS expression
+   68           | expression . TIMES expression
+   68           | expression TIMES expression .
+   69           | expression . DIVIDE expression
+   70           | expression . EQUAL expression
+   71           | expression . NOTEQUAL expression
+   72           | expression . GREATER expression
+   73           | expression . GREATEREQUAL expression
+   74           | expression . LESS expression
+   75           | expression . LESSEQUAL expression
+   77           | expression . OR expression
+   78           | expression . AND expression
 
-    TIMES         shift, and go to state 74
-    DIVIDE        shift, and go to state 75
-    EQUAL         shift, and go to state 77
-    NOTEQUAL      shift, and go to state 78
-    GREATER       shift, and go to state 79
-    GREATEREQUAL  shift, and go to state 80
-    LESS          shift, and go to state 81
-    LESSEQUAL     shift, and go to state 82
-    OR            shift, and go to state 83
-    AND           shift, and go to state 84
+    EQUAL         shift, and go to state 75
+    NOTEQUAL      shift, and go to state 76
+    GREATER       shift, and go to state 77
+    GREATEREQUAL  shift, and go to state 78
+    LESS          shift, and go to state 79
+    LESSEQUAL     shift, and go to state 80
+    OR            shift, and go to state 81
+    AND           shift, and go to state 82
 
     $default  reduce using rule 68 (expression)
 
 
-State 102
+State 101
 
-   67 expression: expression . PLUS expression
-   68           | expression . MINUS expression
-   69           | expression . TIMES expression
-   69           | expression TIMES expression .
-   70           | expression . DIVIDE expression
-   71           | expression . EQUAL expression
-   72           | expression . NOTEQUAL expression
-   73           | expression . GREATER expression
-   74           | expression . GREATEREQUAL expression
-   75           | expression . LESS expression
-   76           | expression . LESSEQUAL expression
-   78           | expression . OR expression
-   79           | expression . AND expression
+   66 expression: expression . PLUS expression
+   67           | expression . MINUS expression
+   68           | expression . TIMES expression
+   69           | expression . DIVIDE expression
+   69           | expression DIVIDE expression .
+   70           | expression . EQUAL expression
+   71           | expression . NOTEQUAL expression
+   72           | expression . GREATER expression
+   73           | expression . GREATEREQUAL expression
+   74           | expression . LESS expression
+   75           | expression . LESSEQUAL expression
+   77           | expression . OR expression
+   78           | expression . AND expression
 
-    EQUAL         shift, and go to state 77
-    NOTEQUAL      shift, and go to state 78
-    GREATER       shift, and go to state 79
-    GREATEREQUAL  shift, and go to state 80
-    LESS          shift, and go to state 81
-    LESSEQUAL     shift, and go to state 82
-    OR            shift, and go to state 83
-    AND           shift, and go to state 84
+    EQUAL         shift, and go to state 75
+    NOTEQUAL      shift, and go to state 76
+    GREATER       shift, and go to state 77
+    GREATEREQUAL  shift, and go to state 78
+    LESS          shift, and go to state 79
+    LESSEQUAL     shift, and go to state 80
+    OR            shift, and go to state 81
+    AND           shift, and go to state 82
 
     $default  reduce using rule 69 (expression)
 
 
-State 103
+State 102
 
-   67 expression: expression . PLUS expression
-   68           | expression . MINUS expression
-   69           | expression . TIMES expression
-   70           | expression . DIVIDE expression
-   70           | expression DIVIDE expression .
-   71           | expression . EQUAL expression
-   72           | expression . NOTEQUAL expression
-   73           | expression . GREATER expression
-   74           | expression . GREATEREQUAL expression
-   75           | expression . LESS expression
-   76           | expression . LESSEQUAL expression
-   78           | expression . OR expression
-   79           | expression . AND expression
+   66 expression: expression . PLUS expression
+   67           | expression . MINUS expression
+   68           | expression . TIMES expression
+   69           | expression . DIVIDE expression
+   70           | expression . EQUAL expression
+   70           | expression EQUAL expression .
+   71           | expression . NOTEQUAL expression
+   72           | expression . GREATER expression
+   73           | expression . GREATEREQUAL expression
+   74           | expression . LESS expression
+   75           | expression . LESSEQUAL expression
+   77           | expression . OR expression
+   78           | expression . AND expression
 
-    EQUAL         shift, and go to state 77
-    NOTEQUAL      shift, and go to state 78
-    GREATER       shift, and go to state 79
-    GREATEREQUAL  shift, and go to state 80
-    LESS          shift, and go to state 81
-    LESSEQUAL     shift, and go to state 82
-    OR            shift, and go to state 83
-    AND           shift, and go to state 84
+    OR   shift, and go to state 81
+    AND  shift, and go to state 82
 
     $default  reduce using rule 70 (expression)
 
 
-State 104
+State 103
 
-   67 expression: expression . PLUS expression
-   68           | expression . MINUS expression
-   69           | expression . TIMES expression
-   70           | expression . DIVIDE expression
-   71           | expression . EQUAL expression
-   71           | expression EQUAL expression .
-   72           | expression . NOTEQUAL expression
-   73           | expression . GREATER expression
-   74           | expression . GREATEREQUAL expression
-   75           | expression . LESS expression
-   76           | expression . LESSEQUAL expression
-   78           | expression . OR expression
-   79           | expression . AND expression
+   66 expression: expression . PLUS expression
+   67           | expression . MINUS expression
+   68           | expression . TIMES expression
+   69           | expression . DIVIDE expression
+   70           | expression . EQUAL expression
+   71           | expression . NOTEQUAL expression
+   71           | expression NOTEQUAL expression .
+   72           | expression . GREATER expression
+   73           | expression . GREATEREQUAL expression
+   74           | expression . LESS expression
+   75           | expression . LESSEQUAL expression
+   77           | expression . OR expression
+   78           | expression . AND expression
 
-    OR   shift, and go to state 83
-    AND  shift, and go to state 84
+    OR   shift, and go to state 81
+    AND  shift, and go to state 82
 
     $default  reduce using rule 71 (expression)
 
 
-State 105
+State 104
 
-   67 expression: expression . PLUS expression
-   68           | expression . MINUS expression
-   69           | expression . TIMES expression
-   70           | expression . DIVIDE expression
-   71           | expression . EQUAL expression
-   72           | expression . NOTEQUAL expression
-   72           | expression NOTEQUAL expression .
-   73           | expression . GREATER expression
-   74           | expression . GREATEREQUAL expression
-   75           | expression . LESS expression
-   76           | expression . LESSEQUAL expression
-   78           | expression . OR expression
-   79           | expression . AND expression
+   66 expression: expression . PLUS expression
+   67           | expression . MINUS expression
+   68           | expression . TIMES expression
+   69           | expression . DIVIDE expression
+   70           | expression . EQUAL expression
+   71           | expression . NOTEQUAL expression
+   72           | expression . GREATER expression
+   72           | expression GREATER expression .
+   73           | expression . GREATEREQUAL expression
+   74           | expression . LESS expression
+   75           | expression . LESSEQUAL expression
+   77           | expression . OR expression
+   78           | expression . AND expression
 
-    OR   shift, and go to state 83
-    AND  shift, and go to state 84
+    OR   shift, and go to state 81
+    AND  shift, and go to state 82
 
     $default  reduce using rule 72 (expression)
 
 
-State 106
+State 105
 
-   67 expression: expression . PLUS expression
-   68           | expression . MINUS expression
-   69           | expression . TIMES expression
-   70           | expression . DIVIDE expression
-   71           | expression . EQUAL expression
-   72           | expression . NOTEQUAL expression
-   73           | expression . GREATER expression
-   73           | expression GREATER expression .
-   74           | expression . GREATEREQUAL expression
-   75           | expression . LESS expression
-   76           | expression . LESSEQUAL expression
-   78           | expression . OR expression
-   79           | expression . AND expression
+   66 expression: expression . PLUS expression
+   67           | expression . MINUS expression
+   68           | expression . TIMES expression
+   69           | expression . DIVIDE expression
+   70           | expression . EQUAL expression
+   71           | expression . NOTEQUAL expression
+   72           | expression . GREATER expression
+   73           | expression . GREATEREQUAL expression
+   73           | expression GREATEREQUAL expression .
+   74           | expression . LESS expression
+   75           | expression . LESSEQUAL expression
+   77           | expression . OR expression
+   78           | expression . AND expression
 
-    OR   shift, and go to state 83
-    AND  shift, and go to state 84
+    OR   shift, and go to state 81
+    AND  shift, and go to state 82
 
     $default  reduce using rule 73 (expression)
 
 
-State 107
+State 106
 
-   67 expression: expression . PLUS expression
-   68           | expression . MINUS expression
-   69           | expression . TIMES expression
-   70           | expression . DIVIDE expression
-   71           | expression . EQUAL expression
-   72           | expression . NOTEQUAL expression
-   73           | expression . GREATER expression
-   74           | expression . GREATEREQUAL expression
-   74           | expression GREATEREQUAL expression .
-   75           | expression . LESS expression
-   76           | expression . LESSEQUAL expression
-   78           | expression . OR expression
-   79           | expression . AND expression
+   66 expression: expression . PLUS expression
+   67           | expression . MINUS expression
+   68           | expression . TIMES expression
+   69           | expression . DIVIDE expression
+   70           | expression . EQUAL expression
+   71           | expression . NOTEQUAL expression
+   72           | expression . GREATER expression
+   73           | expression . GREATEREQUAL expression
+   74           | expression . LESS expression
+   74           | expression LESS expression .
+   75           | expression . LESSEQUAL expression
+   77           | expression . OR expression
+   78           | expression . AND expression
 
-    OR   shift, and go to state 83
-    AND  shift, and go to state 84
+    OR   shift, and go to state 81
+    AND  shift, and go to state 82
 
     $default  reduce using rule 74 (expression)
 
 
-State 108
+State 107
 
-   67 expression: expression . PLUS expression
-   68           | expression . MINUS expression
-   69           | expression . TIMES expression
-   70           | expression . DIVIDE expression
-   71           | expression . EQUAL expression
-   72           | expression . NOTEQUAL expression
-   73           | expression . GREATER expression
-   74           | expression . GREATEREQUAL expression
-   75           | expression . LESS expression
-   75           | expression LESS expression .
-   76           | expression . LESSEQUAL expression
-   78           | expression . OR expression
-   79           | expression . AND expression
+   66 expression: expression . PLUS expression
+   67           | expression . MINUS expression
+   68           | expression . TIMES expression
+   69           | expression . DIVIDE expression
+   70           | expression . EQUAL expression
+   71           | expression . NOTEQUAL expression
+   72           | expression . GREATER expression
+   73           | expression . GREATEREQUAL expression
+   74           | expression . LESS expression
+   75           | expression . LESSEQUAL expression
+   75           | expression LESSEQUAL expression .
+   77           | expression . OR expression
+   78           | expression . AND expression
 
-    OR   shift, and go to state 83
-    AND  shift, and go to state 84
+    OR   shift, and go to state 81
+    AND  shift, and go to state 82
 
     $default  reduce using rule 75 (expression)
 
 
+State 108
+
+   66 expression: expression . PLUS expression
+   67           | expression . MINUS expression
+   68           | expression . TIMES expression
+   69           | expression . DIVIDE expression
+   70           | expression . EQUAL expression
+   71           | expression . NOTEQUAL expression
+   72           | expression . GREATER expression
+   73           | expression . GREATEREQUAL expression
+   74           | expression . LESS expression
+   75           | expression . LESSEQUAL expression
+   77           | expression . OR expression
+   77           | expression OR expression .
+   78           | expression . AND expression
+
+    AND  shift, and go to state 82
+
+    $default  reduce using rule 77 (expression)
+
+
 State 109
 
-   67 expression: expression . PLUS expression
-   68           | expression . MINUS expression
-   69           | expression . TIMES expression
-   70           | expression . DIVIDE expression
-   71           | expression . EQUAL expression
-   72           | expression . NOTEQUAL expression
-   73           | expression . GREATER expression
-   74           | expression . GREATEREQUAL expression
-   75           | expression . LESS expression
-   76           | expression . LESSEQUAL expression
-   76           | expression LESSEQUAL expression .
-   78           | expression . OR expression
-   79           | expression . AND expression
-
-    OR   shift, and go to state 83
-    AND  shift, and go to state 84
-
-    $default  reduce using rule 76 (expression)
-
-
-State 110
-
-   67 expression: expression . PLUS expression
-   68           | expression . MINUS expression
-   69           | expression . TIMES expression
-   70           | expression . DIVIDE expression
-   71           | expression . EQUAL expression
-   72           | expression . NOTEQUAL expression
-   73           | expression . GREATER expression
-   74           | expression . GREATEREQUAL expression
-   75           | expression . LESS expression
-   76           | expression . LESSEQUAL expression
-   78           | expression . OR expression
-   78           | expression OR expression .
-   79           | expression . AND expression
-
-    AND  shift, and go to state 84
+   66 expression: expression . PLUS expression
+   67           | expression . MINUS expression
+   68           | expression . TIMES expression
+   69           | expression . DIVIDE expression
+   70           | expression . EQUAL expression
+   71           | expression . NOTEQUAL expression
+   72           | expression . GREATER expression
+   73           | expression . GREATEREQUAL expression
+   74           | expression . LESS expression
+   75           | expression . LESSEQUAL expression
+   77           | expression . OR expression
+   78           | expression . AND expression
+   78           | expression AND expression .
 
     $default  reduce using rule 78 (expression)
 
 
-State 111
-
-   67 expression: expression . PLUS expression
-   68           | expression . MINUS expression
-   69           | expression . TIMES expression
-   70           | expression . DIVIDE expression
-   71           | expression . EQUAL expression
-   72           | expression . NOTEQUAL expression
-   73           | expression . GREATER expression
-   74           | expression . GREATEREQUAL expression
-   75           | expression . LESS expression
-   76           | expression . LESSEQUAL expression
-   78           | expression . OR expression
-   79           | expression . AND expression
-   79           | expression AND expression .
-
-    $default  reduce using rule 79 (expression)
-
-
-State 112
+State 110
 
    42 if_statement: IF LPAREN expression RPAREN . LBRACE statement_list RBRACE
    43             | IF LPAREN expression RPAREN . LBRACE statement_list RBRACE elif_statement_list
    44             | IF LPAREN expression RPAREN . LBRACE statement_list RBRACE else_statement
    45             | IF LPAREN expression RPAREN . LBRACE statement_list RBRACE elif_statement_list else_statement
 
-    LBRACE  shift, and go to state 125
+    LBRACE  shift, and go to state 123
+
+
+State 111
+
+   50 while_statement: WHILE LPAREN expression RPAREN . LBRACE statement_list RBRACE
+
+    LBRACE  shift, and go to state 124
+
+
+State 112
+
+   51 for_statement: FOR LPAREN for_init expression . SEMICOLON for_update RPAREN LBRACE statement_list RBRACE
+   66 expression: expression . PLUS expression
+   67           | expression . MINUS expression
+   68           | expression . TIMES expression
+   69           | expression . DIVIDE expression
+   70           | expression . EQUAL expression
+   71           | expression . NOTEQUAL expression
+   72           | expression . GREATER expression
+   73           | expression . GREATEREQUAL expression
+   74           | expression . LESS expression
+   75           | expression . LESSEQUAL expression
+   77           | expression . OR expression
+   78           | expression . AND expression
+
+    PLUS          shift, and go to state 70
+    MINUS         shift, and go to state 71
+    TIMES         shift, and go to state 72
+    DIVIDE        shift, and go to state 73
+    SEMICOLON     shift, and go to state 125
+    EQUAL         shift, and go to state 75
+    NOTEQUAL      shift, and go to state 76
+    GREATER       shift, and go to state 77
+    GREATEREQUAL  shift, and go to state 78
+    LESS          shift, and go to state 79
+    LESSEQUAL     shift, and go to state 80
+    OR            shift, and go to state 81
+    AND           shift, and go to state 82
 
 
 State 113
 
-   50 while_statement: WHILE LPAREN expression RPAREN . LBRACE statement_list RBRACE
+   56 do_statement: DO LBRACE statement_list RBRACE . WHILE LPAREN expression RPAREN SEMICOLON
 
-    LBRACE  shift, and go to state 126
+    WHILE  shift, and go to state 126
 
 
 State 114
-
-   51 for_statement: FOR LPAREN for_init expression . SEMICOLON for_update RPAREN LBRACE statement_list RBRACE
-   67 expression: expression . PLUS expression
-   68           | expression . MINUS expression
-   69           | expression . TIMES expression
-   70           | expression . DIVIDE expression
-   71           | expression . EQUAL expression
-   72           | expression . NOTEQUAL expression
-   73           | expression . GREATER expression
-   74           | expression . GREATEREQUAL expression
-   75           | expression . LESS expression
-   76           | expression . LESSEQUAL expression
-   78           | expression . OR expression
-   79           | expression . AND expression
-
-    PLUS          shift, and go to state 72
-    MINUS         shift, and go to state 73
-    TIMES         shift, and go to state 74
-    DIVIDE        shift, and go to state 75
-    SEMICOLON     shift, and go to state 127
-    EQUAL         shift, and go to state 77
-    NOTEQUAL      shift, and go to state 78
-    GREATER       shift, and go to state 79
-    GREATEREQUAL  shift, and go to state 80
-    LESS          shift, and go to state 81
-    LESSEQUAL     shift, and go to state 82
-    OR            shift, and go to state 83
-    AND           shift, and go to state 84
-
-
-State 115
-
-   56 do_statement: DO LBRACE statement_list RBRACE . WHILE LPAREN expression RPAREN SEMICOLON
-
-    WHILE  shift, and go to state 128
-
-
-State 116
 
    24 function_parameters: IDENTIFIER .
 
     $default  reduce using rule 24 (function_parameters)
 
 
-State 117
+State 115
 
    22 function_declaration: FUNCTION IDENTIFIER LPAREN function_parameters . RPAREN LBRACE statement_list RBRACE
    23 function_parameters: function_parameters . COMMA IDENTIFIER
 
-    RPAREN  shift, and go to state 129
-    COMMA   shift, and go to state 130
+    RPAREN  shift, and go to state 127
+    COMMA   shift, and go to state 128
 
 
-State 118
+State 116
 
    29 switch_statement: SWITCH LPAREN IDENTIFIER RPAREN . LBRACE switch_statement_details RBRACE
 
-    LBRACE  shift, and go to state 131
+    LBRACE  shift, and go to state 129
 
 
-State 119
+State 117
 
    38 enum_item: IDENTIFIER .
    39          | IDENTIFIER . ASSIGN expression
 
-    ASSIGN  shift, and go to state 132
+    ASSIGN  shift, and go to state 130
 
     $default  reduce using rule 38 (enum_item)
 
 
-State 120
+State 118
 
    35 enum_declaration: ENUM IDENTIFIER LBRACE enum_item_list . RBRACE SEMICOLON
    37 enum_item_list: enum_item_list . COMMA enum_item
 
-    COMMA   shift, and go to state 133
-    RBRACE  shift, and go to state 134
+    COMMA   shift, and go to state 131
+    RBRACE  shift, and go to state 132
 
 
-State 121
+State 119
 
    36 enum_item_list: enum_item .
 
     $default  reduce using rule 36 (enum_item_list)
 
 
-State 122
+State 120
 
    40 enum_assignment_statement: IDENTIFIER IDENTIFIER ASSIGN IDENTIFIER SEMICOLON .
 
     $default  reduce using rule 40 (enum_assignment_statement)
 
 
-State 123
+State 121
 
    25 function_call: IDENTIFIER LPAREN function_arguments RPAREN SEMICOLON .
 
     $default  reduce using rule 25 (function_call)
 
 
-State 124
+State 122
 
    26 function_arguments: function_arguments COMMA expression .
-   67 expression: expression . PLUS expression
-   68           | expression . MINUS expression
-   69           | expression . TIMES expression
-   70           | expression . DIVIDE expression
-   71           | expression . EQUAL expression
-   72           | expression . NOTEQUAL expression
-   73           | expression . GREATER expression
-   74           | expression . GREATEREQUAL expression
-   75           | expression . LESS expression
-   76           | expression . LESSEQUAL expression
-   78           | expression . OR expression
-   79           | expression . AND expression
+   66 expression: expression . PLUS expression
+   67           | expression . MINUS expression
+   68           | expression . TIMES expression
+   69           | expression . DIVIDE expression
+   70           | expression . EQUAL expression
+   71           | expression . NOTEQUAL expression
+   72           | expression . GREATER expression
+   73           | expression . GREATEREQUAL expression
+   74           | expression . LESS expression
+   75           | expression . LESSEQUAL expression
+   77           | expression . OR expression
+   78           | expression . AND expression
 
-    PLUS          shift, and go to state 72
-    MINUS         shift, and go to state 73
-    TIMES         shift, and go to state 74
-    DIVIDE        shift, and go to state 75
-    EQUAL         shift, and go to state 77
-    NOTEQUAL      shift, and go to state 78
-    GREATER       shift, and go to state 79
-    GREATEREQUAL  shift, and go to state 80
-    LESS          shift, and go to state 81
-    LESSEQUAL     shift, and go to state 82
-    OR            shift, and go to state 83
-    AND           shift, and go to state 84
+    PLUS          shift, and go to state 70
+    MINUS         shift, and go to state 71
+    TIMES         shift, and go to state 72
+    DIVIDE        shift, and go to state 73
+    EQUAL         shift, and go to state 75
+    NOTEQUAL      shift, and go to state 76
+    GREATER       shift, and go to state 77
+    GREATEREQUAL  shift, and go to state 78
+    LESS          shift, and go to state 79
+    LESSEQUAL     shift, and go to state 80
+    OR            shift, and go to state 81
+    AND           shift, and go to state 82
 
     $default  reduce using rule 26 (function_arguments)
 
 
-State 125
+State 123
 
    42 if_statement: IF LPAREN expression RPAREN LBRACE . statement_list RBRACE
    43             | IF LPAREN expression RPAREN LBRACE . statement_list RBRACE elif_statement_list
@@ -2016,7 +1962,7 @@ State 125
     SWITCH      shift, and go to state 13
     ENUM        shift, and go to state 14
 
-    statement_list             go to state 135
+    statement_list             go to state 133
     statement                  go to state 17
     assignment_statement       go to state 18
     function_declaration       go to state 19
@@ -2037,7 +1983,7 @@ State 125
     error_statement            go to state 34
 
 
-State 126
+State 124
 
    50 while_statement: WHILE LPAREN expression RPAREN LBRACE . statement_list RBRACE
 
@@ -2056,7 +2002,7 @@ State 126
     SWITCH      shift, and go to state 13
     ENUM        shift, and go to state 14
 
-    statement_list             go to state 136
+    statement_list             go to state 134
     statement                  go to state 17
     assignment_statement       go to state 18
     function_declaration       go to state 19
@@ -2077,51 +2023,51 @@ State 126
     error_statement            go to state 34
 
 
-State 127
+State 125
 
    51 for_statement: FOR LPAREN for_init expression SEMICOLON . for_update RPAREN LBRACE statement_list RBRACE
 
-    IDENTIFIER  shift, and go to state 56
-    SEMICOLON   shift, and go to state 137
+    IDENTIFIER  shift, and go to state 55
+    SEMICOLON   shift, and go to state 135
 
-    assignment_statement       go to state 138
+    assignment_statement       go to state 136
     enum_assignment_statement  go to state 25
-    for_update                 go to state 139
+    for_update                 go to state 137
+
+
+State 126
+
+   56 do_statement: DO LBRACE statement_list RBRACE WHILE . LPAREN expression RPAREN SEMICOLON
+
+    LPAREN  shift, and go to state 138
+
+
+State 127
+
+   22 function_declaration: FUNCTION IDENTIFIER LPAREN function_parameters RPAREN . LBRACE statement_list RBRACE
+
+    LBRACE  shift, and go to state 139
 
 
 State 128
 
-   56 do_statement: DO LBRACE statement_list RBRACE WHILE . LPAREN expression RPAREN SEMICOLON
+   23 function_parameters: function_parameters COMMA . IDENTIFIER
 
-    LPAREN  shift, and go to state 140
+    IDENTIFIER  shift, and go to state 140
 
 
 State 129
 
-   22 function_declaration: FUNCTION IDENTIFIER LPAREN function_parameters RPAREN . LBRACE statement_list RBRACE
+   29 switch_statement: SWITCH LPAREN IDENTIFIER RPAREN LBRACE . switch_statement_details RBRACE
 
-    LBRACE  shift, and go to state 141
+    CASE     shift, and go to state 141
+    DEFAULT  shift, and go to state 142
+
+    switch_statement_details  go to state 143
+    switch_case               go to state 144
 
 
 State 130
-
-   23 function_parameters: function_parameters COMMA . IDENTIFIER
-
-    IDENTIFIER  shift, and go to state 142
-
-
-State 131
-
-   29 switch_statement: SWITCH LPAREN IDENTIFIER RPAREN LBRACE . switch_statement_details RBRACE
-
-    CASE     shift, and go to state 143
-    DEFAULT  shift, and go to state 144
-
-    switch_statement_details  go to state 145
-    switch_case               go to state 146
-
-
-State 132
 
    39 enum_item: IDENTIFIER ASSIGN . expression
 
@@ -2133,27 +2079,26 @@ State 132
     NOT         shift, and go to state 43
     NILL        shift, and go to state 44
 
-    identifier_error  go to state 45
-    expression        go to state 147
+    expression  go to state 145
 
 
-State 133
+State 131
 
    37 enum_item_list: enum_item_list COMMA . enum_item
 
-    IDENTIFIER  shift, and go to state 119
+    IDENTIFIER  shift, and go to state 117
 
-    enum_item  go to state 148
+    enum_item  go to state 146
 
 
-State 134
+State 132
 
    35 enum_declaration: ENUM IDENTIFIER LBRACE enum_item_list RBRACE . SEMICOLON
 
-    SEMICOLON  shift, and go to state 149
+    SEMICOLON  shift, and go to state 147
 
 
-State 135
+State 133
 
     3 statement_list: statement_list . statement
    42 if_statement: IF LPAREN expression RPAREN LBRACE statement_list . RBRACE
@@ -2171,13 +2116,13 @@ State 135
     CONTINUE    shift, and go to state 8
     RETURN      shift, and go to state 9
     ERROR       shift, and go to state 10
-    RBRACE      shift, and go to state 150
+    RBRACE      shift, and go to state 148
     FUNCTION    shift, and go to state 11
     CONST       shift, and go to state 12
     SWITCH      shift, and go to state 13
     ENUM        shift, and go to state 14
 
-    statement                  go to state 61
+    statement                  go to state 60
     assignment_statement       go to state 18
     function_declaration       go to state 19
     function_call              go to state 20
@@ -2197,7 +2142,7 @@ State 135
     error_statement            go to state 34
 
 
-State 136
+State 134
 
     3 statement_list: statement_list . statement
    50 while_statement: WHILE LPAREN expression RPAREN LBRACE statement_list . RBRACE
@@ -2212,13 +2157,13 @@ State 136
     CONTINUE    shift, and go to state 8
     RETURN      shift, and go to state 9
     ERROR       shift, and go to state 10
-    RBRACE      shift, and go to state 151
+    RBRACE      shift, and go to state 149
     FUNCTION    shift, and go to state 11
     CONST       shift, and go to state 12
     SWITCH      shift, and go to state 13
     ENUM        shift, and go to state 14
 
-    statement                  go to state 61
+    statement                  go to state 60
     assignment_statement       go to state 18
     function_declaration       go to state 19
     function_call              go to state 20
@@ -2238,28 +2183,28 @@ State 136
     error_statement            go to state 34
 
 
-State 137
+State 135
 
    55 for_update: SEMICOLON .
 
     $default  reduce using rule 55 (for_update)
 
 
-State 138
+State 136
 
    54 for_update: assignment_statement .
 
     $default  reduce using rule 54 (for_update)
 
 
-State 139
+State 137
 
    51 for_statement: FOR LPAREN for_init expression SEMICOLON for_update . RPAREN LBRACE statement_list RBRACE
 
-    RPAREN  shift, and go to state 152
+    RPAREN  shift, and go to state 150
 
 
-State 140
+State 138
 
    56 do_statement: DO LBRACE statement_list RBRACE WHILE LPAREN . expression RPAREN SEMICOLON
 
@@ -2271,11 +2216,10 @@ State 140
     NOT         shift, and go to state 43
     NILL        shift, and go to state 44
 
-    identifier_error  go to state 45
-    expression        go to state 153
+    expression  go to state 151
 
 
-State 141
+State 139
 
    22 function_declaration: FUNCTION IDENTIFIER LPAREN function_parameters RPAREN LBRACE . statement_list RBRACE
 
@@ -2294,7 +2238,7 @@ State 141
     SWITCH      shift, and go to state 13
     ENUM        shift, and go to state 14
 
-    statement_list             go to state 154
+    statement_list             go to state 152
     statement                  go to state 17
     assignment_statement       go to state 18
     function_declaration       go to state 19
@@ -2315,14 +2259,14 @@ State 141
     error_statement            go to state 34
 
 
-State 142
+State 140
 
    23 function_parameters: function_parameters COMMA IDENTIFIER .
 
     $default  reduce using rule 23 (function_parameters)
 
 
-State 143
+State 141
 
    32 switch_case: CASE . expression COLON statement_list
 
@@ -2334,145 +2278,144 @@ State 143
     NOT         shift, and go to state 43
     NILL        shift, and go to state 44
 
-    identifier_error  go to state 45
-    expression        go to state 155
+    expression  go to state 153
 
 
-State 144
+State 142
 
    33 switch_case: DEFAULT . COLON statement_list
 
-    COLON  shift, and go to state 156
+    COLON  shift, and go to state 154
 
 
-State 145
+State 143
 
    29 switch_statement: SWITCH LPAREN IDENTIFIER RPAREN LBRACE switch_statement_details . RBRACE
    30 switch_statement_details: switch_statement_details . switch_case
 
-    RBRACE   shift, and go to state 157
-    CASE     shift, and go to state 143
-    DEFAULT  shift, and go to state 144
+    RBRACE   shift, and go to state 155
+    CASE     shift, and go to state 141
+    DEFAULT  shift, and go to state 142
 
-    switch_case  go to state 158
+    switch_case  go to state 156
 
 
-State 146
+State 144
 
    31 switch_statement_details: switch_case .
 
     $default  reduce using rule 31 (switch_statement_details)
 
 
-State 147
+State 145
 
    39 enum_item: IDENTIFIER ASSIGN expression .
-   67 expression: expression . PLUS expression
-   68           | expression . MINUS expression
-   69           | expression . TIMES expression
-   70           | expression . DIVIDE expression
-   71           | expression . EQUAL expression
-   72           | expression . NOTEQUAL expression
-   73           | expression . GREATER expression
-   74           | expression . GREATEREQUAL expression
-   75           | expression . LESS expression
-   76           | expression . LESSEQUAL expression
-   78           | expression . OR expression
-   79           | expression . AND expression
+   66 expression: expression . PLUS expression
+   67           | expression . MINUS expression
+   68           | expression . TIMES expression
+   69           | expression . DIVIDE expression
+   70           | expression . EQUAL expression
+   71           | expression . NOTEQUAL expression
+   72           | expression . GREATER expression
+   73           | expression . GREATEREQUAL expression
+   74           | expression . LESS expression
+   75           | expression . LESSEQUAL expression
+   77           | expression . OR expression
+   78           | expression . AND expression
 
-    PLUS          shift, and go to state 72
-    MINUS         shift, and go to state 73
-    TIMES         shift, and go to state 74
-    DIVIDE        shift, and go to state 75
-    EQUAL         shift, and go to state 77
-    NOTEQUAL      shift, and go to state 78
-    GREATER       shift, and go to state 79
-    GREATEREQUAL  shift, and go to state 80
-    LESS          shift, and go to state 81
-    LESSEQUAL     shift, and go to state 82
-    OR            shift, and go to state 83
-    AND           shift, and go to state 84
+    PLUS          shift, and go to state 70
+    MINUS         shift, and go to state 71
+    TIMES         shift, and go to state 72
+    DIVIDE        shift, and go to state 73
+    EQUAL         shift, and go to state 75
+    NOTEQUAL      shift, and go to state 76
+    GREATER       shift, and go to state 77
+    GREATEREQUAL  shift, and go to state 78
+    LESS          shift, and go to state 79
+    LESSEQUAL     shift, and go to state 80
+    OR            shift, and go to state 81
+    AND           shift, and go to state 82
 
     $default  reduce using rule 39 (enum_item)
 
 
-State 148
+State 146
 
    37 enum_item_list: enum_item_list COMMA enum_item .
 
     $default  reduce using rule 37 (enum_item_list)
 
 
-State 149
+State 147
 
    35 enum_declaration: ENUM IDENTIFIER LBRACE enum_item_list RBRACE SEMICOLON .
 
     $default  reduce using rule 35 (enum_declaration)
 
 
-State 150
+State 148
 
    42 if_statement: IF LPAREN expression RPAREN LBRACE statement_list RBRACE .
    43             | IF LPAREN expression RPAREN LBRACE statement_list RBRACE . elif_statement_list
    44             | IF LPAREN expression RPAREN LBRACE statement_list RBRACE . else_statement
    45             | IF LPAREN expression RPAREN LBRACE statement_list RBRACE . elif_statement_list else_statement
 
-    ELSE  shift, and go to state 159
-    ELIF  shift, and go to state 160
+    ELSE  shift, and go to state 157
+    ELIF  shift, and go to state 158
 
     $default  reduce using rule 42 (if_statement)
 
-    elif_statement_list  go to state 161
-    elif_statement       go to state 162
-    else_statement       go to state 163
+    elif_statement_list  go to state 159
+    elif_statement       go to state 160
+    else_statement       go to state 161
 
 
-State 151
+State 149
 
    50 while_statement: WHILE LPAREN expression RPAREN LBRACE statement_list RBRACE .
 
     $default  reduce using rule 50 (while_statement)
 
 
-State 152
+State 150
 
    51 for_statement: FOR LPAREN for_init expression SEMICOLON for_update RPAREN . LBRACE statement_list RBRACE
 
-    LBRACE  shift, and go to state 164
+    LBRACE  shift, and go to state 162
 
 
-State 153
+State 151
 
    56 do_statement: DO LBRACE statement_list RBRACE WHILE LPAREN expression . RPAREN SEMICOLON
-   67 expression: expression . PLUS expression
-   68           | expression . MINUS expression
-   69           | expression . TIMES expression
-   70           | expression . DIVIDE expression
-   71           | expression . EQUAL expression
-   72           | expression . NOTEQUAL expression
-   73           | expression . GREATER expression
-   74           | expression . GREATEREQUAL expression
-   75           | expression . LESS expression
-   76           | expression . LESSEQUAL expression
-   78           | expression . OR expression
-   79           | expression . AND expression
+   66 expression: expression . PLUS expression
+   67           | expression . MINUS expression
+   68           | expression . TIMES expression
+   69           | expression . DIVIDE expression
+   70           | expression . EQUAL expression
+   71           | expression . NOTEQUAL expression
+   72           | expression . GREATER expression
+   73           | expression . GREATEREQUAL expression
+   74           | expression . LESS expression
+   75           | expression . LESSEQUAL expression
+   77           | expression . OR expression
+   78           | expression . AND expression
 
-    PLUS          shift, and go to state 72
-    MINUS         shift, and go to state 73
-    TIMES         shift, and go to state 74
-    DIVIDE        shift, and go to state 75
-    RPAREN        shift, and go to state 165
-    EQUAL         shift, and go to state 77
-    NOTEQUAL      shift, and go to state 78
-    GREATER       shift, and go to state 79
-    GREATEREQUAL  shift, and go to state 80
-    LESS          shift, and go to state 81
-    LESSEQUAL     shift, and go to state 82
-    OR            shift, and go to state 83
-    AND           shift, and go to state 84
+    PLUS          shift, and go to state 70
+    MINUS         shift, and go to state 71
+    TIMES         shift, and go to state 72
+    DIVIDE        shift, and go to state 73
+    RPAREN        shift, and go to state 163
+    EQUAL         shift, and go to state 75
+    NOTEQUAL      shift, and go to state 76
+    GREATER       shift, and go to state 77
+    GREATEREQUAL  shift, and go to state 78
+    LESS          shift, and go to state 79
+    LESSEQUAL     shift, and go to state 80
+    OR            shift, and go to state 81
+    AND           shift, and go to state 82
 
 
-State 154
+State 152
 
     3 statement_list: statement_list . statement
    22 function_declaration: FUNCTION IDENTIFIER LPAREN function_parameters RPAREN LBRACE statement_list . RBRACE
@@ -2487,13 +2430,84 @@ State 154
     CONTINUE    shift, and go to state 8
     RETURN      shift, and go to state 9
     ERROR       shift, and go to state 10
-    RBRACE      shift, and go to state 166
+    RBRACE      shift, and go to state 164
     FUNCTION    shift, and go to state 11
     CONST       shift, and go to state 12
     SWITCH      shift, and go to state 13
     ENUM        shift, and go to state 14
 
-    statement                  go to state 61
+    statement                  go to state 60
+    assignment_statement       go to state 18
+    function_declaration       go to state 19
+    function_call              go to state 20
+    const_declaration          go to state 21
+    switch_statement           go to state 22
+    enum_declaration_list      go to state 23
+    enum_declaration           go to state 24
+    enum_assignment_statement  go to state 25
+    print_statement            go to state 26
+    if_statement               go to state 27
+    while_statement            go to state 28
+    for_statement              go to state 29
+    do_statement               go to state 30
+    break_statement            go to state 31
+    continue_statement         go to state 32
+    return_statement           go to state 33
+    error_statement            go to state 34
+
+
+State 153
+
+   32 switch_case: CASE expression . COLON statement_list
+   66 expression: expression . PLUS expression
+   67           | expression . MINUS expression
+   68           | expression . TIMES expression
+   69           | expression . DIVIDE expression
+   70           | expression . EQUAL expression
+   71           | expression . NOTEQUAL expression
+   72           | expression . GREATER expression
+   73           | expression . GREATEREQUAL expression
+   74           | expression . LESS expression
+   75           | expression . LESSEQUAL expression
+   77           | expression . OR expression
+   78           | expression . AND expression
+
+    PLUS          shift, and go to state 70
+    MINUS         shift, and go to state 71
+    TIMES         shift, and go to state 72
+    DIVIDE        shift, and go to state 73
+    EQUAL         shift, and go to state 75
+    NOTEQUAL      shift, and go to state 76
+    GREATER       shift, and go to state 77
+    GREATEREQUAL  shift, and go to state 78
+    LESS          shift, and go to state 79
+    LESSEQUAL     shift, and go to state 80
+    OR            shift, and go to state 81
+    AND           shift, and go to state 82
+    COLON         shift, and go to state 165
+
+
+State 154
+
+   33 switch_case: DEFAULT COLON . statement_list
+
+    IDENTIFIER  shift, and go to state 1
+    PRINT       shift, and go to state 2
+    IF          shift, and go to state 3
+    WHILE       shift, and go to state 4
+    FOR         shift, and go to state 5
+    DO          shift, and go to state 6
+    BREAK       shift, and go to state 7
+    CONTINUE    shift, and go to state 8
+    RETURN      shift, and go to state 9
+    ERROR       shift, and go to state 10
+    FUNCTION    shift, and go to state 11
+    CONST       shift, and go to state 12
+    SWITCH      shift, and go to state 13
+    ENUM        shift, and go to state 14
+
+    statement_list             go to state 166
+    statement                  go to state 17
     assignment_statement       go to state 18
     function_declaration       go to state 19
     function_call              go to state 20
@@ -2515,38 +2529,64 @@ State 154
 
 State 155
 
-   32 switch_case: CASE expression . COLON statement_list
-   67 expression: expression . PLUS expression
-   68           | expression . MINUS expression
-   69           | expression . TIMES expression
-   70           | expression . DIVIDE expression
-   71           | expression . EQUAL expression
-   72           | expression . NOTEQUAL expression
-   73           | expression . GREATER expression
-   74           | expression . GREATEREQUAL expression
-   75           | expression . LESS expression
-   76           | expression . LESSEQUAL expression
-   78           | expression . OR expression
-   79           | expression . AND expression
+   29 switch_statement: SWITCH LPAREN IDENTIFIER RPAREN LBRACE switch_statement_details RBRACE .
 
-    PLUS          shift, and go to state 72
-    MINUS         shift, and go to state 73
-    TIMES         shift, and go to state 74
-    DIVIDE        shift, and go to state 75
-    EQUAL         shift, and go to state 77
-    NOTEQUAL      shift, and go to state 78
-    GREATER       shift, and go to state 79
-    GREATEREQUAL  shift, and go to state 80
-    LESS          shift, and go to state 81
-    LESSEQUAL     shift, and go to state 82
-    OR            shift, and go to state 83
-    AND           shift, and go to state 84
-    COLON         shift, and go to state 167
+    $default  reduce using rule 29 (switch_statement)
 
 
 State 156
 
-   33 switch_case: DEFAULT COLON . statement_list
+   30 switch_statement_details: switch_statement_details switch_case .
+
+    $default  reduce using rule 30 (switch_statement_details)
+
+
+State 157
+
+   49 else_statement: ELSE . LBRACE statement_list RBRACE
+
+    LBRACE  shift, and go to state 167
+
+
+State 158
+
+   48 elif_statement: ELIF . LPAREN expression RPAREN LBRACE statement_list RBRACE
+
+    LPAREN  shift, and go to state 168
+
+
+State 159
+
+   43 if_statement: IF LPAREN expression RPAREN LBRACE statement_list RBRACE elif_statement_list .
+   45             | IF LPAREN expression RPAREN LBRACE statement_list RBRACE elif_statement_list . else_statement
+   46 elif_statement_list: elif_statement_list . elif_statement
+
+    ELSE  shift, and go to state 157
+    ELIF  shift, and go to state 158
+
+    $default  reduce using rule 43 (if_statement)
+
+    elif_statement  go to state 169
+    else_statement  go to state 170
+
+
+State 160
+
+   47 elif_statement_list: elif_statement .
+
+    $default  reduce using rule 47 (elif_statement_list)
+
+
+State 161
+
+   44 if_statement: IF LPAREN expression RPAREN LBRACE statement_list RBRACE else_statement .
+
+    $default  reduce using rule 44 (if_statement)
+
+
+State 162
+
+   51 for_statement: FOR LPAREN for_init expression SEMICOLON for_update RPAREN LBRACE . statement_list RBRACE
 
     IDENTIFIER  shift, and go to state 1
     PRINT       shift, and go to state 2
@@ -2563,7 +2603,7 @@ State 156
     SWITCH      shift, and go to state 13
     ENUM        shift, and go to state 14
 
-    statement_list             go to state 168
+    statement_list             go to state 171
     statement                  go to state 17
     assignment_statement       go to state 18
     function_declaration       go to state 19
@@ -2584,66 +2624,23 @@ State 156
     error_statement            go to state 34
 
 
-State 157
-
-   29 switch_statement: SWITCH LPAREN IDENTIFIER RPAREN LBRACE switch_statement_details RBRACE .
-
-    $default  reduce using rule 29 (switch_statement)
-
-
-State 158
-
-   30 switch_statement_details: switch_statement_details switch_case .
-
-    $default  reduce using rule 30 (switch_statement_details)
-
-
-State 159
-
-   49 else_statement: ELSE . LBRACE statement_list RBRACE
-
-    LBRACE  shift, and go to state 169
-
-
-State 160
-
-   48 elif_statement: ELIF . LPAREN expression RPAREN LBRACE statement_list RBRACE
-
-    LPAREN  shift, and go to state 170
-
-
-State 161
-
-   43 if_statement: IF LPAREN expression RPAREN LBRACE statement_list RBRACE elif_statement_list .
-   45             | IF LPAREN expression RPAREN LBRACE statement_list RBRACE elif_statement_list . else_statement
-   46 elif_statement_list: elif_statement_list . elif_statement
-
-    ELSE  shift, and go to state 159
-    ELIF  shift, and go to state 160
-
-    $default  reduce using rule 43 (if_statement)
-
-    elif_statement  go to state 171
-    else_statement  go to state 172
-
-
-State 162
-
-   47 elif_statement_list: elif_statement .
-
-    $default  reduce using rule 47 (elif_statement_list)
-
-
 State 163
 
-   44 if_statement: IF LPAREN expression RPAREN LBRACE statement_list RBRACE else_statement .
+   56 do_statement: DO LBRACE statement_list RBRACE WHILE LPAREN expression RPAREN . SEMICOLON
 
-    $default  reduce using rule 44 (if_statement)
+    SEMICOLON  shift, and go to state 172
 
 
 State 164
 
-   51 for_statement: FOR LPAREN for_init expression SEMICOLON for_update RPAREN LBRACE . statement_list RBRACE
+   22 function_declaration: FUNCTION IDENTIFIER LPAREN function_parameters RPAREN LBRACE statement_list RBRACE .
+
+    $default  reduce using rule 22 (function_declaration)
+
+
+State 165
+
+   32 switch_case: CASE expression COLON . statement_list
 
     IDENTIFIER  shift, and go to state 1
     PRINT       shift, and go to state 2
@@ -2681,23 +2678,10 @@ State 164
     error_statement            go to state 34
 
 
-State 165
-
-   56 do_statement: DO LBRACE statement_list RBRACE WHILE LPAREN expression RPAREN . SEMICOLON
-
-    SEMICOLON  shift, and go to state 174
-
-
 State 166
 
-   22 function_declaration: FUNCTION IDENTIFIER LPAREN function_parameters RPAREN LBRACE statement_list RBRACE .
-
-    $default  reduce using rule 22 (function_declaration)
-
-
-State 167
-
-   32 switch_case: CASE expression COLON . statement_list
+    3 statement_list: statement_list . statement
+   33 switch_case: DEFAULT COLON statement_list .
 
     IDENTIFIER  shift, and go to state 1
     PRINT       shift, and go to state 2
@@ -2714,7 +2698,48 @@ State 167
     SWITCH      shift, and go to state 13
     ENUM        shift, and go to state 14
 
-    statement_list             go to state 175
+    $default  reduce using rule 33 (switch_case)
+
+    statement                  go to state 60
+    assignment_statement       go to state 18
+    function_declaration       go to state 19
+    function_call              go to state 20
+    const_declaration          go to state 21
+    switch_statement           go to state 22
+    enum_declaration_list      go to state 23
+    enum_declaration           go to state 24
+    enum_assignment_statement  go to state 25
+    print_statement            go to state 26
+    if_statement               go to state 27
+    while_statement            go to state 28
+    for_statement              go to state 29
+    do_statement               go to state 30
+    break_statement            go to state 31
+    continue_statement         go to state 32
+    return_statement           go to state 33
+    error_statement            go to state 34
+
+
+State 167
+
+   49 else_statement: ELSE LBRACE . statement_list RBRACE
+
+    IDENTIFIER  shift, and go to state 1
+    PRINT       shift, and go to state 2
+    IF          shift, and go to state 3
+    WHILE       shift, and go to state 4
+    FOR         shift, and go to state 5
+    DO          shift, and go to state 6
+    BREAK       shift, and go to state 7
+    CONTINUE    shift, and go to state 8
+    RETURN      shift, and go to state 9
+    ERROR       shift, and go to state 10
+    FUNCTION    shift, and go to state 11
+    CONST       shift, and go to state 12
+    SWITCH      shift, and go to state 13
+    ENUM        shift, and go to state 14
+
+    statement_list             go to state 174
     statement                  go to state 17
     assignment_statement       go to state 18
     function_declaration       go to state 19
@@ -2737,88 +2762,6 @@ State 167
 
 State 168
 
-    3 statement_list: statement_list . statement
-   33 switch_case: DEFAULT COLON statement_list .
-
-    IDENTIFIER  shift, and go to state 1
-    PRINT       shift, and go to state 2
-    IF          shift, and go to state 3
-    WHILE       shift, and go to state 4
-    FOR         shift, and go to state 5
-    DO          shift, and go to state 6
-    BREAK       shift, and go to state 7
-    CONTINUE    shift, and go to state 8
-    RETURN      shift, and go to state 9
-    ERROR       shift, and go to state 10
-    FUNCTION    shift, and go to state 11
-    CONST       shift, and go to state 12
-    SWITCH      shift, and go to state 13
-    ENUM        shift, and go to state 14
-
-    $default  reduce using rule 33 (switch_case)
-
-    statement                  go to state 61
-    assignment_statement       go to state 18
-    function_declaration       go to state 19
-    function_call              go to state 20
-    const_declaration          go to state 21
-    switch_statement           go to state 22
-    enum_declaration_list      go to state 23
-    enum_declaration           go to state 24
-    enum_assignment_statement  go to state 25
-    print_statement            go to state 26
-    if_statement               go to state 27
-    while_statement            go to state 28
-    for_statement              go to state 29
-    do_statement               go to state 30
-    break_statement            go to state 31
-    continue_statement         go to state 32
-    return_statement           go to state 33
-    error_statement            go to state 34
-
-
-State 169
-
-   49 else_statement: ELSE LBRACE . statement_list RBRACE
-
-    IDENTIFIER  shift, and go to state 1
-    PRINT       shift, and go to state 2
-    IF          shift, and go to state 3
-    WHILE       shift, and go to state 4
-    FOR         shift, and go to state 5
-    DO          shift, and go to state 6
-    BREAK       shift, and go to state 7
-    CONTINUE    shift, and go to state 8
-    RETURN      shift, and go to state 9
-    ERROR       shift, and go to state 10
-    FUNCTION    shift, and go to state 11
-    CONST       shift, and go to state 12
-    SWITCH      shift, and go to state 13
-    ENUM        shift, and go to state 14
-
-    statement_list             go to state 176
-    statement                  go to state 17
-    assignment_statement       go to state 18
-    function_declaration       go to state 19
-    function_call              go to state 20
-    const_declaration          go to state 21
-    switch_statement           go to state 22
-    enum_declaration_list      go to state 23
-    enum_declaration           go to state 24
-    enum_assignment_statement  go to state 25
-    print_statement            go to state 26
-    if_statement               go to state 27
-    while_statement            go to state 28
-    for_statement              go to state 29
-    do_statement               go to state 30
-    break_statement            go to state 31
-    continue_statement         go to state 32
-    return_statement           go to state 33
-    error_statement            go to state 34
-
-
-State 170
-
    48 elif_statement: ELIF LPAREN . expression RPAREN LBRACE statement_list RBRACE
 
     IDENTIFIER  shift, and go to state 38
@@ -2829,25 +2772,24 @@ State 170
     NOT         shift, and go to state 43
     NILL        shift, and go to state 44
 
-    identifier_error  go to state 45
-    expression        go to state 177
+    expression  go to state 175
 
 
-State 171
+State 169
 
    46 elif_statement_list: elif_statement_list elif_statement .
 
     $default  reduce using rule 46 (elif_statement_list)
 
 
-State 172
+State 170
 
    45 if_statement: IF LPAREN expression RPAREN LBRACE statement_list RBRACE elif_statement_list else_statement .
 
     $default  reduce using rule 45 (if_statement)
 
 
-State 173
+State 171
 
     3 statement_list: statement_list . statement
    51 for_statement: FOR LPAREN for_init expression SEMICOLON for_update RPAREN LBRACE statement_list . RBRACE
@@ -2862,13 +2804,13 @@ State 173
     CONTINUE    shift, and go to state 8
     RETURN      shift, and go to state 9
     ERROR       shift, and go to state 10
-    RBRACE      shift, and go to state 178
+    RBRACE      shift, and go to state 176
     FUNCTION    shift, and go to state 11
     CONST       shift, and go to state 12
     SWITCH      shift, and go to state 13
     ENUM        shift, and go to state 14
 
-    statement                  go to state 61
+    statement                  go to state 60
     assignment_statement       go to state 18
     function_declaration       go to state 19
     function_call              go to state 20
@@ -2888,14 +2830,14 @@ State 173
     error_statement            go to state 34
 
 
-State 174
+State 172
 
    56 do_statement: DO LBRACE statement_list RBRACE WHILE LPAREN expression RPAREN SEMICOLON .
 
     $default  reduce using rule 56 (do_statement)
 
 
-State 175
+State 173
 
     3 statement_list: statement_list . statement
    32 switch_case: CASE expression COLON statement_list .
@@ -2917,7 +2859,7 @@ State 175
 
     $default  reduce using rule 32 (switch_case)
 
-    statement                  go to state 61
+    statement                  go to state 60
     assignment_statement       go to state 18
     function_declaration       go to state 19
     function_call              go to state 20
@@ -2937,7 +2879,7 @@ State 175
     error_statement            go to state 34
 
 
-State 176
+State 174
 
     3 statement_list: statement_list . statement
    49 else_statement: ELSE LBRACE statement_list . RBRACE
@@ -2952,13 +2894,13 @@ State 176
     CONTINUE    shift, and go to state 8
     RETURN      shift, and go to state 9
     ERROR       shift, and go to state 10
-    RBRACE      shift, and go to state 179
+    RBRACE      shift, and go to state 177
     FUNCTION    shift, and go to state 11
     CONST       shift, and go to state 12
     SWITCH      shift, and go to state 13
     ENUM        shift, and go to state 14
 
-    statement                  go to state 61
+    statement                  go to state 60
     assignment_statement       go to state 18
     function_declaration       go to state 19
     function_call              go to state 20
@@ -2978,59 +2920,59 @@ State 176
     error_statement            go to state 34
 
 
-State 177
+State 175
 
    48 elif_statement: ELIF LPAREN expression . RPAREN LBRACE statement_list RBRACE
-   67 expression: expression . PLUS expression
-   68           | expression . MINUS expression
-   69           | expression . TIMES expression
-   70           | expression . DIVIDE expression
-   71           | expression . EQUAL expression
-   72           | expression . NOTEQUAL expression
-   73           | expression . GREATER expression
-   74           | expression . GREATEREQUAL expression
-   75           | expression . LESS expression
-   76           | expression . LESSEQUAL expression
-   78           | expression . OR expression
-   79           | expression . AND expression
+   66 expression: expression . PLUS expression
+   67           | expression . MINUS expression
+   68           | expression . TIMES expression
+   69           | expression . DIVIDE expression
+   70           | expression . EQUAL expression
+   71           | expression . NOTEQUAL expression
+   72           | expression . GREATER expression
+   73           | expression . GREATEREQUAL expression
+   74           | expression . LESS expression
+   75           | expression . LESSEQUAL expression
+   77           | expression . OR expression
+   78           | expression . AND expression
 
-    PLUS          shift, and go to state 72
-    MINUS         shift, and go to state 73
-    TIMES         shift, and go to state 74
-    DIVIDE        shift, and go to state 75
-    RPAREN        shift, and go to state 180
-    EQUAL         shift, and go to state 77
-    NOTEQUAL      shift, and go to state 78
-    GREATER       shift, and go to state 79
-    GREATEREQUAL  shift, and go to state 80
-    LESS          shift, and go to state 81
-    LESSEQUAL     shift, and go to state 82
-    OR            shift, and go to state 83
-    AND           shift, and go to state 84
+    PLUS          shift, and go to state 70
+    MINUS         shift, and go to state 71
+    TIMES         shift, and go to state 72
+    DIVIDE        shift, and go to state 73
+    RPAREN        shift, and go to state 178
+    EQUAL         shift, and go to state 75
+    NOTEQUAL      shift, and go to state 76
+    GREATER       shift, and go to state 77
+    GREATEREQUAL  shift, and go to state 78
+    LESS          shift, and go to state 79
+    LESSEQUAL     shift, and go to state 80
+    OR            shift, and go to state 81
+    AND           shift, and go to state 82
 
 
-State 178
+State 176
 
    51 for_statement: FOR LPAREN for_init expression SEMICOLON for_update RPAREN LBRACE statement_list RBRACE .
 
     $default  reduce using rule 51 (for_statement)
 
 
-State 179
+State 177
 
    49 else_statement: ELSE LBRACE statement_list RBRACE .
 
     $default  reduce using rule 49 (else_statement)
 
 
-State 180
+State 178
 
    48 elif_statement: ELIF LPAREN expression RPAREN . LBRACE statement_list RBRACE
 
-    LBRACE  shift, and go to state 181
+    LBRACE  shift, and go to state 179
 
 
-State 181
+State 179
 
    48 elif_statement: ELIF LPAREN expression RPAREN LBRACE . statement_list RBRACE
 
@@ -3049,7 +2991,7 @@ State 181
     SWITCH      shift, and go to state 13
     ENUM        shift, and go to state 14
 
-    statement_list             go to state 182
+    statement_list             go to state 180
     statement                  go to state 17
     assignment_statement       go to state 18
     function_declaration       go to state 19
@@ -3070,7 +3012,7 @@ State 181
     error_statement            go to state 34
 
 
-State 182
+State 180
 
     3 statement_list: statement_list . statement
    48 elif_statement: ELIF LPAREN expression RPAREN LBRACE statement_list . RBRACE
@@ -3085,13 +3027,13 @@ State 182
     CONTINUE    shift, and go to state 8
     RETURN      shift, and go to state 9
     ERROR       shift, and go to state 10
-    RBRACE      shift, and go to state 183
+    RBRACE      shift, and go to state 181
     FUNCTION    shift, and go to state 11
     CONST       shift, and go to state 12
     SWITCH      shift, and go to state 13
     ENUM        shift, and go to state 14
 
-    statement                  go to state 61
+    statement                  go to state 60
     assignment_statement       go to state 18
     function_declaration       go to state 19
     function_call              go to state 20
@@ -3111,7 +3053,7 @@ State 182
     error_statement            go to state 34
 
 
-State 183
+State 181
 
    48 elif_statement: ELIF LPAREN expression RPAREN LBRACE statement_list RBRACE .
 

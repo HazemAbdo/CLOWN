@@ -22,7 +22,7 @@ extern char* yytext;
 %token ASSIGN PLUS MINUS TIMES DIVIDE LPAREN RPAREN SEMICOLON
 %token EQUAL NOTEQUAL GREATER GREATEREQUAL LESS LESSEQUAL COMMA LBRACE RBRACE FUNCTION CONST
 %token OR AND NOT
-%token SWITCH CASE COLON DEFAULT
+%token SWITCH CASE COLON DEFAULT ELIF ENUM NILL
 
 %left PLUS MINUS
 %left TIMES DIVIDE
@@ -59,10 +59,12 @@ statement : assignment_statement
           | function_call
           | const_declaration
           | switch_statement
+          | enum_declaration_list
          ;
 
 assignment_statement : IDENTIFIER ASSIGN expression SEMICOLON
                     | IDENTIFIER ASSIGN function_call
+                    | enum_assignment_statement
                       ;
 
 function_declaration : FUNCTION IDENTIFIER LPAREN function_parameters RPAREN LBRACE statement_list RBRACE
@@ -94,12 +96,41 @@ switch_case: CASE expression COLON statement_list
               | DEFAULT COLON statement_list
               ;
 
+enum_declaration_list : enum_declaration
+                      ;
+
+enum_declaration : ENUM IDENTIFIER LBRACE enum_item_list RBRACE SEMICOLON
+                  ;
+
+enum_item_list : enum_item
+               | enum_item_list COMMA enum_item
+               ;
+
+enum_item : IDENTIFIER
+          | IDENTIFIER ASSIGN expression
+          ;
+
+enum_assignment_statement: IDENTIFIER IDENTIFIER ASSIGN IDENTIFIER SEMICOLON
+                         ;
+
 print_statement : PRINT expression SEMICOLON 
                 ;
 
 if_statement : IF LPAREN expression RPAREN LBRACE statement_list RBRACE %prec ELSE
-             | IF LPAREN expression RPAREN LBRACE statement_list RBRACE ELSE LBRACE statement_list RBRACE
+             | IF LPAREN expression RPAREN LBRACE statement_list RBRACE elif_statement_list %prec ELSE
+             | IF LPAREN expression RPAREN LBRACE statement_list RBRACE else_statement %prec ELSE
+             | IF LPAREN expression RPAREN LBRACE statement_list RBRACE elif_statement_list else_statement %prec ELSE
              ;
+
+elif_statement_list : elif_statement_list elif_statement
+                    | elif_statement
+                    ;
+
+elif_statement : ELIF LPAREN expression RPAREN LBRACE statement_list RBRACE
+               ;
+
+else_statement : ELSE LBRACE statement_list RBRACE
+               ;
 
 while_statement : WHILE LPAREN expression RPAREN LBRACE statement_list RBRACE
                  ;
@@ -133,6 +164,7 @@ error_statement : ERROR SEMICOLON
 expression : INTEGER
            | STRING
            | IDENTIFIER
+           | NILL
            | LPAREN expression RPAREN             %prec UMINUS
            | expression PLUS expression           %prec PLUS
            | expression MINUS expression          %prec MINUS
