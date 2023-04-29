@@ -1,0 +1,6 @@
+draft.y
+*.h
+*.c
+*.output
+*.txt
+parser

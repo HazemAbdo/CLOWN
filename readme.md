@@ -1,4 +1,11 @@
+# CLOWN
+
+### Programming doesn't have to be a joke - unless it's CLOWN
+
 # Run The code (Ubuntu)
+
+- remove extern int yydebug; to simple.y if any
+- remove yydebug = 1; to main function in simple.y if any
 
 ```
 flex -l -d simple.lex
@@ -7,257 +14,187 @@ gcc -o parser simple.tab.c simple.tab.h lex.yy.c -lfl
 ./parser < code.clown
 ```
 
-sample code.clown
+# Run The code with debug (Ubuntu)
+
+- add extern int yydebug; to simple.y
+- add yydebug = 1; to main function in simple.y
 
 ```
-switch(x){
-    case 1:
-        print("x is 1");
-        break;
-    case 2:
-        print("x is 2");
-        break;
-    default:
-        print("x is neither 1 nor 2");
-        break;
+flex -l -d simple.lex
+bison -l -d -v simple.y
+gcc -o parser -DYYDEBUG simple.tab.c simple.tab.h lex.yy.c -lfl
+```
+
+## Keywords
+
+```
+"print", "if", "else", "elif", "while", "for", "do", "break", "continue", "return", "=", "==", "!=", ">", ">=", "<", "<=", "+", "-", "*", "/", "^", "%", "||", "&&", "!", "(", ")", "{", "}", ";", "function", "const", "switch", "case", "default", "enum", "NULL", ":", ","
+```
+
+## Syntax
+
+### print
+
+```
+print ("Hello World");
+print(a);
+print(a+b);
+print(1+2+3);
+```
+
+### if elif else
+
+```
+if (a == 1) {
+    print("a is 1");
+} elif (a == 2) {
+    print("a is 2");
+} else {
+    print("a is not 1 or 2");
 }
+```
 
-if(x == 1){
-    y = 10;
-    print("x is 1");
-}else{
-    print("x is neither 1 nor 2");
+### while
+
+```
+while (a < 10) {
+    print(a);
+    a = a + 1;
 }
+```
 
+### for loop
 
-for(i = 0; i < 10; i=i+1;){
+```
+for (i = 0; i < 10; i = i + 1) {
     print(i);
 }
-```
-
-expected output
 
 ```
---(end of buffer or a NUL)
---accepting rule at line 81 ("switch")
---accepting rule at line 74 ("(")
---accepting rule at line 88 ("x")
---accepting rule at line 75 (")")
---accepting rule at line 76 ("{")
---accepting rule at line 86 ("
-")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 82 ("case")
---accepting rule at line 86 (" ")
---accepting rule at line 89 ("1")
---accepting rule at line 84 (":")
---accepting rule at line 86 ("
-")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 51 ("print")
---accepting rule at line 74 ("(")
---accepting rule at line 87 (""x is 1"")
---accepting rule at line 75 (")")
---accepting rule at line 78 (";")
---accepting rule at line 86 ("
-")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 57 ("break")
---accepting rule at line 78 (";")
---accepting rule at line 86 ("
-")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 82 ("case")
---accepting rule at line 86 (" ")
---accepting rule at line 89 ("2")
---accepting rule at line 84 (":")
---accepting rule at line 86 ("
-")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 51 ("print")
---accepting rule at line 74 ("(")
---accepting rule at line 87 (""x is 2"")
---accepting rule at line 75 (")")
---accepting rule at line 78 (";")
---accepting rule at line 86 ("
-")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 57 ("break")
---accepting rule at line 78 (";")
---accepting rule at line 86 ("
-")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 83 ("default")
---accepting rule at line 84 (":")
---accepting rule at line 86 ("
-")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 51 ("print")
---accepting rule at line 74 ("(")
---accepting rule at line 87 (""x is neither 1 nor 2"")
---accepting rule at line 75 (")")
---accepting rule at line 78 (";")
---accepting rule at line 86 ("
-")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 57 ("break")
---accepting rule at line 78 (";")
---accepting rule at line 86 ("
-")
---accepting rule at line 77 ("}")
---accepting rule at line 86 ("
-")
---accepting rule at line 86 ("
-")
---accepting rule at line 52 ("if")
---accepting rule at line 74 ("(")
---accepting rule at line 88 ("x")
---accepting rule at line 86 (" ")
---accepting rule at line 61 ("==")
---accepting rule at line 86 (" ")
---accepting rule at line 89 ("1")
---accepting rule at line 75 (")")
---accepting rule at line 76 ("{")
---accepting rule at line 86 ("
-")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 88 ("y")
---accepting rule at line 86 (" ")
---accepting rule at line 60 ("=")
---accepting rule at line 86 (" ")
---accepting rule at line 89 ("10")
---accepting rule at line 78 (";")
---accepting rule at line 86 ("
-")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 51 ("print")
---accepting rule at line 74 ("(")
---accepting rule at line 87 (""x is 1"")
---accepting rule at line 75 (")")
---accepting rule at line 78 (";")
---accepting rule at line 86 ("
-")
---accepting rule at line 77 ("}")
---accepting rule at line 53 ("else")
---accepting rule at line 76 ("{")
---accepting rule at line 86 ("
-")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 51 ("print")
---accepting rule at line 74 ("(")
---accepting rule at line 87 (""x is neither 1 nor 2"")
---accepting rule at line 75 (")")
---accepting rule at line 78 (";")
---accepting rule at line 86 ("
-")
---accepting rule at line 77 ("}")
---accepting rule at line 86 ("
-")
---accepting rule at line 86 ("
-")
---accepting rule at line 86 ("
-")
---accepting rule at line 55 ("for")
---accepting rule at line 74 ("(")
---accepting rule at line 88 ("i")
---accepting rule at line 86 (" ")
---accepting rule at line 60 ("=")
---accepting rule at line 86 (" ")
---accepting rule at line 89 ("0")
---accepting rule at line 78 (";")
---accepting rule at line 86 (" ")
---accepting rule at line 88 ("i")
---accepting rule at line 86 (" ")
---accepting rule at line 65 ("<")
---accepting rule at line 86 (" ")
---accepting rule at line 89 ("10")
---accepting rule at line 78 (";")
---accepting rule at line 86 (" ")
---accepting rule at line 88 ("i")
---accepting rule at line 60 ("=")
---accepting rule at line 88 ("i")
---accepting rule at line 67 ("+")
---accepting rule at line 89 ("1")
---accepting rule at line 78 (";")
---accepting rule at line 75 (")")
---accepting rule at line 76 ("{")
---accepting rule at line 86 ("
-")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 86 (" ")
---accepting rule at line 51 ("print")
---accepting rule at line 74 ("(")
---accepting rule at line 88 ("i")
---accepting rule at line 75 (")")
---accepting rule at line 78 (";")
---accepting rule at line 86 ("
-")
---accepting rule at line 77 ("}")
---(end of buffer or a NUL)
---EOF (start condition 0)
-Parsing successful!
+
+### do while
+
+```
+do {
+    print(a);
+    a = a + 1;
+} while (a < 10);
+```
+
+### break
+
+```
+while (a < 10) {
+    print(a);
+    a = a + 1;
+    if (a == 5) {
+        break;
+    }
+}
+```
+
+### continue
+
+```
+while (a < 10) {
+    a = a + 1;
+    if (a == 5) {
+        continue;
+    }
+    print(a);
+}
+```
+
+### return
+
+```
+function add(a, b) {
+    return a + b;
+}
+```
+
+### function call
+
+```
+z = add(1, 2);
+add(1, 2);
+```
+
+### const
+
+```
+const a = 1;
+```
+
+### switch case
+
+```
+switch (a) {
+    case 1:
+        print("a is 1");
+        break;
+    case 2:
+        print("a is 2");
+        break;
+    default:
+        print("a is not 1 or 2");
+        break;
+}
+```
+
+### enum
+
+```
+enum Color {
+    RED,
+    GREEN,
+    BLUE = 5
+};
+```
+
+### enum usage
+
+```
+Color color = RED;
+```
+
+### NULL
+
+```
+a = NULL;
+return NULL;
+```
+
+### comments
+
+```
+/* This is a comment */
+```
+
+### Mathematical operations
+
+```
+a = 1 + 2;
+b = 1 - 2;
+c = 1 * 2;
+d = 1 / 2;
+e = 1 ^ 2;
+f = 1 % 2;
+z = (a + b) * ((c - d))^e;
+```
+
+### Logical operations
+
+```
+a = 5 > 2;
+b = 5 >= 2;
+c = 5 < 2;
+d = 5 <= 2;
+e = 5 == 2;
+f = 5 != 2;
+g = a && b;
+h = a || b;
+i = !a;
 ```
 
 ## Language Grammar
@@ -374,86 +311,4 @@ expression : INTEGER
            | expression AND expression            %prec AND
            | MINUS expression                     %prec UMINUS
            ;
-```
-
-## Syntax Examples
-
-### Assignment
-
-```
-x = 1;
-```
-
-### Print
-
-```
-print("Hello World!");
-```
-
-### If
-
-```
-if (x == 1) {
-    print("x is 1");
-}else {
-    print("x is neither 1 nor 2");
-}
-```
-
-### While
-
-```
-while (x < 10) {
-    print(x);
-    x = x + 1;
-}
-```
-
-### For
-
-```
-for (i = 0; i < 10; i = i + 1;) {
-    print(i);
-}
-```
-
-### Do
-
-```
-do {
-    print(i);
-    i = i + 1;
-} while (i < 10);
-```
-
-### Break
-
-```
-while (x < 10) {
-    print(x);
-    x = x + 1;
-    if (x == 5) {
-        break;
-    }
-}
-```
-
-### Continue
-
-```
-while (x < 10) {
-    print(x);
-    x = x + 1;
-    if (x == 5) {
-        continue;
-    }
-}
-```
-
-### Return
-
-```
-function foo(a) {
-    return 1;
-}
 ```

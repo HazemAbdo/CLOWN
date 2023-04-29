@@ -22,10 +22,10 @@ extern char* yytext;
 %token ASSIGN PLUS MINUS TIMES DIVIDE LPAREN RPAREN SEMICOLON
 %token EQUAL NOTEQUAL GREATER GREATEREQUAL LESS LESSEQUAL COMMA LBRACE RBRACE FUNCTION CONST
 %token OR AND NOT
-%token SWITCH CASE COLON DEFAULT ELIF ENUM NILL
+%token SWITCH CASE COLON DEFAULT ELIF ENUM NILL POWER MOD
 
 %left PLUS MINUS
-%left TIMES DIVIDE
+%left TIMES DIVIDE MOD POWER
 %left EQUAL NOTEQUAL GREATER GREATEREQUAL LESS LESSEQUAL
 %right ASSIGN
 %left OR
@@ -33,12 +33,11 @@ extern char* yytext;
 %right NOT
 %nonassoc UMINUS
 
-
 %start program
 
 %%
 
-program : statement_list
+program : statement_list 
         ;
 
 statement_list : statement
@@ -56,14 +55,13 @@ statement : assignment_statement
           | return_statement
           | error_statement
           | function_declaration
-          | function_call
+          | function_call SEMICOLON
           | const_declaration
           | switch_statement
           | enum_declaration_list
          ;
 
-assignment_statement : IDENTIFIER ASSIGN expression SEMICOLON
-                    | IDENTIFIER ASSIGN function_call
+assignment_statement :IDENTIFIER ASSIGN expression SEMICOLON
                     | enum_assignment_statement
                       ;
 
@@ -72,13 +70,15 @@ function_declaration : FUNCTION IDENTIFIER LPAREN function_parameters RPAREN LBR
 
 function_parameters : function_parameters COMMA IDENTIFIER
                     | IDENTIFIER
+                    | /* empty */
                     ;
 
-function_call : IDENTIFIER LPAREN function_arguments RPAREN SEMICOLON
+function_call : IDENTIFIER LPAREN function_arguments RPAREN
                 ;
 
 function_arguments : function_arguments COMMA expression
                    | expression
+                   | /* empty */
                    ;
 
 
@@ -156,20 +156,25 @@ continue_statement : CONTINUE SEMICOLON
                    ;
 
 return_statement : RETURN expression SEMICOLON
+                 | RETURN SEMICOLON
                  ;
 
 error_statement : ERROR SEMICOLON
                 ;
 
+
 expression : INTEGER
            | STRING
            | IDENTIFIER
            | NILL
+           | function_call
            | LPAREN expression RPAREN             %prec UMINUS
            | expression PLUS expression           %prec PLUS
            | expression MINUS expression          %prec MINUS
+           | expression POWER expression          %prec POWER
            | expression TIMES expression          %prec TIMES
            | expression DIVIDE expression         %prec DIVIDE
+           | expression MOD expression            %prec MOD
            | expression EQUAL expression          %prec EQUAL
            | expression NOTEQUAL expression       %prec EQUAL
            | expression GREATER expression        %prec GREATER
@@ -187,6 +192,8 @@ void yyerror(char *s) {
     fprintf(stderr, "Syntax error in line %d: %s\n", yylineno, s);
     exit(EXIT_FAILURE);
 }
+
+
 
 int main() {
 

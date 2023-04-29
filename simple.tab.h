@@ -91,7 +91,9 @@ extern int yydebug;
     ELIF = 297,
     ENUM = 298,
     NILL = 299,
-    UMINUS = 300
+    POWER = 300,
+    MOD = 301,
+    UMINUS = 302
   };
 #endif
 

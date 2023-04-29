@@ -1,6 +1,5 @@
 %{
 #include <stdio.h>
-
 // Define the token codes as integer constants
  enum yytokentype
   {
@@ -46,7 +45,9 @@
     ELIF = 297,
     ENUM = 298,
     NILL  = 299,
-    UMINUS = 300
+    POWER = 300,
+    MOD = 301,
+    UMINUS = 302
   };
 %}
 
@@ -72,6 +73,8 @@
 "-"         { return MINUS; }
 "*"         { return TIMES; }
 "/"         { return DIVIDE; }
+"^"         { return POWER; }
+"%"        { return MOD; }
 "||"        { return OR; }
 "&&"        { return AND; }
 "!"         { return NOT; }
@@ -90,6 +93,7 @@
 ":"         {return COLON;}
 ","         { return COMMA; }
 [ \t\n]     ; /* ignore whitespace */
+[/][*][^*]*[*]+([^*/][^*]*[*]+)*[/] ; /* ignore comments */
 \"[^"]*\"   { return STRING; }
 [a-zA-Z][a-zA-Z0-9]* { return IDENTIFIER; }
 [0-9]+      { return INTEGER; }
