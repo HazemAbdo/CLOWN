@@ -6,48 +6,51 @@
     IDENTIFIER = 258,
     STRING = 259,
     INTEGER = 260,
-    PRINT = 261,
-    IF = 262,
-    ELSE = 263,
-    WHILE = 264,
-    FOR = 265,
-    DO = 266,
-    BREAK = 267,
-    CONTINUE = 268,
-    RETURN = 269,
-    ERROR = 270,
-    ASSIGN = 271,
-    PLUS = 272,
-    MINUS = 273,
-    TIMES = 274,
-    DIVIDE = 275,
-    LPAREN = 276,
-    RPAREN = 277,
-    SEMICOLON = 278,
-    EQUAL = 279,
-    NOTEQUAL = 280,
-    GREATER = 281,
-    GREATEREQUAL = 282,
-    LESS = 283,
-    LESSEQUAL = 284,
-    COMMA = 285,
-    LBRACE = 286,
-    RBRACE = 287,
-    FUNCTION = 288,
-    CONST = 289,
-    OR = 290,
-    AND = 291,
-    NOT = 292,
-    SWITCH = 293,
-    CASE = 294,
-    COLON = 295,
-    DEFAULT = 296,
-    ELIF = 297,
-    ENUM = 298,
-    NILL  = 299,
-    POWER = 300,
-    MOD = 301,
-    UMINUS = 302
+    FLOAT = 261,
+    TRUE = 262,
+    FALSE = 263,
+    PRINT = 264,
+    IF = 265,
+    ELSE = 266,
+    WHILE = 267,
+    FOR = 268,
+    DO = 269,
+    BREAK = 270,
+    CONTINUE = 271,
+    RETURN = 272,
+    ERROR = 273,
+    ASSIGN = 274,
+    PLUS = 275,
+    MINUS = 276,
+    TIMES = 277,
+    DIVIDE = 278,
+    LPAREN = 279,
+    RPAREN = 280,
+    SEMICOLON = 281,
+    EQUAL = 282,
+    NOTEQUAL = 283,
+    GREATER = 284,
+    GREATEREQUAL = 285,
+    LESS = 286,
+    LESSEQUAL = 287,
+    COMMA = 288,
+    LBRACE = 289,
+    RBRACE = 290,
+    FUNCTION = 291,
+    CONST = 292,
+    OR = 293,
+    AND = 294,
+    NOT = 295,
+    SWITCH = 296,
+    CASE = 297,
+    COLON = 298,
+    DEFAULT = 299,
+    ELIF = 300,
+    ENUM = 301,
+    NILL = 302,
+    POWER = 303,
+    MOD = 304,
+    UMINUS = 305
   };
 %}
 
@@ -90,12 +93,15 @@
 "default"   {return DEFAULT;}
 "enum"     {return ENUM;}
 "NULL"     {return NILL;}
+"true"     {return TRUE;}
+"false"    {return FALSE;}
 ":"         {return COLON;}
 ","         { return COMMA; }
 [ \t\n]     ; /* ignore whitespace */
 [/][*][^*]*[*]+([^*/][^*]*[*]+)*[/] ; /* ignore comments */
 \"[^"]*\"   { return STRING; }
 [a-zA-Z][a-zA-Z0-9]* { return IDENTIFIER; }
+[0-9]*\.[0-9]+ { return FLOAT; }
 [0-9]+      { return INTEGER; }
 .           { return ERROR; }
 %%

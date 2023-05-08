@@ -8,30 +8,35 @@ extern int yylex();
 extern int yyparse();
 extern int yylineno;
 extern char* yytext;
-
+extern int yydebug;
 %}
 
 %union {
     int ival;
+    float fval;
     char *sval;
+    int *bval;
 }
 
 %token <sval> IDENTIFIER STRING
 %token <ival> INTEGER
+%token <fval> FLOAT
+%token <bval> TRUE FALSE
 %token PRINT IF ELSE WHILE FOR DO BREAK CONTINUE RETURN ERROR
 %token ASSIGN PLUS MINUS TIMES DIVIDE LPAREN RPAREN SEMICOLON
 %token EQUAL NOTEQUAL GREATER GREATEREQUAL LESS LESSEQUAL COMMA LBRACE RBRACE FUNCTION CONST
 %token OR AND NOT
-%token SWITCH CASE COLON DEFAULT ELIF ENUM NILL POWER MOD
+%token SWITCH CASE COLON DEFAULT ELIF ENUM NILL POWER MOD UMINUS
 
+%nonassoc UMINUS
+%left POWER
+%left TIMES DIVIDE MOD
 %left PLUS MINUS
-%left TIMES DIVIDE MOD POWER
 %left EQUAL NOTEQUAL GREATER GREATEREQUAL LESS LESSEQUAL
 %right ASSIGN
+%right NOT
 %left OR
 %left AND
-%right NOT
-%nonassoc UMINUS
 
 %start program
 
@@ -133,9 +138,11 @@ else_statement : ELSE LBRACE statement_list RBRACE
                ;
 
 while_statement : WHILE LPAREN expression RPAREN LBRACE statement_list RBRACE
+                | WHILE LPAREN expression RPAREN LBRACE  RBRACE 
                  ;
 
 for_statement : FOR LPAREN for_init  expression SEMICOLON for_update RPAREN LBRACE statement_list RBRACE
+              | FOR LPAREN for_init  expression SEMICOLON for_update RPAREN LBRACE  RBRACE
               ;
 
 for_init : assignment_statement
@@ -147,6 +154,7 @@ for_update : assignment_statement
            ;
 
 do_statement : DO LBRACE statement_list RBRACE WHILE LPAREN expression RPAREN SEMICOLON
+             | DO LBRACE  RBRACE WHILE LPAREN expression RPAREN SEMICOLON
              ;
 
 break_statement : BREAK SEMICOLON
@@ -164,6 +172,9 @@ error_statement : ERROR SEMICOLON
 
 
 expression : INTEGER
+           | FLOAT
+           | TRUE
+           | FALSE
            | STRING
            | IDENTIFIER
            | NILL
@@ -196,10 +207,7 @@ void yyerror(char *s) {
 
 
 int main() {
-
-    
-
-    // yyparse returns 0 if parsing was successful 
+    yydebug = 1;
     int res = yyparse();
     if (res != 0) {
         fprintf(stderr, "Parsing failed!\n");

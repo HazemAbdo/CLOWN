@@ -20,10 +20,16 @@ for (i = 0; i < 10; i = i + 1;) {
     print(i);
 }
 
+for (i = 0; i < 10; i = i + 1;) {
+}
+
 
 do {
     print(a);
     a = a + 1;
+} while (a < 10);
+
+do {
 } while (a < 10);
 
 
@@ -41,6 +47,8 @@ while (a < 10) {
         continue;
     }
     print(a);
+}
+while (a < 10) {
 }
 
 const z = 1;
@@ -91,3 +99,5 @@ f = 5 != 2;
 g = a && b;
 h = a || b;
 i = !a;
+
+print "10";

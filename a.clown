@@ -1,0 +1,10 @@
+a = 1.5*3.4*.5*0.1;
+B = true;
+c = 1&&true&&false;
+if(true){
+    print 1;
+}
+
+while(false){
+    print 2;
+}
