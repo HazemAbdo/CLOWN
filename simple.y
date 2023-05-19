@@ -40,7 +40,7 @@ extern char* yytext;
 
 %%
 
-program : statement_list { freeSymbolTable(); }
+program : statement_list { writeSymbolTable(); freeSymbolTable(); }
         ;
 
 statement_list : statement
@@ -64,11 +64,12 @@ statement : assignment_statement
           | enum_declaration_list
           ;
 
-assignment_statement : IDENTIFIER ASSIGN expression SEMICOLON { addSymbolEntry($1, IDENTIFIER); }
+assignment_statement : IDENTIFIER SEMICOLON { addSymbolEntry($1, IDENTIFIER, 0); }
+                     | IDENTIFIER ASSIGN expression SEMICOLON { addSymbolEntry($1, IDENTIFIER, 1); }
                      | enum_assignment_statement
                      ;
 
-function_declaration : FUNCTION IDENTIFIER LPAREN function_parameters RPAREN LBRACE statement_list RBRACE
+function_declaration : FUNCTION IDENTIFIER LPAREN function_parameters RPAREN LBRACE statement_list RBRACE { addSymbolEntry($2, FUNCTION, 0); }
                      ;
 
 function_parameters : function_parameters COMMA IDENTIFIER
@@ -210,7 +211,6 @@ int main() {
         fprintf(stderr, "Parsing failed!\n");
         exit(EXIT_FAILURE);
     }
-    writeSymbolTableToFile();
     printf("Parsing successful!\n");
     return 0;
 }
