@@ -3,12 +3,55 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Structure to represent a symbol entry
+typedef struct {
+    char* name;
+    // Add any additional fields you need to store symbol information
+} SymbolEntry;
+
+// Function to add a symbol entry to the symbol table
+void addSymbolEntry(char* name) {
+    // Check if the name is null
+    if (name == NULL) {
+        fprintf(stderr, "Name is null.\n");
+        return;
+    }
+
+    // Create a new symbol entry
+    SymbolEntry* entry = (SymbolEntry*)malloc(sizeof(SymbolEntry));
+    if (entry == NULL) {
+        fprintf(stderr, "Failed to allocate memory for symbol entry.\n");
+        return;
+    }
+
+    // Initialize the fields of the symbol entry
+    entry->name = strdup(name);  // Make a copy of the name string
+
+    // Print the added symbol entry (for demonstration purposes)
+    printf("Added symbol: %s\n", entry->name);
+}
+
+// Function to free the symbol table and its entries
+void freeSymbolTable(SymbolEntry** symbolTable, int size) {
+    if (symbolTable == NULL) {
+        return;
+    }
+
+    for (int i = 0; i < size; i++) {
+        SymbolEntry* entry = symbolTable[i];
+        free(entry->name);
+        free(entry);
+    }
+
+    free(symbolTable);
+}
+
 void yyerror(char *s);
 extern int yylex();
 extern int yyparse();
 extern int yylineno;
 extern char* yytext;
-extern int yydebug;
+
 %}
 
 %union {
@@ -64,11 +107,11 @@ statement : assignment_statement
           | const_declaration
           | switch_statement
           | enum_declaration_list
-         ;
+          ;
 
-assignment_statement :IDENTIFIER ASSIGN expression SEMICOLON
-                    | enum_assignment_statement
-                      ;
+assignment_statement : IDENTIFIER ASSIGN expression SEMICOLON { addSymbolEntry($1); }
+                     | enum_assignment_statement
+                     ;
 
 function_declaration : FUNCTION IDENTIFIER LPAREN function_parameters RPAREN LBRACE statement_list RBRACE
                    ;
@@ -207,7 +250,6 @@ void yyerror(char *s) {
 
 
 int main() {
-    yydebug = 1;
     int res = yyparse();
     if (res != 0) {
         fprintf(stderr, "Parsing failed!\n");

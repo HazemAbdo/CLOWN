@@ -1,6 +1,4 @@
-draft.y
-*.h
-*.c
-*.output
-*.txt
-parser
+.vscode/
+
+build/*
+!build/.gitkeep
