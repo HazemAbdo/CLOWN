@@ -4,11 +4,7 @@ LEXER_OUTPUT ?= lex
 PARSER_OUTPUT ?= parser
 BIN_OUTPUT ?= clown
 
-N ?= 1
 INPUT_FILE ?= code.clown
-OUTPUT_FILE ?= outputs/output$(N).txt
-
-# .PHONY: all lex parse build
 
 all: lex parse build
 
@@ -19,7 +15,7 @@ lex: $(LEXER_INPUT)
 	flex -l -d -obuild/$(LEXER_OUTPUT).yy.c $(LEXER_INPUT)
 
 build: build/$(LEXER_OUTPUT).yy.c build/$(PARSER_OUTPUT).tab.c
-	gcc build/$(PARSER_OUTPUT).tab.c build/$(LEXER_OUTPUT).yy.c -I. -Llib -lfl -o build/$(BIN_OUTPUT)
+	g++ build/$(PARSER_OUTPUT).tab.c build/$(LEXER_OUTPUT).yy.c -I. -Llib -lfl -o build/$(BIN_OUTPUT)
 
 run: build $(INPUT_FILE)
 	build/$(BIN_OUTPUT) < $(INPUT_FILE)

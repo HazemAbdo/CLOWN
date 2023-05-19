@@ -1,50 +1,5 @@
 %{
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-// Structure to represent a symbol entry
-typedef struct {
-    char* name;
-    // Add any additional fields you need to store symbol information
-} SymbolEntry;
-
-// Function to add a symbol entry to the symbol table
-void addSymbolEntry(char* name) {
-    // Check if the name is null
-    if (name == NULL) {
-        fprintf(stderr, "Name is null.\n");
-        return;
-    }
-
-    // Create a new symbol entry
-    SymbolEntry* entry = (SymbolEntry*)malloc(sizeof(SymbolEntry));
-    if (entry == NULL) {
-        fprintf(stderr, "Failed to allocate memory for symbol entry.\n");
-        return;
-    }
-
-    // Initialize the fields of the symbol entry
-    entry->name = strdup(name);  // Make a copy of the name string
-
-    // Print the added symbol entry (for demonstration purposes)
-    printf("Added symbol: %s\n", entry->name);
-}
-
-// Function to free the symbol table and its entries
-void freeSymbolTable(SymbolEntry** symbolTable, int size) {
-    if (symbolTable == NULL) {
-        return;
-    }
-
-    for (int i = 0; i < size; i++) {
-        SymbolEntry* entry = symbolTable[i];
-        free(entry->name);
-        free(entry);
-    }
-
-    free(symbolTable);
-}
+#include "test.h"
 
 void yyerror(char *s);
 extern int yylex();
@@ -109,12 +64,12 @@ statement : assignment_statement
           | enum_declaration_list
           ;
 
-assignment_statement : IDENTIFIER ASSIGN expression SEMICOLON { addSymbolEntry($1); }
+assignment_statement : IDENTIFIER ASSIGN expression SEMICOLON { addSymbolEntry($1, IDENTIFIER); }
                      | enum_assignment_statement
                      ;
 
 function_declaration : FUNCTION IDENTIFIER LPAREN function_parameters RPAREN LBRACE statement_list RBRACE
-                   ;
+                     ;
 
 function_parameters : function_parameters COMMA IDENTIFIER
                     | IDENTIFIER
@@ -122,7 +77,7 @@ function_parameters : function_parameters COMMA IDENTIFIER
                     ;
 
 function_call : IDENTIFIER LPAREN function_arguments RPAREN
-                ;
+              ;
 
 function_arguments : function_arguments COMMA expression
                    | expression
@@ -130,17 +85,17 @@ function_arguments : function_arguments COMMA expression
                    ;
 
 
-const_declaration: CONST assignment_statement
+const_declaration : CONST assignment_statement
+                  ;
+
+switch_statement : SWITCH LPAREN IDENTIFIER RPAREN LBRACE switch_statement_details RBRACE
                  ;
 
-switch_statement: SWITCH LPAREN IDENTIFIER RPAREN LBRACE switch_statement_details RBRACE
-                ;
+switch_statement_details : switch_statement_details switch_case
+                         | switch_case
+                         ;
 
-switch_statement_details: switch_statement_details switch_case
-                        | switch_case
-                        ;
-
-switch_case: CASE expression COLON statement_list
+switch_case   : CASE expression COLON statement_list
               | DEFAULT COLON statement_list
               ;
 
@@ -148,7 +103,7 @@ enum_declaration_list : enum_declaration
                       ;
 
 enum_declaration : ENUM IDENTIFIER LBRACE enum_item_list RBRACE SEMICOLON
-                  ;
+                 ;
 
 enum_item_list : enum_item
                | enum_item_list COMMA enum_item
@@ -158,8 +113,8 @@ enum_item : IDENTIFIER
           | IDENTIFIER ASSIGN expression
           ;
 
-enum_assignment_statement: IDENTIFIER IDENTIFIER ASSIGN IDENTIFIER SEMICOLON
-                         ;
+enum_assignment_statement : IDENTIFIER IDENTIFIER ASSIGN IDENTIFIER SEMICOLON
+                          ;
 
 print_statement : PRINT expression SEMICOLON 
                 ;
@@ -182,7 +137,7 @@ else_statement : ELSE LBRACE statement_list RBRACE
 
 while_statement : WHILE LPAREN expression RPAREN LBRACE statement_list RBRACE
                 | WHILE LPAREN expression RPAREN LBRACE  RBRACE 
-                 ;
+                ;
 
 for_statement : FOR LPAREN for_init  expression SEMICOLON for_update RPAREN LBRACE statement_list RBRACE
               | FOR LPAREN for_init  expression SEMICOLON for_update RPAREN LBRACE  RBRACE
