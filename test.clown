@@ -1,6 +1,12 @@
 ahmed = 100;
 x;
 
-function add(x, y) {
-    return x + y;
+if (ahmed == 100) {
+    y = 4;
+    x = 1 + y;
+} else {
+    z = 5;
+    x = 2 + z;
 }
+
+print(x);

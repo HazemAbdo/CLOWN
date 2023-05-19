@@ -39,6 +39,11 @@
 ";"         { return SEMICOLON; }
 "function"  { return FUNCTION; }
 "const"     {return CONST;}
+"int"       {return TYPE_INT;}
+"float"     {return TYPE_FLOAT;}
+"bool"      {return TYPE_BOOL;}
+"char"      {return TYPE_CHAR;}
+"string"    {return TYPE_STRING;}
 "switch"    {return SWITCH;}
 "case"      {return CASE;}
 "default"   {return DEFAULT;}

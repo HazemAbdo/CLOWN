@@ -9,15 +9,18 @@ using std::map;
 using std::string;
 using std::vector;
 
+static int scope = 0;
+
 /* Structure to represent a symbol entry in the table */
 typedef struct SymbolEntry
 {
+    int dataType;
     char *name;
     int symbolType;
     int scope;
     bool used;
     bool initialized;
-    SymbolEntry(char *name, int symbolType, int scope, bool initialized)
+    SymbolEntry(int dataType, char *name, int symbolType, int scope, bool initialized)
     {
         this->name = name;
         this->symbolType = symbolType;
@@ -27,10 +30,10 @@ typedef struct SymbolEntry
     }
 } SymbolEntry;
 
-static vector<map<string, SymbolEntry *>> symbolTable(1, map<string, SymbolEntry *>());
+static map<string, SymbolEntry *> symbolTable;
 
 // Function to add a symbol entry to the symbol table
-void addSymbolEntry(char *name, int symbolType, int isInitialized)
+void addSymbolEntry(int dataType, char *name, int symbolType, int isInitialized)
 {
     // Check if the name is null
     if (name == NULL)
@@ -39,28 +42,26 @@ void addSymbolEntry(char *name, int symbolType, int isInitialized)
         return;
     }
 
+    // Check if the name already exists in the current scope
+    if (symbolTable.find(name) != symbolTable.end() && symbolTable[name]->scope == scope)
+    {
+        return;
+    }
+
     // Create a new symbol entry by using the constructor
-    SymbolEntry *entry = new SymbolEntry(name, symbolType, 0, (bool)isInitialized);
+    SymbolEntry *entry = new SymbolEntry(name, symbolType, scope, (bool)isInitialized);
 
     // Add the symbol entry to the symbol table
-    map<string, SymbolEntry *> newSymbolEntry;
-    newSymbolEntry[name] = entry;
-    symbolTable.push_back(newSymbolEntry);
+    symbolTable[name] = entry;
 }
 
 // Function to free the memory allocated to the symbol table
 void freeSymbolTable()
 {
-    // Iterate over all the symbol entries in the symbol table
-    for (int i = 0; i < symbolTable.size(); i++)
+    for (auto it = symbolTable.begin(); it != symbolTable.end(); it++)
     {
-        // Iterate over all the entries in the current symbol entry
-        for (map<string, SymbolEntry *>::iterator it = symbolTable[i].begin(); it != symbolTable[i].end(); it++)
-        {
-            // Free the memory allocated to the symbol entry
-            free(it->second->name);
-            free(it->second);
-        }
+        free(it->second->name);
+        free(it->second);
     }
 }
 
@@ -78,14 +79,13 @@ void writeSymbolTable(char *filename = "outputs/symbol_table.txt")
     fprintf(fp, "Name,SymbolType,Scope,Used,Initialized\n");
 
     // Iterate over all the symbol entries in the symbol table
-    for (int i = 0; i < symbolTable.size(); i++)
+    for (auto it = symbolTable.begin(); it != symbolTable.end(); it++)
     {
-        // Iterate over all the entries in the current symbol entry
-        for (map<string, SymbolEntry *>::iterator it = symbolTable[i].begin(); it != symbolTable[i].end(); it++)
-        {
-            // Write the symbol entry to the file
-            fprintf(fp, "%s,%d,%d,%d,%d\n", it->second->name, it->second->symbolType, it->second->scope, it->second->used, it->second->initialized);
-        }
+        // Get the symbol entry
+        SymbolEntry *entry = it->second;
+
+        // Write the symbol entry to the file
+        fprintf(fp, "%s,%d,%d,%d,%d\n", entry->name, entry->symbolType, entry->scope, entry->used, entry->initialized);
     }
 
     // Close the file

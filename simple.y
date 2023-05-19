@@ -1,7 +1,9 @@
 %{
+# include <stdarg.h>
 #include "test.h"
 
 void yyerror(char *s);
+extern int scope;
 extern int yylex();
 extern int yyparse();
 extern int yylineno;
@@ -64,16 +66,18 @@ statement : assignment_statement
           | enum_declaration_list
           ;
 
-assignment_statement : IDENTIFIER SEMICOLON { addSymbolEntry($1, IDENTIFIER, 0); }
-                     | IDENTIFIER ASSIGN expression SEMICOLON { addSymbolEntry($1, IDENTIFIER, 1); }
+assignment_statement : data_type IDENTIFIER SEMICOLON { addSymbolEntry($1, $2, IDENTIFIER, 0); }
+                     | data_type IDENTIFIER ASSIGN expression SEMICOLON { addSymbolEntry($1, $2, IDENTIFIER, 1); }
+                     | IDENTIFIER ASSIGN expression SEMICOLON
+                     | IDENTIFIER SEMICOLON
                      | enum_assignment_statement
                      ;
 
 function_declaration : FUNCTION IDENTIFIER LPAREN function_parameters RPAREN LBRACE statement_list RBRACE { addSymbolEntry($2, FUNCTION, 0); }
                      ;
 
-function_parameters : function_parameters COMMA IDENTIFIER
-                    | IDENTIFIER
+function_parameters : function_parameters COMMA IDENTIFIER { addSymbolEntry($3, IDENTIFIER, 0); }
+                    | IDENTIFIER { addSymbolEntry($1, IDENTIFIER, 0); }
                     | /* empty */
                     ;
 
@@ -85,8 +89,7 @@ function_arguments : function_arguments COMMA expression
                    | /* empty */
                    ;
 
-
-const_declaration : CONST assignment_statement
+const_declaration : CONST data_type assignment_statement { addSymbolEntry($2, $3, CONST, 1); }
                   ;
 
 switch_statement : SWITCH LPAREN IDENTIFIER RPAREN LBRACE switch_statement_details RBRACE
@@ -120,10 +123,10 @@ enum_assignment_statement : IDENTIFIER IDENTIFIER ASSIGN IDENTIFIER SEMICOLON
 print_statement : PRINT expression SEMICOLON 
                 ;
 
-if_statement : IF LPAREN expression RPAREN LBRACE statement_list RBRACE %prec ELSE
-             | IF LPAREN expression RPAREN LBRACE statement_list RBRACE elif_statement_list %prec ELSE
-             | IF LPAREN expression RPAREN LBRACE statement_list RBRACE else_statement %prec ELSE
-             | IF LPAREN expression RPAREN LBRACE statement_list RBRACE elif_statement_list else_statement %prec ELSE
+if_statement : IF LPAREN expression RPAREN LBRACE statement_list RBRACE %prec ELSE { scope++; }
+             | IF LPAREN expression RPAREN LBRACE statement_list RBRACE elif_statement_list %prec ELSE { scope++; }
+             | IF LPAREN expression RPAREN LBRACE statement_list RBRACE else_statement %prec ELSE { scope++; }
+             | IF LPAREN expression RPAREN LBRACE statement_list RBRACE elif_statement_list else_statement %prec ELSE { scope++; }
              ;
 
 elif_statement_list : elif_statement_list elif_statement
@@ -169,6 +172,11 @@ return_statement : RETURN expression SEMICOLON
 error_statement : ERROR SEMICOLON
                 ;
 
+data_type : TYPE_INT
+          | TYPE_FLOAT
+          | TYPE_BOOL
+          | TYPE_CHAR
+          | TYPE_STRING
 
 expression : INTEGER
            | FLOAT
