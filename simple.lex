@@ -3,6 +3,8 @@
 #include "parser.tab.h"
 %}
 
+%option noyywrap
+
 %%
 "print"     { return PRINT; }
 "if"        { return IF; }

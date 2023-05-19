@@ -17,7 +17,7 @@ typedef struct
     // Add any additional fields you need to store symbol information
 } SymbolEntry;
 
-static vector<map<string, SymbolEntry *>> symbolTable = vector<map<string, SymbolEntry *>>();
+static vector<map<string, SymbolEntry *>> symbolTable(1, map<string, SymbolEntry *>());
 
 // Function to add a symbol entry to the symbol table
 void addSymbolEntry(char *name, int tokenType)
@@ -65,4 +65,32 @@ void freeSymbolTable()
             free(entry);
         }
     }
+}
+
+// Function to write the symbol table to a file
+void writeSymbolTableToFile(char *filename = "symbol_table.txt")
+{
+    // Open the file for writing
+    FILE *fp = fopen(filename, "w");
+    if (fp == NULL)
+    {
+        fprintf(stderr, "Failed to open file '%s' for writing.\n", filename);
+        return;
+    }
+
+    // Iterate over all the symbol entries in the symbol table
+    for (int i = 0; i < symbolTable.size(); i++)
+    {
+        map<string, SymbolEntry *> currentScope = symbolTable[i];
+        for (map<string, SymbolEntry *>::iterator it = currentScope.begin(); it != currentScope.end(); it++)
+        {
+            // Write the symbol entry to the file
+            printf("\n\n%s\n\n", ((SymbolEntry *)it->second)->name);
+            SymbolEntry *entry = (SymbolEntry *)it->second;
+            fprintf(fp, "Name=%s, TokenType=%d\n", entry->name, entry->tokenType);
+        }
+    }
+
+    // Close the file
+    fclose(fp);
 }

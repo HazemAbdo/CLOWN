@@ -40,7 +40,7 @@ extern char* yytext;
 
 %%
 
-program : statement_list 
+program : statement_list { freeSymbolTable(); }
         ;
 
 statement_list : statement
@@ -210,6 +210,7 @@ int main() {
         fprintf(stderr, "Parsing failed!\n");
         exit(EXIT_FAILURE);
     }
+    writeSymbolTableToFile();
     printf("Parsing successful!\n");
     return 0;
 }
