@@ -10,6 +10,7 @@ typedef struct symbol
     char *type;
     int isConst;
     char *value;
+    int isInitialized;
 } symbol_t;
 
 // Define a structure to represent the symbol table
@@ -44,7 +45,45 @@ void addSymbol(symbol_table_t *table, char *name, char *type, int isConst, char 
     sym->name = strdup(name);
     sym->type = strdup(type);
     sym->isConst = isConst;
+    printf("value: %s\n", value);
+    // Check if value has the correct type
+    if (value != NULL){
+        if (strcmp(sym->type, "int") == 0 && atoi(value) == 0)
+        {
+            fprintf(stderr, "Error: value for variable %s is not of type int\n", name);
+            exit(EXIT_FAILURE);
+        }
+        else if (strcmp(sym->type, "float") == 0 && atof(value) == 0)
+        {
+            fprintf(stderr, "Error: value for variable %s is not of type float\n", name);
+            exit(EXIT_FAILURE);
+        }
+        else if (strcmp(sym->type, "String") == 0 && strlen(value) > 1)
+        {
+            fprintf(stderr, "Error: value for variable %s is not of type char\n", name);
+            exit(EXIT_FAILURE);
+        }
+        else if (strcmp(sym->type, "bool") == 0 && (strcmp(value, "true") != 0 || strcmp(value, "false") != 0))
+        {
+            fprintf(stderr, "Error: value for variable %s is not of type bool\n", name);
+            exit(EXIT_FAILURE);
+        }
+        else if (strcmp(sym->type, "void") == 0 && value != NULL)
+        {
+            fprintf(stderr, "Error: value for variable %s is not of type void\n", name);
+            exit(EXIT_FAILURE);
+        }
+    }
+    
     sym->value = value;
+    if (sym->value == NULL)
+    {
+        sym->isInitialized = 0;
+    }
+    else
+    {
+        sym->isInitialized = 1;
+    }
     // check if symbol already exists
     int i;
     for (i = 0; i < table->size; i++)
@@ -59,6 +98,19 @@ void addSymbol(symbol_table_t *table, char *name, char *type, int isConst, char 
     table->size++;
     table->symbols = realloc(table->symbols, table->size * sizeof(symbol_t *));
     table->symbols[table->size - 1] = sym;
+}
+
+void unInitalized_variables(symbol_table_t *table)
+{
+    int i;
+    for (i = 0; i < table->size; i++)
+    {
+        if (table->symbols[i]->isInitialized == 0)
+        {
+            fprintf(stderr, "Error: variable %s is not initialized\n", table->symbols[i]->name);
+            exit(EXIT_FAILURE);
+        }
+    }
 }
 
 // Update the value of an existing symbol in the symbol table
@@ -76,11 +128,27 @@ void updateSymbol(symbol_table_t *table, char *name, char *value)
                 exit(EXIT_FAILURE);
             }
             table->symbols[i]->value = value;
+            table->symbols[i]->isInitialized = 1;
             return;
         }
     }
     fprintf(stderr, "Error: undeclared variable %s \n", name);
     exit(EXIT_FAILURE);
+}
+
+void printSymbolTable(symbol_table_t *table)
+{
+    // print it to external file
+    FILE *fp;
+    fp = fopen("symbol_table.csv", "w");
+    fprintf(fp, "Symbol Table\n");
+    fprintf(fp, "Name,Type,Const,Value,Initialized\n");
+    int i;
+    for (i = 0; i < table->size; i++)
+    {
+        fprintf(fp, "%s,%s,%d,%s,%d\n", table->symbols[i]->name, table->symbols[i]->type, table->symbols[i]->isConst, table->symbols[i]->value, table->symbols[i]->isInitialized);
+    }
+    fclose(fp);
 }
 
 // Lookup a symbol in the symbol table and return its value

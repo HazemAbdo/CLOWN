@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "symbol_table.h"
+#include "../symbol_table.h"
 
 void yyerror(char *s);
 extern int yylex();
@@ -236,6 +236,8 @@ int main() {
         exit(EXIT_FAILURE);
     }
     printf("Parsing successful!\n");
+    printSymbolTable(symbolTable);
+    unInitalized_variables(symbolTable);
     freeSymbolTable(symbolTable);
     return 0;
 }

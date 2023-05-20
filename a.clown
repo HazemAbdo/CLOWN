@@ -2,12 +2,14 @@ float a = 1.5*3.4*.5*0.1;
 bool b = true;
 int c = 1;
 
-for(int i = 0; i < 10; i = i + 1){
-    c = c + 1;
-}
 const int d = 1;
 const bool e = false;
 int function add (int a, int b){
     return a + b;
 }
-int z = add(1,2,3);
+int f = add(1,2,3);
+for(int i = 0; i < 10; i = i + 1){
+    c = c + 1;
+}
+
+int k;
