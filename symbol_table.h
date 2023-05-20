@@ -2,6 +2,52 @@
 #include <stdlib.h>
 #include <string.h>
 
+// define a map struct to save the name of the function and its return type
+typedef struct function
+{
+    char *name;
+    char *type;
+} function_t;
+
+typedef struct function_table
+{
+    function_t **functions;
+    int size;
+} function_table_t;
+
+// init a new function table
+function_table_t *initFunctionTable()
+{
+    printf("Initializing function table\n");
+    function_table_t *table = malloc(sizeof(function_table_t));
+    table->functions = NULL;
+    table->size = 0;
+    return table;
+}
+
+
+// add a new function to the function table
+void addFunction(function_table_t *table, char *name, char *type)
+{
+    // first check if the function is already in the table
+    for (int i = 0; i < table->size; i++)
+    {
+        if (strcmp(table->functions[i]->name, name) == 0)
+        {
+            printf("Function %s already exists in function table\n", name);
+            // return error
+            return;
+        }
+    }
+    printf("Adding function %s to function table\n", name);
+    function_t *func = malloc(sizeof(function_t));
+    func->name = strdup(name);
+    func->type = strdup(type);
+    table->size++;
+    table->functions = realloc(table->functions, sizeof(function_t *) * table->size);
+    table->functions[table->size - 1] = func;
+}
+
 // Define a structure to represent a symbol
 typedef struct symbol
 {
@@ -50,7 +96,7 @@ symbol_table_stack_t *initSymbolTableStack(symbol_table_t *table)
 }
 
 // Add a new symbol to the symbol table
-void addSymbol(symbol_table_t *table, char *name, char *type, int isConst, char *value)
+void addSymbol(symbol_table_t *table,function_table_t *mapList , char *name, char *type, int isConst, char *value)
 {
     // print current stack size
     printf("Table size before add: %d\n", table->size);
@@ -66,9 +112,29 @@ void addSymbol(symbol_table_t *table, char *name, char *type, int isConst, char 
     sym->name = strdup(name);
     sym->type = strdup(type);
     sym->isConst = isConst;
-    printf("value: %s\n", value);
+    printf("Value: %s\n", value);
+    int is_function = 0;
+    if (value != NULL && strlen(value) > 1 )
+    {
+        // check if the value is a function and if yes, check the return type with the type of the variable
+        for (int i = 0; i < mapList->size; i++)
+        {
+            printf("Function name: %s\n", mapList->functions[i]->name);
+            printf("Function type: %s\n", mapList->functions[i]->type);
+            if (strcmp(mapList->functions[i]->name, value) == 0)
+            {
+                if (strcmp(mapList->functions[i]->type, type) != 0)
+                {
+                    fprintf(stderr, "Error: return type of function %s is not of type %s\n", value, type);
+                    exit(EXIT_FAILURE);
+                }
+                is_function = 1;
+            }
+        }
+    }
+    
     // Check if value has the correct type
-    if (value != NULL)
+    if (value != NULL && is_function == 0)
     {
         if (strcmp(sym->type, "int") == 0 && atoi(value) == 0)
         {
@@ -122,6 +188,7 @@ void addSymbol(symbol_table_t *table, char *name, char *type, int isConst, char 
     table->symbols[table->size - 1] = sym;
     printf("Table size after add: %d\n", table->size);
 }
+
 
 void unInitalized_variables(symbol_table_t *table)
 {
