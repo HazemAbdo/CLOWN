@@ -1,10 +1,15 @@
-a = 1.5*3.4*.5*0.1;
-B = true;
-c = 1&&true&&false;
-if(true){
-    print 1;
+float a = 1.5*3.4*.5*0.1;
+bool b = true;
+int c = 1;
+
+for(int i = 0; i < 10; i = i + 1){
+    c = c + 1;
+}
+const int d = 1;
+const bool e = false;
+
+int function add (int a, int b){
+    return a + b;
 }
 
-while(false){
-    print 2;
-}
+int z = add(1,2,3);

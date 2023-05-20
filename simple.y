@@ -18,15 +18,19 @@ extern int yydebug;
     int *bval;
 }
 
-%token <sval> IDENTIFIER STRING
-%token <ival> INTEGER
-%token <fval> FLOAT
-%token <bval> TRUE FALSE
-%token PRINT IF ELSE WHILE FOR DO BREAK CONTINUE RETURN ERROR
-%token ASSIGN PLUS MINUS TIMES DIVIDE LPAREN RPAREN SEMICOLON
-%token EQUAL NOTEQUAL GREATER GREATEREQUAL LESS LESSEQUAL COMMA LBRACE RBRACE FUNCTION CONST
+%token  TYPE_STRING
+%token  TYPE_INT
+%token  TYPE_FLOAT
+%token  TYPE_BOOL
+%token  TYPE_VOID
+%token INTEGER FLOAT TRUE FALSE STRING IDENTIFIER 
+%token PRINT IF ELSE WHILE FOR DO BREAK CONTINUE RETURN ERROR SWITCH CASE COLON DEFAULT ELIF ENUM FUNCTION CONST
+%token SEMICOLON
+%token EQUAL NOTEQUAL GREATER GREATEREQUAL LESS LESSEQUAL COMMA ASSIGN
+%token LPAREN RPAREN LBRACE RBRACE
 %token OR AND NOT
-%token SWITCH CASE COLON DEFAULT ELIF ENUM NILL POWER MOD UMINUS
+%token PLUS MINUS TIMES DIVIDE POWER MOD UMINUS
+%token NILL
 
 %nonassoc UMINUS
 %left POWER
@@ -49,7 +53,8 @@ statement_list : statement
                | statement_list statement 
                ;
 
-statement : assignment_statement
+statement : var_declaration
+        | assignment_statement
           | print_statement
           | if_statement
           | while_statement
@@ -66,15 +71,26 @@ statement : assignment_statement
           | enum_declaration_list
          ;
 
-assignment_statement :IDENTIFIER ASSIGN expression SEMICOLON
+var_declaration :DATA_TYPE IDENTIFIER ASSIGN expression SEMICOLON
+                    | DATA_TYPE IDENTIFIER SEMICOLON
                     | enum_assignment_statement
                       ;
 
-function_declaration : FUNCTION IDENTIFIER LPAREN function_parameters RPAREN LBRACE statement_list RBRACE
+DATA_TYPE : TYPE_STRING
+         | TYPE_INT
+         | TYPE_FLOAT
+         | TYPE_BOOL
+         ;
+
+assignment_statement : IDENTIFIER ASSIGN expression SEMICOLON
+                     ;
+
+function_declaration : DATA_TYPE FUNCTION IDENTIFIER LPAREN function_parameters RPAREN LBRACE statement_list RBRACE
+                    | TYPE_VOID FUNCTION IDENTIFIER LPAREN function_parameters RPAREN LBRACE statement_list RBRACE
                    ;
 
-function_parameters : function_parameters COMMA IDENTIFIER
-                    | IDENTIFIER
+function_parameters : function_parameters COMMA DATA_TYPE IDENTIFIER
+                    | DATA_TYPE IDENTIFIER
                     | /* empty */
                     ;
 
@@ -87,7 +103,7 @@ function_arguments : function_arguments COMMA expression
                    ;
 
 
-const_declaration: CONST assignment_statement
+const_declaration: CONST var_declaration
                  ;
 
 switch_statement: SWITCH LPAREN IDENTIFIER RPAREN LBRACE switch_statement_details RBRACE
@@ -145,13 +161,17 @@ for_statement : FOR LPAREN for_init  expression SEMICOLON for_update RPAREN LBRA
               | FOR LPAREN for_init  expression SEMICOLON for_update RPAREN LBRACE  RBRACE
               ;
 
-for_init : assignment_statement
+
+for_init : var_declaration
          | SEMICOLON
          ;
 
-for_update : assignment_statement
+for_update : for_update_expression
            | SEMICOLON
            ;
+
+for_update_expression: IDENTIFIER ASSIGN expression
+                     ;
 
 do_statement : DO LBRACE statement_list RBRACE WHILE LPAREN expression RPAREN SEMICOLON
              | DO LBRACE  RBRACE WHILE LPAREN expression RPAREN SEMICOLON
@@ -176,10 +196,10 @@ expression : INTEGER
            | TRUE
            | FALSE
            | STRING
-           | IDENTIFIER
            | NILL
            | function_call
            | LPAREN expression RPAREN             %prec UMINUS
+           | IDENTIFIER
            | expression PLUS expression           %prec PLUS
            | expression MINUS expression          %prec MINUS
            | expression POWER expression          %prec POWER
@@ -197,6 +217,8 @@ expression : INTEGER
            | expression AND expression            %prec AND
            | MINUS expression                     %prec UMINUS
            ;
+
+
 %%
 
 void yyerror(char *s) {
@@ -207,7 +229,7 @@ void yyerror(char *s) {
 
 
 int main() {
-    yydebug = 1;
+    yydebug = 0;
     int res = yyparse();
     if (res != 0) {
         fprintf(stderr, "Parsing failed!\n");
