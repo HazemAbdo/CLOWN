@@ -12,8 +12,6 @@ extern char* yytext;
 extern int yydebug;
 symbol_table_t *symbolTable;
 symbol_table_stack_t *symbolTableStack;
-
-
 %}
 
 %union {
@@ -138,10 +136,10 @@ enum_assignment_statement: IDENTIFIER IDENTIFIER ASSIGN IDENTIFIER SEMICOLON
 print_statement : PRINT expression SEMICOLON 
                 ;
 
-if_statement : IF LPAREN expression RPAREN LBRACE { pushSymbolTable(symbolTableStack,symbolTable); } statement_list RBRACE %prec ELSE
-             | IF LPAREN expression RPAREN LBRACE { pushSymbolTable(symbolTableStack,symbolTable); } statement_list RBRACE elif_statement_list %prec ELSE
-             | IF LPAREN expression RPAREN LBRACE { pushSymbolTable(symbolTableStack,symbolTable); } statement_list RBRACE else_statement %prec ELSE
-             | IF LPAREN expression RPAREN LBRACE { pushSymbolTable(symbolTableStack,symbolTable); } statement_list RBRACE elif_statement_list else_statement %prec ELSE
+if_statement : IF LPAREN expression RPAREN LBRACE { symbolTable= pushSymbolTable(symbolTableStack); } statement_list RBRACE %prec ELSE
+             | IF LPAREN expression RPAREN LBRACE { symbolTable= pushSymbolTable(symbolTableStack); } statement_list RBRACE elif_statement_list %prec ELSE
+             | IF LPAREN expression RPAREN LBRACE { symbolTable= pushSymbolTable(symbolTableStack); } statement_list RBRACE else_statement %prec ELSE
+             | IF LPAREN expression RPAREN LBRACE { symbolTable= pushSymbolTable(symbolTableStack); } statement_list RBRACE elif_statement_list else_statement %prec ELSE
              { popSymbolTable(symbolTableStack); }
              ;
 
@@ -201,7 +199,7 @@ expression : INTEGER {$$ = $1;}
            | NILL
            | function_call
            | LPAREN expression RPAREN             %prec UMINUS
-           | IDENTIFIER   {lookupSymbol(symbolTable, $1);}
+           | IDENTIFIER   {lookupSymbol(symbolTableStack, $1);}
            | expression PLUS expression           %prec PLUS 
            | expression MINUS expression          %prec MINUS
            | expression POWER expression          %prec POWER

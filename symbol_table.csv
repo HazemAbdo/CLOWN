@@ -1,2 +1,4 @@
 Symbol Table
 Name,Type,Const,Value,Initialized
+c,int,0,3,1
+d,int,0,4,1
