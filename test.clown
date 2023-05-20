@@ -5,7 +5,15 @@ while (a == 1) {
     return a;
 }
 
-int z = test(1, 2);
-int y = 1;
-const int x;
-x = 1;
+int function test (int a, int b) {
+    int c = 3;
+    int d = 4;
+    return a;
+}
+
+int function add (int a, int b) {
+    return a + b;
+}
+int d = 4;
+
+int z = test(1, 2,3.5,true,add(1,2),a||d);

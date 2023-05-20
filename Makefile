@@ -12,7 +12,7 @@ parse: $(PARSER_INPUT)
 	bison -l $(PARSER_INPUT) -b build/$(PARSER_OUTPUT)
 
 lex: $(LEXER_INPUT)
-	flex -l -obuild/$(LEXER_OUTPUT).yy.c $(LEXER_INPUT)
+	flex -l  -obuild/$(LEXER_OUTPUT).yy.c $(LEXER_INPUT)
 
 build: build/$(LEXER_OUTPUT).yy.c build/$(PARSER_OUTPUT).tab.c
 	gcc -o parser -DYYDEBUG build/$(PARSER_OUTPUT).tab.c build/$(LEXER_OUTPUT).yy.c -lfl -o build/$(BIN_OUTPUT)

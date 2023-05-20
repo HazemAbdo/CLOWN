@@ -25,7 +25,6 @@ function_table_t *initFunctionTable()
     return table;
 }
 
-
 // add a new function to the function table
 void addFunction(function_table_t *table, char *name, char *type)
 {
@@ -96,7 +95,7 @@ symbol_table_stack_t *initSymbolTableStack(symbol_table_t *table)
 }
 
 // Add a new symbol to the symbol table
-void addSymbol(symbol_table_t *table,function_table_t *mapList , char *name, char *type, int isConst, char *value)
+void addSymbol(symbol_table_t *table, function_table_t *mapList, char *name, char *type, int isConst, char *value)
 {
     // print current stack size
     printf("Table size before add: %d\n", table->size);
@@ -114,7 +113,7 @@ void addSymbol(symbol_table_t *table,function_table_t *mapList , char *name, cha
     sym->isConst = isConst;
     printf("Value: %s\n", value);
     int is_function = 0;
-    if (value != NULL && strlen(value) > 1 )
+    if (value != NULL && strlen(value) > 1)
     {
         // check if the value is a function and if yes, check the return type with the type of the variable
         for (int i = 0; i < mapList->size; i++)
@@ -132,7 +131,7 @@ void addSymbol(symbol_table_t *table,function_table_t *mapList , char *name, cha
             }
         }
     }
-    
+
     // Check if value has the correct type
     if (value != NULL && is_function == 0)
     {
@@ -188,7 +187,6 @@ void addSymbol(symbol_table_t *table,function_table_t *mapList , char *name, cha
     table->symbols[table->size - 1] = sym;
     printf("Table size after add: %d\n", table->size);
 }
-
 
 void unInitalized_variables(symbol_table_t *table)
 {

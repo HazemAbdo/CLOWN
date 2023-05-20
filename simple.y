@@ -93,15 +93,39 @@ function_parameters : function_parameters COMMA DATA_TYPE IDENTIFIER {addSymbol(
                     | DATA_TYPE IDENTIFIER {addSymbol(symbolTable,functionTable, $2, $1,0, NULL);}
                     | /* empty */
                     ;
-
-function_call : IDENTIFIER LPAREN function_arguments RPAREN
+function_call : IDENTIFIER LPAREN function_arguments RPAREN  
                 ;
 
-function_arguments : function_arguments COMMA expression
-                   | expression
+function_arguments : function_arguments COMMA argument  
+                   | argument 
                    | /* empty */
                    ;
 
+argument :  INTEGER {printf("int argument: %s\n", $1);}
+            | FLOAT {printf("float argument: %s\n", $1);}
+            | TRUE {printf("bool argument: %s\n", $1);}
+            | FALSE {printf("bool argument: %s\n", $1);}
+            | STRING {printf("string argument: %s\n", $1);}
+            | IDENTIFIER {printf("identifier argument: %s\n", $1);}
+            | argument PLUS argument {printf("argument PLUS argument\n");}
+            | argument MINUS argument {printf("argument MINUS argument\n");}
+            | argument TIMES argument {printf("argument TIMES argument\n");}
+            | argument DIVIDE argument {printf("argument DIVIDE argument\n");}
+            | argument POWER argument {printf("argument POWER argument\n");}
+            | argument MOD argument {printf("argument MOD argument\n");}
+            | argument EQUAL argument {printf("argument EQUAL argument\n");}
+            | argument NOTEQUAL argument {printf("argument NOTEQUAL argument\n");}
+            | argument GREATER argument {printf("argument GREATER argument\n");}
+            | argument GREATEREQUAL argument {printf("argument GREATEREQUAL argument\n");}
+            | argument LESS argument {printf("argument LESS argument\n");}
+            | argument LESSEQUAL argument {printf("argument LESSEQUAL argument\n");}
+            | NOT argument {printf("NOT argument\n");}
+            | argument OR argument {printf("argument OR argument\n");}
+            | argument AND argument {printf("argument AND argument\n");}
+            | MINUS argument {printf("MINUS argument\n");}
+            | function_call {printf("function_call\n");}
+            | NILL {printf("NILL\n");}
+            ;
 
 const_declaration: CONST DATA_TYPE IDENTIFIER ASSIGN expression SEMICOLON {addSymbol(symbolTable,functionTable, $3, $2,1, $5);}
                  ;
