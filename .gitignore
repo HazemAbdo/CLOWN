@@ -1,5 +1,4 @@
 draft.y
-*.h
 *.c
 *.output
 *.txt
