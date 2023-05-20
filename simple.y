@@ -84,12 +84,12 @@ DATA_TYPE : TYPE_STRING
 assignment_statement : IDENTIFIER ASSIGN expression SEMICOLON {updateSymbol(symbolTable, $1, $3);}
                      ;
 
-function_declaration : DATA_TYPE FUNCTION IDENTIFIER LPAREN function_parameters RPAREN LBRACE statement_list RBRACE
-                    | TYPE_VOID FUNCTION IDENTIFIER LPAREN function_parameters RPAREN LBRACE statement_list RBRACE
+function_declaration : DATA_TYPE FUNCTION IDENTIFIER LPAREN { symbolTable= pushSymbolTable(symbolTableStack); } function_parameters RPAREN LBRACE statement_list  RBRACE { symbolTable=popSymbolTable(symbolTableStack);}
+                    | TYPE_VOID FUNCTION IDENTIFIER LPAREN { symbolTable= pushSymbolTable(symbolTableStack); } function_parameters RPAREN LBRACE  statement_list  RBRACE { symbolTable=popSymbolTable(symbolTableStack);}
                    ;
 
-function_parameters : function_parameters COMMA DATA_TYPE IDENTIFIER
-                    | DATA_TYPE IDENTIFIER
+function_parameters : function_parameters COMMA DATA_TYPE IDENTIFIER {addSymbol(symbolTable, $4, $3,0, NULL);}
+                    | DATA_TYPE IDENTIFIER {addSymbol(symbolTable, $2, $1,0, NULL);}
                     | /* empty */
                     ;
 
@@ -105,7 +105,7 @@ function_arguments : function_arguments COMMA expression
 const_declaration: CONST DATA_TYPE IDENTIFIER ASSIGN expression SEMICOLON {addSymbol(symbolTable, $3, $2,1, $5);}
                  ;
 
-switch_statement: SWITCH LPAREN IDENTIFIER RPAREN LBRACE switch_statement_details RBRACE
+switch_statement: SWITCH LPAREN IDENTIFIER RPAREN LBRACE { symbolTable= pushSymbolTable(symbolTableStack); } switch_statement_details  RBRACE { symbolTable=popSymbolTable(symbolTableStack);}
                 ;
 
 switch_statement_details: switch_statement_details switch_case
@@ -119,7 +119,7 @@ switch_case: CASE expression COLON statement_list
 enum_declaration_list : enum_declaration
                       ;
 
-enum_declaration : ENUM IDENTIFIER LBRACE enum_item_list RBRACE SEMICOLON
+enum_declaration : ENUM IDENTIFIER LBRACE { symbolTable= pushSymbolTable(symbolTableStack); } enum_item_list  RBRACE { symbolTable=popSymbolTable(symbolTableStack);} SEMICOLON
                   ;
 
 enum_item_list : enum_item
@@ -136,29 +136,29 @@ enum_assignment_statement: IDENTIFIER IDENTIFIER ASSIGN IDENTIFIER SEMICOLON
 print_statement : PRINT expression SEMICOLON 
                 ;
 
-if_statement : IF LPAREN expression RPAREN LBRACE { symbolTable= pushSymbolTable(symbolTableStack); } statement_list RBRACE %prec ELSE
-             | IF LPAREN expression RPAREN LBRACE { symbolTable= pushSymbolTable(symbolTableStack); } statement_list RBRACE elif_statement_list %prec ELSE
-             | IF LPAREN expression RPAREN LBRACE { symbolTable= pushSymbolTable(symbolTableStack); } statement_list RBRACE else_statement %prec ELSE
-             | IF LPAREN expression RPAREN LBRACE { symbolTable= pushSymbolTable(symbolTableStack); } statement_list RBRACE elif_statement_list else_statement %prec ELSE
-             { popSymbolTable(symbolTableStack); }
+if_statement : IF LPAREN expression RPAREN LBRACE { symbolTable= pushSymbolTable(symbolTableStack); } statement_list RBRACE { symbolTable=popSymbolTable(symbolTableStack);  } %prec ELSE
+             | IF LPAREN expression RPAREN LBRACE { symbolTable= pushSymbolTable(symbolTableStack); } statement_list RBRACE { symbolTable=popSymbolTable(symbolTableStack);  } elif_statement_list %prec ELSE
+             | IF LPAREN expression RPAREN LBRACE { symbolTable= pushSymbolTable(symbolTableStack); } statement_list RBRACE { symbolTable=popSymbolTable(symbolTableStack);  } else_statement %prec ELSE
+             | IF LPAREN expression RPAREN LBRACE { symbolTable= pushSymbolTable(symbolTableStack); } statement_list RBRACE { symbolTable=popSymbolTable(symbolTableStack);  } elif_statement_list else_statement %prec ELSE
+             
              ;
 
 elif_statement_list : elif_statement_list elif_statement
                     | elif_statement
                     ;
 
-elif_statement : ELIF LPAREN expression RPAREN LBRACE statement_list RBRACE
+elif_statement : ELIF LPAREN expression RPAREN LBRACE { symbolTable= pushSymbolTable(symbolTableStack); } statement_list  RBRACE { symbolTable=popSymbolTable(symbolTableStack);}
                ;
 
-else_statement : ELSE LBRACE statement_list RBRACE
+else_statement : ELSE LBRACE { symbolTable= pushSymbolTable(symbolTableStack); } statement_list  RBRACE { symbolTable=popSymbolTable(symbolTableStack);}
                ;
 
-while_statement : WHILE LPAREN expression RPAREN LBRACE statement_list RBRACE
-                | WHILE LPAREN expression RPAREN LBRACE  RBRACE 
+while_statement : WHILE LPAREN expression RPAREN LBRACE { symbolTable= pushSymbolTable(symbolTableStack); } statement_list RBRACE { symbolTable=popSymbolTable(symbolTableStack);}
+                | WHILE LPAREN expression RPAREN LBRACE { symbolTable= pushSymbolTable(symbolTableStack); } RBRACE { symbolTable=popSymbolTable(symbolTableStack);}
                  ;
 
-for_statement : FOR LPAREN for_init  expression SEMICOLON for_update RPAREN LBRACE statement_list RBRACE
-              | FOR LPAREN for_init  expression SEMICOLON for_update RPAREN LBRACE  RBRACE
+for_statement : FOR LPAREN for_init  expression SEMICOLON for_update RPAREN LBRACE { symbolTable= pushSymbolTable(symbolTableStack); } statement_list  RBRACE { symbolTable=popSymbolTable(symbolTableStack);}
+              | FOR LPAREN for_init  expression SEMICOLON for_update RPAREN LBRACE { symbolTable= pushSymbolTable(symbolTableStack); }   RBRACE { symbolTable=popSymbolTable(symbolTableStack);}
               ;
 
 
@@ -173,8 +173,8 @@ for_update : for_update_expression
 for_update_expression: IDENTIFIER ASSIGN expression
                      ;
 
-do_statement : DO LBRACE statement_list RBRACE WHILE LPAREN expression RPAREN SEMICOLON
-             | DO LBRACE  RBRACE WHILE LPAREN expression RPAREN SEMICOLON
+do_statement : DO LBRACE { symbolTable= pushSymbolTable(symbolTableStack); } statement_list  RBRACE { symbolTable=popSymbolTable(symbolTableStack);} WHILE LPAREN expression RPAREN SEMICOLON
+             | DO LBRACE { symbolTable= pushSymbolTable(symbolTableStack); } RBRACE { symbolTable=popSymbolTable(symbolTableStack);} WHILE LPAREN expression RPAREN SEMICOLON
              ;
 
 break_statement : BREAK SEMICOLON
@@ -229,6 +229,8 @@ void yyerror(char *s) {
 
 
 int main() {
+    FILE *fp;
+    fp = fopen("symbol_table.csv", "w");
     symbolTable = initSymbolTable();
     symbolTableStack = initSymbolTableStack(symbolTable);
     yydebug = 0;
@@ -238,7 +240,7 @@ int main() {
         exit(EXIT_FAILURE);
     }
     printf("Parsing successful!\n");
-    printSymbolTable(symbolTable);
+    printSymbolTableStack(symbolTableStack);
     unInitalized_variables(symbolTable);
     freeSymbolTable(symbolTable);
     return 0;

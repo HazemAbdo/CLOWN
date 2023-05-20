@@ -48,6 +48,7 @@ symbol_table_stack_t *initSymbolTableStack(symbol_table_t *table)
 
     return stack;
 }
+
 // Add a new symbol to the symbol table
 void addSymbol(symbol_table_t *table, char *name, char *type, int isConst, char *value)
 {
@@ -160,9 +161,10 @@ void updateSymbol(symbol_table_t *table, char *name, char *value)
 
 void printSymbolTable(symbol_table_t *table)
 {
-    // print it to external file
     FILE *fp;
-    fp = fopen("symbol_table.csv", "w");
+    fp = fopen("symbol_table.csv", "a");
+    // print it to external file
+    fprintf(fp, "======\n");
     fprintf(fp, "Symbol Table\n");
     fprintf(fp, "Name,Type,Const,Value,Initialized\n");
     int i;
@@ -177,9 +179,6 @@ void printSymbolTable(symbol_table_t *table)
 char *lookupSymbol(symbol_table_stack_t *stack, char *name)
 {
     int i;
-    printf("Looking up symbol %s\n", name);
-    printf("Stack size: %d\n", stack->size);
-    printf("Table size: %d\n", stack->tables[0]->size);
     for (i = stack->size - 1; i >= 0; i--)
     {
         symbol_table_t *table = stack->tables[i];
@@ -199,15 +198,12 @@ char *lookupSymbol(symbol_table_stack_t *stack, char *name)
 // Push a new symbol table onto the top of the stack
 symbol_table_t *pushSymbolTable(symbol_table_stack_t *stack)
 {
-    // create a new symbol table
-    symbol_table_t *table = initSymbolTable();
-    table->parent = stack->tables[stack->size - 1];
-    printf("Pushing symbol table\n");
-    printf("Stack size: %d\n", stack->size);
     stack->size++;
     stack->tables = realloc(stack->tables, stack->size * sizeof(symbol_table_t *));
-    stack->tables[stack->size - 1] = table;
-    return table;
+    // create new table and return it
+    symbol_table_t *symbolTable = initSymbolTable();
+    stack->tables[stack->size - 1] = symbolTable;
+    return symbolTable;
 }
 
 // Pop the topmost symbol table from the stack
@@ -221,7 +217,21 @@ symbol_table_t *popSymbolTable(symbol_table_stack_t *stack)
     symbol_table_t *table = stack->tables[stack->size - 1];
     stack->size--;
     stack->tables = realloc(stack->tables, stack->size * sizeof(symbol_table_t *));
-    return table;
+
+    // write the symbol table to external file
+    printSymbolTable(table);
+
+    return stack->tables[stack->size - 1];
+}
+
+void printSymbolTableStack(symbol_table_stack_t *stack)
+{
+    int i;
+    for (i = 0; i < stack->size; i++)
+    {
+        printf("Symbol table %d\n", i);
+        printSymbolTable(stack->tables[i]);
+    }
 }
 
 // Free the memory used by the symbol table
