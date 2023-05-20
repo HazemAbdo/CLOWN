@@ -2,5 +2,10 @@ int a = 1;
 while (a == 1) {
     int c = 3;
     int d = 4;
-    int a = 2;
+    return a;
 }
+
+int z = test(1, 2);
+int y = 1;
+const int x;
+x = 1;

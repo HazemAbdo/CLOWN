@@ -5,6 +5,3 @@ a,int,0,(null),0
 b,int,0,(null),0
 c,int,0,3,1
 d,int,0,4,1
-======
-Symbol Table
-Name,Type,Const,Value,Initialized

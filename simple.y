@@ -12,6 +12,7 @@ extern char* yytext;
 extern int yydebug;
 symbol_table_t *symbolTable;
 symbol_table_stack_t *symbolTableStack;
+function_table_t *functionTable;
 %}
 
 %union {
@@ -70,8 +71,8 @@ statement : var_declaration
           | enum_declaration_list
          ;
 
-var_declaration :DATA_TYPE IDENTIFIER ASSIGN expression SEMICOLON   {addSymbol(symbolTable, $2, $1,0, $4);}
-                    | DATA_TYPE IDENTIFIER SEMICOLON  {addSymbol(symbolTable, $2, $1,0, NULL);}
+var_declaration :DATA_TYPE IDENTIFIER ASSIGN expression SEMICOLON   {addSymbol(symbolTable,functionTable, $2, $1,0, $4);}
+                    | DATA_TYPE IDENTIFIER SEMICOLON  {addSymbol(symbolTable,functionTable, $2, $1,0, NULL);}
                     | enum_assignment_statement
                       ;
 
@@ -84,12 +85,12 @@ DATA_TYPE : TYPE_STRING
 assignment_statement : IDENTIFIER ASSIGN expression SEMICOLON {updateSymbol(symbolTable, $1, $3);}
                      ;
 
-function_declaration : DATA_TYPE FUNCTION IDENTIFIER LPAREN { symbolTable= pushSymbolTable(symbolTableStack); } function_parameters RPAREN LBRACE statement_list  RBRACE { symbolTable=popSymbolTable(symbolTableStack);}
-                    | TYPE_VOID FUNCTION IDENTIFIER LPAREN { symbolTable= pushSymbolTable(symbolTableStack); } function_parameters RPAREN LBRACE  statement_list  RBRACE { symbolTable=popSymbolTable(symbolTableStack);}
+function_declaration : DATA_TYPE FUNCTION IDENTIFIER LPAREN {addFunction(functionTable,$3,$1); symbolTable= pushSymbolTable(symbolTableStack); } function_parameters RPAREN LBRACE statement_list  RBRACE { symbolTable=popSymbolTable(symbolTableStack);}
+                    | TYPE_VOID FUNCTION IDENTIFIER LPAREN {addFunction(functionTable,$3,$1); symbolTable= pushSymbolTable(symbolTableStack); } function_parameters RPAREN LBRACE  statement_list  RBRACE { symbolTable=popSymbolTable(symbolTableStack);}
                    ;
 
-function_parameters : function_parameters COMMA DATA_TYPE IDENTIFIER {addSymbol(symbolTable, $4, $3,0, NULL);}
-                    | DATA_TYPE IDENTIFIER {addSymbol(symbolTable, $2, $1,0, NULL);}
+function_parameters : function_parameters COMMA DATA_TYPE IDENTIFIER {addSymbol(symbolTable, functionTable,$4, $3,0, NULL);}
+                    | DATA_TYPE IDENTIFIER {addSymbol(symbolTable,functionTable, $2, $1,0, NULL);}
                     | /* empty */
                     ;
 
@@ -102,7 +103,7 @@ function_arguments : function_arguments COMMA expression
                    ;
 
 
-const_declaration: CONST DATA_TYPE IDENTIFIER ASSIGN expression SEMICOLON {addSymbol(symbolTable, $3, $2,1, $5);}
+const_declaration: CONST DATA_TYPE IDENTIFIER ASSIGN expression SEMICOLON {addSymbol(symbolTable,functionTable, $3, $2,1, $5);}
                  ;
 
 switch_statement: SWITCH LPAREN IDENTIFIER RPAREN LBRACE { symbolTable= pushSymbolTable(symbolTableStack); } switch_statement_details  RBRACE { symbolTable=popSymbolTable(symbolTableStack);}
@@ -233,6 +234,7 @@ int main() {
     fp = fopen("symbol_table.csv", "w");
     symbolTable = initSymbolTable();
     symbolTableStack = initSymbolTableStack(symbolTable);
+    functionTable = initFunctionTable();
     yydebug = 0;
     int res = yyparse();
     if (res != 0) {
