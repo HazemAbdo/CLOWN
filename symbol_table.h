@@ -156,9 +156,9 @@ void updateSymbol(symbol_table_t *table, char *name, char *value)
 
 void printSymbolTable(symbol_table_t *table)
 {
-    // print it to external file
     FILE *fp;
-    fp = fopen("symbol_table.csv", "w");
+    fp = fopen("symbol_table.csv", "a");
+    // print it to external file
     fprintf(fp, "Symbol Table\n");
     fprintf(fp, "Name,Type,Const,Value,Initialized\n");
     int i;
@@ -190,12 +190,13 @@ char *lookupSymbol(symbol_table_stack_t *stack, char *name)
 }
 
 // Push a new symbol table onto the top of the stack
-void pushSymbolTable(symbol_table_stack_t *stack, symbol_table_t *table){
-    printf("Pushing symbol table\n");
-    printf("Stack size: %d\n", stack->size);
+symbol_table_t *pushSymbolTable(symbol_table_stack_t *stack){
     stack->size++;
     stack->tables = realloc(stack->tables, stack->size * sizeof(symbol_table_t *));
-    stack->tables[stack->size - 1] = table;
+    // create new table and return it 
+    symbol_table_t *symbolTable = initSymbolTable();
+    stack->tables[stack->size - 1] = symbolTable;
+    return symbolTable;
 }
 
 // Pop the topmost symbol table from the stack
@@ -207,7 +208,17 @@ symbol_table_t *popSymbolTable(symbol_table_stack_t *stack){
     symbol_table_t *table = stack->tables[stack->size - 1];
     stack->size--;
     stack->tables = realloc(stack->tables, stack->size * sizeof(symbol_table_t *));
-    return table;
+    return stack->tables[stack->size - 1];
+}
+
+void printSymbolTableStack(symbol_table_stack_t *stack){
+    int i;
+    FILE *fp;
+    fp = fopen("symbol_table.csv", "w");
+    for (i = 0; i < stack->size; i++){
+        printf("Symbol table %d\n", i);
+        printSymbolTable(stack->tables[i]);
+    }
 }
 
 

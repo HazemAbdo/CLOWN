@@ -138,11 +138,11 @@ enum_assignment_statement: IDENTIFIER IDENTIFIER ASSIGN IDENTIFIER SEMICOLON
 print_statement : PRINT expression SEMICOLON 
                 ;
 
-if_statement : IF LPAREN expression RPAREN LBRACE { pushSymbolTable(symbolTableStack,symbolTable); } statement_list RBRACE %prec ELSE
-             | IF LPAREN expression RPAREN LBRACE { pushSymbolTable(symbolTableStack,symbolTable); } statement_list RBRACE elif_statement_list %prec ELSE
-             | IF LPAREN expression RPAREN LBRACE { pushSymbolTable(symbolTableStack,symbolTable); } statement_list RBRACE else_statement %prec ELSE
-             | IF LPAREN expression RPAREN LBRACE { pushSymbolTable(symbolTableStack,symbolTable); } statement_list RBRACE elif_statement_list else_statement %prec ELSE
-             { popSymbolTable(symbolTableStack); }
+if_statement : IF LPAREN expression RPAREN LBRACE { symbolTable= pushSymbolTable(symbolTableStack); } statement_list RBRACE %prec ELSE
+             | IF LPAREN expression RPAREN LBRACE { symbolTable= pushSymbolTable(symbolTableStack); } statement_list RBRACE elif_statement_list %prec ELSE
+             | IF LPAREN expression RPAREN LBRACE { symbolTable= pushSymbolTable(symbolTableStack); } statement_list RBRACE else_statement %prec ELSE
+             | IF LPAREN expression RPAREN LBRACE { symbolTable= pushSymbolTable(symbolTableStack); } statement_list RBRACE elif_statement_list else_statement %prec ELSE
+             { symbolTable=popSymbolTable(symbolTableStack);  }
              ;
 
 elif_statement_list : elif_statement_list elif_statement
@@ -201,7 +201,7 @@ expression : INTEGER {$$ = $1;}
            | NILL
            | function_call
            | LPAREN expression RPAREN             %prec UMINUS
-           | IDENTIFIER   {lookupSymbol(symbolTable, $1);}
+           | IDENTIFIER   {lookupSymbol(symbolTableStack, $1);}
            | expression PLUS expression           %prec PLUS 
            | expression MINUS expression          %prec MINUS
            | expression POWER expression          %prec POWER
@@ -240,7 +240,7 @@ int main() {
         exit(EXIT_FAILURE);
     }
     printf("Parsing successful!\n");
-    printSymbolTable(symbolTable);
+    printSymbolTableStack(symbolTableStack);
     unInitalized_variables(symbolTable);
     freeSymbolTable(symbolTable);
     return 0;
