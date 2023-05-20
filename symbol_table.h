@@ -18,7 +18,14 @@ typedef struct symbol_table
 {
     symbol_t **symbols;
     int size;
+    struct symbol_table *parent;
 } symbol_table_t;
+
+typedef struct symbol_table_stack
+{
+    symbol_table_t **tables;
+    int size;
+} symbol_table_stack_t;
 
 // Initialize a new symbol table
 symbol_table_t *initSymbolTable()
@@ -27,9 +34,20 @@ symbol_table_t *initSymbolTable()
     symbol_table_t *table = malloc(sizeof(symbol_table_t));
     table->symbols = NULL;
     table->size = 0;
+    table->parent = NULL;
     return table;
 }
 
+// Initialize a new symbol table stack
+symbol_table_stack_t *initSymbolTableStack(symbol_table_t *table)
+{
+    printf("Initializing symbol table stack\n");
+    symbol_table_stack_t *stack = malloc(sizeof(symbol_table_stack_t));
+    stack->tables = malloc(sizeof(symbol_table_t *));
+    stack->tables[0] = table;
+    stack->size = 1;
+    return stack;
+}
 // Add a new symbol to the symbol table
 void addSymbol(symbol_table_t *table, char *name, char *type, int isConst, char *value)
 {
@@ -152,19 +170,46 @@ void printSymbolTable(symbol_table_t *table)
 }
 
 // Lookup a symbol in the symbol table and return its value
-char *lookupSymbol(symbol_table_t *table, char *name)
+char *lookupSymbol(symbol_table_stack_t *stack, char *name)
 {
     int i;
-    for (i = 0; i < table->size; i++)
-    {
-        if (strcmp(table->symbols[i]->name, name) == 0)
-        {
-            return table->symbols[i]->value;
+    printf("Looking up symbol %s\n", name);
+    printf("Stack size: %d\n", stack->size);
+    printf("Table size: %d\n", stack->tables[0]->size);
+    for (i = stack->size - 1; i >= 0; i--){
+        symbol_table_t *table = stack->tables[i];
+        int j;
+        for (j = 0; j < table->size; j++){
+            if (strcmp(table->symbols[j]->name, name) == 0){
+                return table->symbols[j]->value;
+            }
         }
     }
     fprintf(stderr, "Error: symbol %s not found in symbol table\n", name);
     exit(EXIT_FAILURE);
 }
+
+// Push a new symbol table onto the top of the stack
+void pushSymbolTable(symbol_table_stack_t *stack, symbol_table_t *table){
+    printf("Pushing symbol table\n");
+    printf("Stack size: %d\n", stack->size);
+    stack->size++;
+    stack->tables = realloc(stack->tables, stack->size * sizeof(symbol_table_t *));
+    stack->tables[stack->size - 1] = table;
+}
+
+// Pop the topmost symbol table from the stack
+symbol_table_t *popSymbolTable(symbol_table_stack_t *stack){
+    if (stack->size == 0){
+        fprintf(stderr, "Error: symbol table stack underflow\n");
+        exit(EXIT_FAILURE);
+    }
+    symbol_table_t *table = stack->tables[stack->size - 1];
+    stack->size--;
+    stack->tables = realloc(stack->tables, stack->size * sizeof(symbol_table_t *));
+    return table;
+}
+
 
 // Free the memory used by the symbol table
 void freeSymbolTable(symbol_table_t *table)

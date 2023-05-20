@@ -11,7 +11,7 @@ extern int yylineno;
 extern char* yytext;
 extern int yydebug;
 symbol_table_t *symbolTable;
-
+symbol_table_stack_t *symbolTableStack;
 
 
 %}
@@ -48,10 +48,12 @@ symbol_table_t *symbolTable;
 program : statement_list  
         ;
 
-statement_list : statement
-               | statement_list statement 
+statement_list : statement_list_inner
                ;
 
+statement_list_inner : statement
+                     | statement_list statement 
+                     ;
 statement : var_declaration
         | assignment_statement
           | print_statement
@@ -136,10 +138,11 @@ enum_assignment_statement: IDENTIFIER IDENTIFIER ASSIGN IDENTIFIER SEMICOLON
 print_statement : PRINT expression SEMICOLON 
                 ;
 
-if_statement : IF LPAREN expression RPAREN LBRACE statement_list RBRACE %prec ELSE
-             | IF LPAREN expression RPAREN LBRACE statement_list RBRACE elif_statement_list %prec ELSE
-             | IF LPAREN expression RPAREN LBRACE statement_list RBRACE else_statement %prec ELSE
-             | IF LPAREN expression RPAREN LBRACE statement_list RBRACE elif_statement_list else_statement %prec ELSE
+if_statement : IF LPAREN expression RPAREN LBRACE { pushSymbolTable(symbolTableStack,symbolTable); } statement_list RBRACE %prec ELSE
+             | IF LPAREN expression RPAREN LBRACE { pushSymbolTable(symbolTableStack,symbolTable); } statement_list RBRACE elif_statement_list %prec ELSE
+             | IF LPAREN expression RPAREN LBRACE { pushSymbolTable(symbolTableStack,symbolTable); } statement_list RBRACE else_statement %prec ELSE
+             | IF LPAREN expression RPAREN LBRACE { pushSymbolTable(symbolTableStack,symbolTable); } statement_list RBRACE elif_statement_list else_statement %prec ELSE
+             { popSymbolTable(symbolTableStack); }
              ;
 
 elif_statement_list : elif_statement_list elif_statement
@@ -229,6 +232,7 @@ void yyerror(char *s) {
 
 int main() {
     symbolTable = initSymbolTable();
+    symbolTableStack = initSymbolTableStack(symbolTable);
     yydebug = 0;
     int res = yyparse();
     if (res != 0) {
