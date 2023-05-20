@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "symbol_table.h"
 
 void yyerror(char *s);
 extern int yylex();
@@ -9,28 +10,26 @@ extern int yyparse();
 extern int yylineno;
 extern char* yytext;
 extern int yydebug;
+symbol_table_t *symbolTable;
+
+
+
 %}
 
 %union {
-    int ival;
-    float fval;
-    char *sval;
-    int *bval;
+    char*string_value;
 }
 
-%token  TYPE_STRING
-%token  TYPE_INT
-%token  TYPE_FLOAT
-%token  TYPE_BOOL
-%token  TYPE_VOID
-%token INTEGER FLOAT TRUE FALSE STRING IDENTIFIER 
-%token PRINT IF ELSE WHILE FOR DO BREAK CONTINUE RETURN ERROR SWITCH CASE COLON DEFAULT ELIF ENUM FUNCTION CONST
-%token SEMICOLON
-%token EQUAL NOTEQUAL GREATER GREATEREQUAL LESS LESSEQUAL COMMA ASSIGN
+%token <string_value> TYPE_STRING TYPE_INT TYPE_FLOAT TYPE_BOOL TYPE_VOID
+%token <string_value> INTEGER FLOAT TRUE FALSE STRING IDENTIFIER 
+%token <string_value> EQUAL NOTEQUAL GREATER GREATEREQUAL LESS LESSEQUAL COMMA ASSIGN
+%token <string_value> OR AND NOT
+%token <string_value> PLUS MINUS TIMES DIVIDE POWER MOD UMINUS
+%token  <expression> NILL
+%token PRINT IF ELSE WHILE FOR DO BREAK CONTINUE RETURN ERROR SWITCH CASE COLON DEFAULT ELIF ENUM FUNCTION CONST SEMICOLON
 %token LPAREN RPAREN LBRACE RBRACE
-%token OR AND NOT
-%token PLUS MINUS TIMES DIVIDE POWER MOD UMINUS
-%token NILL
+
+%type <string_value> DATA_TYPE expression
 
 %nonassoc UMINUS
 %left POWER
@@ -46,7 +45,7 @@ extern int yydebug;
 
 %%
 
-program : statement_list 
+program : statement_list  
         ;
 
 statement_list : statement
@@ -71,18 +70,18 @@ statement : var_declaration
           | enum_declaration_list
          ;
 
-var_declaration :DATA_TYPE IDENTIFIER ASSIGN expression SEMICOLON
-                    | DATA_TYPE IDENTIFIER SEMICOLON
+var_declaration :DATA_TYPE IDENTIFIER ASSIGN expression SEMICOLON   {addSymbol(symbolTable, $2, $1,0, $4);}
+                    | DATA_TYPE IDENTIFIER SEMICOLON  {addSymbol(symbolTable, $2, $1,0, NULL);}
                     | enum_assignment_statement
                       ;
 
-DATA_TYPE : TYPE_STRING
+DATA_TYPE : TYPE_STRING 
          | TYPE_INT
          | TYPE_FLOAT
          | TYPE_BOOL
          ;
 
-assignment_statement : IDENTIFIER ASSIGN expression SEMICOLON
+assignment_statement : IDENTIFIER ASSIGN expression SEMICOLON {updateSymbol(symbolTable, $1, $3);}
                      ;
 
 function_declaration : DATA_TYPE FUNCTION IDENTIFIER LPAREN function_parameters RPAREN LBRACE statement_list RBRACE
@@ -103,7 +102,7 @@ function_arguments : function_arguments COMMA expression
                    ;
 
 
-const_declaration: CONST var_declaration
+const_declaration: CONST DATA_TYPE IDENTIFIER ASSIGN expression SEMICOLON {addSymbol(symbolTable, $3, $2,1, $5);}
                  ;
 
 switch_statement: SWITCH LPAREN IDENTIFIER RPAREN LBRACE switch_statement_details RBRACE
@@ -191,16 +190,16 @@ error_statement : ERROR SEMICOLON
                 ;
 
 
-expression : INTEGER
-           | FLOAT
-           | TRUE
-           | FALSE
-           | STRING
+expression : INTEGER {$$ = $1;}
+           | FLOAT 
+           | TRUE 
+           | FALSE 
+           | STRING 
            | NILL
            | function_call
            | LPAREN expression RPAREN             %prec UMINUS
-           | IDENTIFIER
-           | expression PLUS expression           %prec PLUS
+           | IDENTIFIER   {lookupSymbol(symbolTable, $1);}
+           | expression PLUS expression           %prec PLUS 
            | expression MINUS expression          %prec MINUS
            | expression POWER expression          %prec POWER
            | expression TIMES expression          %prec TIMES
@@ -229,6 +228,7 @@ void yyerror(char *s) {
 
 
 int main() {
+    symbolTable = initSymbolTable();
     yydebug = 0;
     int res = yyparse();
     if (res != 0) {
@@ -236,5 +236,6 @@ int main() {
         exit(EXIT_FAILURE);
     }
     printf("Parsing successful!\n");
+    freeSymbolTable(symbolTable);
     return 0;
 }
