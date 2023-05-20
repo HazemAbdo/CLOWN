@@ -1,5 +1,6 @@
-int function test (int a, int b) {
+int a = 1;
+while (a == 1) {
     int c = 3;
     int d = 4;
-    return a;
+    int a = 2;
 }
