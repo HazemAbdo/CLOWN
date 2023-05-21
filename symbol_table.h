@@ -2,13 +2,18 @@
 #include <stdlib.h>
 #include <string.h>
 
-// define a map struct to save the name of the function and its return type
+// define a map struct to save the name of the function and its return type and add array of arguments and their types and the number of arguments
 typedef struct function
 {
     char *name;
     char *type;
+    char **arguments;
+    char **arguments_types;
+    char **arguments_called;
+    char **arguments_called_types;
+    int number_of_arguments;
+    int number_of_arguments_called;
 } function_t;
-
 typedef struct function_table
 {
     function_t **functions;
@@ -18,33 +23,153 @@ typedef struct function_table
 // init a new function table
 function_table_t *initFunctionTable()
 {
-    printf("Initializing function table\n");
     function_table_t *table = malloc(sizeof(function_table_t));
-    table->functions = NULL;
     table->size = 0;
+    table->functions = malloc(sizeof(function_t *));
     return table;
 }
-
 // add a new function to the function table
 void addFunction(function_table_t *table, char *name, char *type)
 {
-    // first check if the function is already in the table
+    // check if the function is already in the table
     for (int i = 0; i < table->size; i++)
     {
         if (strcmp(table->functions[i]->name, name) == 0)
         {
-            printf("Function %s already exists in function table\n", name);
+            printf("Function %s already exists\n", name);
             // return error
             return;
         }
     }
-    printf("Adding function %s to function table\n", name);
-    function_t *func = malloc(sizeof(function_t));
-    func->name = strdup(name);
-    func->type = strdup(type);
+    // add the function to the table
+    printf("Adding function %s\n", name);
     table->size++;
     table->functions = realloc(table->functions, sizeof(function_t *) * table->size);
-    table->functions[table->size - 1] = func;
+    table->functions[table->size - 1] = malloc(sizeof(function_t));
+    table->functions[table->size - 1]->name = name;
+    table->functions[table->size - 1]->type = type;
+    table->functions[table->size - 1]->number_of_arguments = 0;
+}
+
+void addArgument(function_table_t *table, char *name, char *type)
+{
+    // first get the function 
+    function_t *func = table->functions[table->size - 1];
+    // check if the argument is already in the function
+    for (int i = 0; i < func->number_of_arguments; i++)
+    {
+        if (strcmp(func->arguments[i], name) == 0)
+        {
+            printf("Argument %s already exists in function %s\n", name, func->name);
+            // return error
+            return;
+        }
+    }
+    // check if there is no arguments in the function
+    if (func->number_of_arguments == 0)
+    {
+        func->arguments = malloc(sizeof(char *));
+        func->arguments_types = malloc(sizeof(char *));
+    }
+
+    printf("Adding argument %s to function %s\n", name, func->name);
+    func->number_of_arguments++;
+    func->arguments = realloc(func->arguments, sizeof(char *) * func->number_of_arguments);
+    func->arguments_types = realloc(func->arguments_types, sizeof(char *) * func->number_of_arguments);
+    func->arguments[func->number_of_arguments - 1] = name;
+    func->arguments_types[func->number_of_arguments - 1] = type;
+    printf("Argument %s is of type %s\n", name, type);
+    
+}
+
+int getFunctionScope(function_table_t *table, char *name)
+{
+    // check if the function is already in the table
+    for (int i = 0; i < table->size; i++)
+    {
+        if (strcmp(table->functions[i]->name, name) == 0)
+        {
+            return i;
+        }
+    }
+    // return Error
+    return -1;
+}
+
+void addCalledArgument(function_table_t *table,int FunctionScope, char *name, char *type)
+{
+    // first get the function 
+    function_t *func = table->functions[FunctionScope];
+    // print function 
+    printf("Function %s\n", func->name);
+    // check if there is no arguments in the function return error
+    if (func->number_of_arguments == 0)
+    {
+        printf("Function %s has no arguments\n", func->name);
+        // return error
+        return;
+    }
+    if (func->number_of_arguments_called > func->number_of_arguments)
+    {
+        func->number_of_arguments_called = 0;
+    }
+    
+    
+    // check if there is no arguments in the function
+    if (func->number_of_arguments_called == 0)
+    {
+        func->arguments_called = malloc(sizeof(char *));
+        func->arguments_called_types = malloc(sizeof(char *));
+    }
+
+    printf("Adding argument called %s to function %s\n", name, func->name);
+    printf("Number of arguments called %d\n", func->number_of_arguments_called);
+    printf("Number of arguments %d\n", func->number_of_arguments);
+    func->number_of_arguments_called++;
+    func->arguments_called = realloc(func->arguments_called, sizeof(char *) * func->number_of_arguments_called);
+    func->arguments_called_types = realloc(func->arguments_called_types, sizeof(char *) * func->number_of_arguments_called);
+    func->arguments_called[func->number_of_arguments_called - 1] = name;
+    func->arguments_called_types[func->number_of_arguments_called - 1] = type;
+    printf("Argument called %s is of type %s\n", name, type);
+}
+
+void checkArguments(function_table_t *table,int FunctionScope)
+{
+    // first get the function 
+    function_t *func = table->functions[FunctionScope];
+    printf("Checking arguments of function %s\n", func->name);
+    // check if there is no arguments in the function return error
+    if (func->number_of_arguments == 0)
+    {
+        printf("Function %s has no arguments\n", func->name);
+        // return error
+        return;
+    }
+    // check if the number of arguments is the same
+    if (func->number_of_arguments != func->number_of_arguments_called)
+    {
+        printf("Function %s has %d arguments but %d arguments were called\n", func->name, func->number_of_arguments, func->number_of_arguments_called);
+        // return error
+        return;
+    }
+    
+    // check if the arguments types are the same
+    for (int i = 0; i < func->number_of_arguments; i++)
+    {
+        printf("Argument %s has type %s\n", func->arguments[i], func->arguments_types[i]);
+        printf("Argument called %s has type %s\n", func->arguments_called[i], func->arguments_called_types[i]);
+        if (strcmp(func->arguments_types[i], func->arguments_called_types[i]) != 0)
+        {
+            printf("Function %s has argument %s of type %s but %s was called with type %s\n", func->name, func->arguments[i], func->arguments_types[i], func->arguments_called[i], func->arguments_called_types[i]);
+            // return error
+            return;
+        }
+    }
+    printf("Function %s has correct arguments\n", func->name);
+    // return all arguments to null
+    func->number_of_arguments_called = 0;
+    func->arguments_called = NULL;
+    func->arguments_called_types = NULL;
 }
 
 // Define a structure to represent a symbol
@@ -98,20 +223,20 @@ symbol_table_stack_t *initSymbolTableStack(symbol_table_t *table)
 void addSymbol(symbol_table_t *table, function_table_t *mapList, char *name, char *type, int isConst, char *value)
 {
     // print current stack size
-    printf("Table size before add: %d\n", table->size);
-    if (isConst == 1)
-    {
-        printf("Adding constant %s to symbol table\n", name);
-    }
-    else
-    {
-        printf("Adding variable %s to symbol table\n", name);
-    }
+    // printf("Table size before add: %d\n", table->size);
+    // if (isConst == 1)
+    // {
+    //     printf("Adding constant %s to symbol table\n", name);
+    // }
+    // else
+    // {
+    //     printf("Adding variable %s to symbol table\n", name);
+    // }
     symbol_t *sym = malloc(sizeof(symbol_t));
     sym->name = strdup(name);
     sym->type = strdup(type);
     sym->isConst = isConst;
-    printf("Value: %s\n", value);
+    // printf("Value: %s\n", value);
     int is_function = 0;
     if (value != NULL && strlen(value) > 1)
     {
@@ -185,7 +310,7 @@ void addSymbol(symbol_table_t *table, function_table_t *mapList, char *name, cha
     table->size++;
     table->symbols = realloc(table->symbols, table->size * sizeof(symbol_t *));
     table->symbols[table->size - 1] = sym;
-    printf("Table size after add: %d\n", table->size);
+    // printf("Table size after add: %d\n", table->size);
 }
 
 void unInitalized_variables(symbol_table_t *table)

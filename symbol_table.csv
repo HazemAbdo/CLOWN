@@ -1,11 +1,6 @@
 ======
 Symbol Table
 Name,Type,Const,Value,Initialized
-c,int,0,3,1
-d,int,0,4,1
-======
-Symbol Table
-Name,Type,Const,Value,Initialized
 a,int,0,(null),0
 b,int,0,(null),0
 c,int,0,3,1
@@ -13,11 +8,13 @@ d,int,0,4,1
 ======
 Symbol Table
 Name,Type,Const,Value,Initialized
-a,int,0,(null),0
-b,int,0,(null),0
+a2,int,0,(null),0
+b2,float,0,(null),0
+c,int,0,3,1
+d,int,0,4,1
 ======
 Symbol Table
 Name,Type,Const,Value,Initialized
 a,int,0,1,1
-d,int,0,4,1
 z,int,0,test,1
+z2,int,0,test2,1

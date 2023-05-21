@@ -13,6 +13,7 @@ extern int yydebug;
 symbol_table_t *symbolTable;
 symbol_table_stack_t *symbolTableStack;
 function_table_t *functionTable;
+int FunctionScope=0;
 %}
 
 %union {
@@ -89,42 +90,42 @@ function_declaration : DATA_TYPE FUNCTION IDENTIFIER LPAREN {addFunction(functio
                     | TYPE_VOID FUNCTION IDENTIFIER LPAREN {addFunction(functionTable,$3,$1); symbolTable= pushSymbolTable(symbolTableStack); } function_parameters RPAREN LBRACE  statement_list  RBRACE { symbolTable=popSymbolTable(symbolTableStack);}
                    ;
 
-function_parameters : function_parameters COMMA DATA_TYPE IDENTIFIER {addSymbol(symbolTable, functionTable,$4, $3,0, NULL);}
-                    | DATA_TYPE IDENTIFIER {addSymbol(symbolTable,functionTable, $2, $1,0, NULL);}
+function_parameters : function_parameters COMMA DATA_TYPE IDENTIFIER {addSymbol(symbolTable, functionTable,$4, $3,0, NULL);addArgument(functionTable, $4, $3);}
+                    | DATA_TYPE IDENTIFIER {addSymbol(symbolTable,functionTable, $2, $1,0, NULL);addArgument(functionTable, $2, $1);}
                     | /* empty */
                     ;
-function_call : IDENTIFIER LPAREN function_arguments RPAREN  
+function_call : IDENTIFIER {FunctionScope = getFunctionScope(functionTable,$1);} LPAREN function_arguments RPAREN {checkArguments(functionTable,FunctionScope);} 
                 ;
 
-function_arguments : function_arguments COMMA argument  
+function_arguments : function_arguments COMMA argument 
                    | argument 
                    | /* empty */
                    ;
 
-argument :  INTEGER {printf("int argument: %s\n", $1);}
-            | FLOAT {printf("float argument: %s\n", $1);}
-            | TRUE {printf("bool argument: %s\n", $1);}
-            | FALSE {printf("bool argument: %s\n", $1);}
-            | STRING {printf("string argument: %s\n", $1);}
-            | IDENTIFIER {printf("identifier argument: %s\n", $1);}
-            | argument PLUS argument {printf("argument PLUS argument\n");}
-            | argument MINUS argument {printf("argument MINUS argument\n");}
-            | argument TIMES argument {printf("argument TIMES argument\n");}
-            | argument DIVIDE argument {printf("argument DIVIDE argument\n");}
-            | argument POWER argument {printf("argument POWER argument\n");}
-            | argument MOD argument {printf("argument MOD argument\n");}
-            | argument EQUAL argument {printf("argument EQUAL argument\n");}
-            | argument NOTEQUAL argument {printf("argument NOTEQUAL argument\n");}
-            | argument GREATER argument {printf("argument GREATER argument\n");}
-            | argument GREATEREQUAL argument {printf("argument GREATEREQUAL argument\n");}
-            | argument LESS argument {printf("argument LESS argument\n");}
-            | argument LESSEQUAL argument {printf("argument LESSEQUAL argument\n");}
-            | NOT argument {printf("NOT argument\n");}
-            | argument OR argument {printf("argument OR argument\n");}
-            | argument AND argument {printf("argument AND argument\n");}
-            | MINUS argument {printf("MINUS argument\n");}
-            | function_call {printf("function_call\n");}
-            | NILL {printf("NILL\n");}
+argument :  INTEGER {addCalledArgument(functionTable,FunctionScope, $1, "int");}
+            | FLOAT {addCalledArgument(functionTable,FunctionScope, $1, "float");}
+            | TRUE {addCalledArgument(functionTable,FunctionScope, $1, "bool");}
+            | FALSE {addCalledArgument(functionTable,FunctionScope, $1, "bool");}
+            | STRING {addCalledArgument(functionTable,FunctionScope, $1, "string");}
+            | IDENTIFIER 
+            | argument PLUS argument 
+            | argument MINUS argument 
+            | argument TIMES argument 
+            | argument DIVIDE argument 
+            | argument POWER argument 
+            | argument MOD argument 
+            | argument EQUAL argument 
+            | argument NOTEQUAL argument 
+            | argument GREATER argument 
+            | argument GREATEREQUAL argument 
+            | argument LESS argument 
+            | argument LESSEQUAL argument 
+            | NOT argument 
+            | argument OR argument 
+            | argument AND argument 
+            | MINUS argument 
+            | function_call 
+            | NILL 
             ;
 
 const_declaration: CONST DATA_TYPE IDENTIFIER ASSIGN expression SEMICOLON {addSymbol(symbolTable,functionTable, $3, $2,1, $5);}
