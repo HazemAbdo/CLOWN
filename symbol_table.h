@@ -263,8 +263,6 @@ void addSymbol(symbol_table_t *table, function_table_t *mapList, char *name, cha
         // check if the value is a variable and if yes, check the type of the variable with the type of the variable
         for (int i = 0; i < table->size; i++)
         {
-            printf("Variable name: %s\n", table->symbols[i]->name);
-            printf("Variable type: %s\n", table->symbols[i]->type);
             if (strcmp(table->symbols[i]->name, value) == 0)
             {
                 if (strcmp(table->symbols[i]->type, type) != 0)
@@ -277,10 +275,11 @@ void addSymbol(symbol_table_t *table, function_table_t *mapList, char *name, cha
         }
     }
 
+    
     // Check if value has the correct type
     if (value != NULL && is_function == 0 && is_variable ==0)
     {
-        if (strcmp(sym->type, "int") == 0 && atoi(value) == 0)
+        if (strcmp(sym->type, "int") == 0 && atoi(value) == 0 && strcmp(value, "0") != 0)
         {
             fprintf(stderr, "Error: value for variable %s is not of type int\n", name);
             exit(EXIT_FAILURE);
