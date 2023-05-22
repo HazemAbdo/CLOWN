@@ -14,6 +14,7 @@ typedef struct function
     int number_of_arguments;
     int number_of_arguments_called;
 } function_t;
+
 typedef struct function_table
 {
     function_t **functions;
@@ -28,6 +29,7 @@ function_table_t *initFunctionTable()
     table->functions = malloc(sizeof(function_t *));
     return table;
 }
+
 // add a new function to the function table
 void addFunction(function_table_t *table, char *name, char *type)
 {
@@ -53,7 +55,7 @@ void addFunction(function_table_t *table, char *name, char *type)
 
 void addArgument(function_table_t *table, char *name, char *type)
 {
-    // first get the function 
+    // first get the function
     function_t *func = table->functions[table->size - 1];
     // check if the argument is already in the function
     for (int i = 0; i < func->number_of_arguments; i++)
@@ -79,7 +81,6 @@ void addArgument(function_table_t *table, char *name, char *type)
     func->arguments[func->number_of_arguments - 1] = name;
     func->arguments_types[func->number_of_arguments - 1] = type;
     printf("Argument %s is of type %s\n", name, type);
-    
 }
 
 int getFunctionScope(function_table_t *table, char *name)
@@ -96,11 +97,11 @@ int getFunctionScope(function_table_t *table, char *name)
     return -1;
 }
 
-void addCalledArgument(function_table_t *table,int FunctionScope, char *name, char *type)
+void addCalledArgument(function_table_t *table, int FunctionScope, char *name, char *type)
 {
-    // first get the function 
+    // first get the function
     function_t *func = table->functions[FunctionScope];
-    // print function 
+    // print function
     printf("Function %s\n", func->name);
     // check if there is no arguments in the function return error
     if (func->number_of_arguments == 0)
@@ -113,8 +114,7 @@ void addCalledArgument(function_table_t *table,int FunctionScope, char *name, ch
     {
         func->number_of_arguments_called = 0;
     }
-    
-    
+
     // check if there is no arguments in the function
     if (func->number_of_arguments_called == 0)
     {
@@ -133,9 +133,9 @@ void addCalledArgument(function_table_t *table,int FunctionScope, char *name, ch
     printf("Argument called %s is of type %s\n", name, type);
 }
 
-void checkArguments(function_table_t *table,int FunctionScope)
+void checkArguments(function_table_t *table, int FunctionScope)
 {
-    // first get the function 
+    // first get the function
     function_t *func = table->functions[FunctionScope];
     printf("Checking arguments of function %s\n", func->name);
     // check if there is no arguments in the function return error
@@ -152,7 +152,7 @@ void checkArguments(function_table_t *table,int FunctionScope)
         // return error
         return;
     }
-    
+
     // check if the arguments types are the same
     for (int i = 0; i < func->number_of_arguments; i++)
     {
