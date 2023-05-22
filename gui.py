@@ -1,64 +1,57 @@
 import tkinter as tk
-from os import system
 import tkinter.scrolledtext as scrolledtext
 from tkinter.filedialog import askopenfilename
+from os import system
 
-window_size = (1080, 720)
-frame_size = (int(window_size[0] * 0.90), int(window_size[1] - 20))
+WINDOW_SIZE = (1080, 720)
+FRAME_SIZE = (int(WINDOW_SIZE[0] * 0.90), int(WINDOW_SIZE[1] - 20))
+QUADS_OR_ST = "Show Quadruples"
+TITLE = "CLOWN"
+BACKGROUND_COLOR = "#2b2d35"
 
-# create window with size of 1080x720
-window = tk.Tk()
-window.title("A3E")
-window.configure(background='#2b2d35')
-window.geometry(f"{window_size[0]}x{window_size[1]}")
 
-quads_or_st = "Show Quadruples"
+def create_window():
+    global window
+    window = tk.Tk()
+    window.title(TITLE)
+    window.configure(background=BACKGROUND_COLOR)
+    window.geometry(f"{WINDOW_SIZE[0]}x{WINDOW_SIZE[1]}")
 
 
 def compile_code():
-    # get code from text box
-    global code_area
-    code = code_area.get("1.0", tk.END)
+    global code_text_area, symbol_table_text_area, errors_text_area
+    code = code_text_area.get("1.0", tk.END)
 
-    # write code to test.clown file
     with open("test.clown", "w") as file:
         file.write(code)
 
-    system('"src\\a3e" < test.clown')
+    system('make all && make run INPUT_FILE=test.clown')
 
-    # read src/outputs/symbol_table.txt file
-    with open("output/symbol_table.txt", "r") as file:
+    with open("outputs/symbol_table.txt", "r") as file:
         symbol_table = file.read()
 
-    # display symbol table
-    global symbol_table_area
-    symbol_table_area.config(state='normal')
-    symbol_table_area.delete("1.0", tk.END)
-    symbol_table_area.insert("1.0", symbol_table)
-    symbol_table_area.config(state='disabled')
+    symbol_table_text_area.config(state='normal')
+    symbol_table_text_area.delete("1.0", tk.END)
+    symbol_table_text_area.insert("1.0", symbol_table)
+    symbol_table_text_area.config(state='disabled')
 
-    # read src/outputs/errors.txt file
-    with open("output/errors.txt", "r") as file:
+    with open("outputs/errors.txt", "r") as file:
         errors = file.read()
 
-    # display errors
-    global errors_area
-    errors_area.config(state='normal')
-    errors_area.delete("1.0", tk.END)
-    errors_area.insert("1.0", errors)
-    errors_area.config(state='disabled')
+    errors_text_area.config(state='normal')
+    errors_text_area.delete("1.0", tk.END)
+    errors_text_area.insert("1.0", errors)
+    errors_text_area.config(state='disabled')
 
 
 def select_file():
+    global code_text_area
     file_name = askopenfilename(initialdir="/", title="Select file",
-                                filetypes=(("all files", "*.*"), ("text files", "*.txt")))
-
-    # open file and display it in text box
+                                filetypes=(("all files", "*.*"), ("CLOWNs files", "*.clown")))
 
     with open(file_name, "r") as file:
-        global code_area
-        code_area.delete("1.0", tk.END)
-        code_area.insert("1.0", file.read())
+        code_text_area.delete("1.0", tk.END)
+        code_text_area.insert("1.0", file.read())
 
 
 class LineNumbers(tk.Text):
@@ -67,15 +60,22 @@ class LineNumbers(tk.Text):
 
         self.text_widget = text_widget
         self.text_widget.bind('<KeyPress>', self.on_key_press)
+        self.text_widget.bind('<KeyRelease>', self.on_key_release)
 
         self.insert(1.0, '1')
         self.configure(state='disabled')
 
     def on_key_press(self, event=None):
-        final_index = str(self.text_widget.index(tk.END))
-        num_of_lines = final_index.split('.')[0]
-        line_numbers_string = "\n".join(str(no + 1)
-                                        for no in range(int(num_of_lines)))
+        self.update_line_numbers()
+
+    def on_key_release(self, event=None):
+        self.update_line_numbers()
+
+    def update_line_numbers(self):
+        final_index = self.text_widget.index('end-1c')
+        num_of_lines = int(final_index.split('.')[0])
+        line_numbers_string = '\n'.join(str(i)
+                                        for i in range(1, num_of_lines + 1))
         width = len(str(num_of_lines))
 
         self.configure(state='normal', width=width)
@@ -84,80 +84,87 @@ class LineNumbers(tk.Text):
         self.configure(state='disabled')
 
 
-def flip_content():
-    global quads_or_st
-    global flip_button
-    global symbol_table_area
+def toggle_content():
+    global QUADS_OR_ST, flip_button, symbol_table_text_area
 
-    symbol_table_area.config(state='normal')
-    symbol_table_area.delete("1.0", tk.END)
+    symbol_table_text_area.config(state='normal')
+    symbol_table_text_area.delete("1.0", tk.END)
 
-    if quads_or_st == "Show Symbol Table":
-        quads_or_st = "Show Quadruples"
+    if QUADS_OR_ST == "Show Symbol Table":
+        QUADS_OR_ST = "Show Quadruples"
 
-        with open("output/symbol_table.txt", "r") as file:
+        with open("outputs/symbol_table.txt", "r") as file:
             data = file.read()
 
     else:
-        quads_or_st = "Show Symbol Table"
+        QUADS_OR_ST = "Show Symbol Table"
 
-        with open("output/quads.txt", "r") as file:
+        with open("outputs/quads.txt", "r") as file:
             data = file.read()
 
-    flip_button.config(text=quads_or_st)
+    flip_button.config(text=QUADS_OR_ST)
 
-    symbol_table_area.insert("1.0", data)
-    symbol_table_area.config(state='disabled')
-
-##### Widgets #####
+    symbol_table_text_area.insert("1.0", data)
+    symbol_table_text_area.config(state='disabled')
 
 
-top_frame = tk.Frame(window, width=frame_size[0], height=frame_size[1],
-                     bg="#2b2d35", borderwidth=5, relief="flat")
+def create_widgets():
+    global top_frame, code_text_area, symbol_table_text_area, bottom_frame, errors_text_area, compile_button, select_file_button, flip_button
 
-code_area = tk.Text(top_frame, width=50, height=28,
-                    borderwidth=3, relief="ridge")
+    top_frame = tk.Frame(window, width=FRAME_SIZE[0], height=FRAME_SIZE[1],
+                         bg=BACKGROUND_COLOR, borderwidth=5, relief="flat")
 
-symbol_table_area = scrolledtext.ScrolledText(
-    top_frame, width=50, height=28, borderwidth=3, relief="ridge", wrap="none")
+    code_text_area = tk.Text(top_frame, width=50, height=25,
+                             borderwidth=3, relief="flat")
 
-bottom_frame = tk.Frame(window, width=frame_size[0], height=frame_size[1],
-                        bg="#2b2d35", borderwidth=5, relief="flat")
+    symbol_table_text_area = scrolledtext.ScrolledText(
+        top_frame, width=50, height=28, borderwidth=3, relief="flat", wrap="none")
 
-errors_area = tk.Text(bottom_frame, width=80, height=18,
-                      borderwidth=3, relief="ridge")
+    bottom_frame = tk.Frame(window, width=FRAME_SIZE[0], height=FRAME_SIZE[1],
+                            bg=BACKGROUND_COLOR, borderwidth=5, relief="flat")
+
+    errors_text_area = tk.Text(bottom_frame, width=80, height=18,
+                               borderwidth=3, relief="ridge", fg='red')
+
+    compile_button = tk.Button(bottom_frame, text="Compile", width=15, height=1, fg=BACKGROUND_COLOR, font=("Monospace", 12),
+                               command=compile_code)
+
+    select_file_button = tk.Button(bottom_frame, text="Select file", width=15, height=1, fg=BACKGROUND_COLOR, font=("Monospace", 12),
+                                   command=select_file)
+
+    flip_button = tk.Button(bottom_frame, text=QUADS_OR_ST, width=15, height=1, fg=BACKGROUND_COLOR, font=("Monospace", 12),
+                            command=toggle_content)
 
 
-compile_button = tk.Button(bottom_frame, text="Compile", width=15, height=1, fg='#2b2d35', font=("Helvetica", 14),
-                           command=compile_code)
+def configure_widgets():
+    global code_text_area_lines_numbers
 
-select_file_button = tk.Button(bottom_frame, text="Select file", width=15, height=1, fg='#2b2d35', font=("Helvetica", 14),
-                               command=select_file)
+    code_text_area_lines_numbers = LineNumbers(
+        top_frame, code_text_area, width=3)
+    symbol_table_text_area.configure(state='disabled')
+    errors_text_area.configure(state='disabled')
 
-flip_button = tk.Button(bottom_frame, text=quads_or_st, width=15, height=1, fg='#2b2d35', font=("Helvetica", 14),
-                        command=flip_content)
+
+def pack_widgets():
+    top_frame.pack()
+    code_text_area_lines_numbers.pack(side="left", pady=30, fill="y")
+    code_text_area.pack(side="left", fill="y", pady=30)
+    symbol_table_text_area.pack(side="right", padx=20, pady=30)
+
+    bottom_frame.pack()
+    errors_text_area.pack(side=tk.LEFT, padx=(20, 20), pady=(0, 30))
+    select_file_button.pack(side=tk.TOP, pady=(0, 20))
+    compile_button.pack(side=tk.TOP, pady=(0, 20))
+    flip_button.pack(side=tk.TOP, pady=(0, 20))
 
 
-##### Configurations #####
+def run_app():
+    create_window()
+    create_widgets()
+    configure_widgets()
+    pack_widgets()
+    window.mainloop()
 
-code_area_lines_numbers = LineNumbers(top_frame, code_area, width=3)
 
-symbol_table_area.configure(state='disabled')
-errors_area.configure(state='disabled')
-
-###### Packing Area ######
-
-top_frame.pack()
-code_area_lines_numbers.pack(side="left", pady=30, fill="y")
-code_area.pack(side="left", fill="y", pady=30)
-symbol_table_area.pack(side="right", padx=20, pady=30)
-
-bottom_frame.pack()
-errors_area.pack(side=tk.LEFT, padx=(20, 20), pady=(0, 30))
-select_file_button.pack(side=tk.TOP, pady=(0, 20))
-compile_button.pack(side=tk.TOP, pady=(0, 20))
-flip_button.pack(side=tk.TOP, pady=(0, 20))
-
-##### Main loop #####
-
-window.mainloop()
+if __name__ == '__main__':
+    run_app()

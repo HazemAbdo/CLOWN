@@ -1,0 +1,12 @@
+======
+Symbol Table
+Name,Type,Const,Value,Initialized
+a,int,0,4,1
+======
+Symbol Table
+Name,Type,Const,Value,Initialized
+a,int,0,4,1
+======
+Symbol Table
+Name,Type,Const,Value,Initialized
+d,int,0,10,1

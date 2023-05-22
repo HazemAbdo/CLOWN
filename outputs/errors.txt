@@ -1,0 +1,1 @@
+Error: symbol d not found in symbol table on line 5
