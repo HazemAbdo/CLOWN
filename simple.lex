@@ -5,7 +5,7 @@
 
 %%
 
-"int"         {yylval.string_value="int";  return TYPE_INT; }
+"int"         { yylval.string_value="int";  return TYPE_INT; }
 "float"       { yylval.string_value="float";  return TYPE_FLOAT; }
 "string"      { yylval.string_value="string";  return TYPE_STRING; }
 "bool"        { yylval.string_value="bool";  return TYPE_BOOL; }
@@ -21,7 +21,7 @@
 "break"     { return BREAK; }
 "continue"  { return CONTINUE; }
 "return"    { return RETURN; }
-"="         {yylval.string_value="="; return ASSIGN; }
+"="         { yylval.string_value="="; return ASSIGN; }
 "=="        { yylval.string_value="=="; return EQUAL; }
 "!="        { yylval.string_value="!="; return NOTEQUAL; }
 ">"         { yylval.string_value=">"; return GREATER; }
@@ -43,15 +43,15 @@
 "}"         { return RBRACE; }
 ";"         { return SEMICOLON; }
 "function"  { return FUNCTION; }
-"const"     {return CONST;}
-"switch"    {return SWITCH;}
-"case"      {return CASE;}
-"default"   {return DEFAULT;}
-"enum"     {return ENUM;}
-"NULL"     {yylval.string_value="NULL"; return NILL;}
-"true"     {yylval.string_value="true"; return TRUE;}
-"false"    {yylval.string_value="false"; return FALSE;}
-":"         {return COLON;}
+"const"     { return CONST; }
+"switch"    { return SWITCH; }
+"case"      { return CASE; }
+"default"   { return DEFAULT; }
+"enum"     { return ENUM; }
+"NULL"     { yylval.string_value="NULL"; return NILL; }
+"true"     { yylval.string_value="true"; return TRUE; }
+"false"    { yylval.string_value="false"; return FALSE; }
+":"         { return COLON; }
 ","         { return COMMA; }
 [ \t\n]     ; /* ignore whitespace */
 [/][*][^*]*[*]+([^*/][^*]*[*]+)*[/] ; /* ignore comments */
