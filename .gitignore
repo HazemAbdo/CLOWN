@@ -1,5 +1,2 @@
-draft.y
-*.c
-*.output
-*.txt
-parser
+build/*
+!build/.gitkeep
