@@ -74,13 +74,13 @@ void addArgument(function_table_t *table, char *name, char *type)
         func->arguments_types = malloc(sizeof(char *));
     }
 
-    printf("Adding argument %s to function %s\n", name, func->name);
+    // printf("Adding argument %s to function %s\n", name, func->name);
     func->number_of_arguments++;
     func->arguments = realloc(func->arguments, sizeof(char *) * func->number_of_arguments);
     func->arguments_types = realloc(func->arguments_types, sizeof(char *) * func->number_of_arguments);
     func->arguments[func->number_of_arguments - 1] = name;
     func->arguments_types[func->number_of_arguments - 1] = type;
-    printf("Argument %s is of type %s\n", name, type);
+    // printf("Argument %s is of type %s\n", name, type);
 }
 
 int getFunctionScope(function_table_t *table, char *name)
@@ -97,41 +97,6 @@ int getFunctionScope(function_table_t *table, char *name)
     return -1;
 }
 
-void addCalledArgument(function_table_t *table, int FunctionScope, char *name, char *type)
-{
-    // first get the function
-    function_t *func = table->functions[FunctionScope];
-    // print function
-    printf("Function %s\n", func->name);
-    // check if there is no arguments in the function return error
-    if (func->number_of_arguments == 0)
-    {
-        printf("Function %s has no arguments\n", func->name);
-        // return error
-        return;
-    }
-    if (func->number_of_arguments_called > func->number_of_arguments)
-    {
-        func->number_of_arguments_called = 0;
-    }
-
-    // check if there is no arguments in the function
-    if (func->number_of_arguments_called == 0)
-    {
-        func->arguments_called = malloc(sizeof(char *));
-        func->arguments_called_types = malloc(sizeof(char *));
-    }
-
-    printf("Adding argument called %s to function %s\n", name, func->name);
-    printf("Number of arguments called %d\n", func->number_of_arguments_called);
-    printf("Number of arguments %d\n", func->number_of_arguments);
-    func->number_of_arguments_called++;
-    func->arguments_called = realloc(func->arguments_called, sizeof(char *) * func->number_of_arguments_called);
-    func->arguments_called_types = realloc(func->arguments_called_types, sizeof(char *) * func->number_of_arguments_called);
-    func->arguments_called[func->number_of_arguments_called - 1] = name;
-    func->arguments_called_types[func->number_of_arguments_called - 1] = type;
-    printf("Argument called %s is of type %s\n", name, type);
-}
 
 void checkArguments(function_table_t *table, int FunctionScope)
 {
@@ -217,6 +182,60 @@ symbol_table_stack_t *initSymbolTableStack(symbol_table_t *table)
     stack->size = 1;
 
     return stack;
+}
+
+void addCalledArgument(symbol_table_t *symbol_table,function_table_t *table, int FunctionScope, char *name, char *type)
+{
+    // first get the function
+    function_t *func = table->functions[FunctionScope];
+    // print function
+    printf("Function %s\n", func->name);
+    // check if there is no arguments in the function return error
+    if (func->number_of_arguments == 0)
+    {
+        printf("Function %s has no arguments\n", func->name);
+        // return error
+        return;
+    }
+    if (func->number_of_arguments_called > func->number_of_arguments)
+    {
+        func->number_of_arguments_called = 0;
+    }
+
+    // check if there is no arguments in the function
+    if (func->number_of_arguments_called == 0)
+    {
+        func->arguments_called = malloc(sizeof(char *));
+        func->arguments_called_types = malloc(sizeof(char *));
+    }
+    if (type == "identifier")
+    {
+        // check the return type of the identifer from the symbol table
+        int entered = 0;
+        for (int i = 0; i < symbol_table->size; i++)
+        {
+            if (strcmp(symbol_table->symbols[i]->name, name) == 0)
+            {
+                type = symbol_table->symbols[i]->type;
+                entered = 1;
+            }
+        }
+        if (entered == 0)
+        {
+            printf("Identifier %s not declared\n", name);
+            return;
+        }
+    }
+
+    // printf("Adding argument called %s to function %s\n", name, func->name);
+    // printf("Number of arguments called %d\n", func->number_of_arguments_called);
+    // printf("Number of arguments %d\n", func->number_of_arguments);
+    func->number_of_arguments_called++;
+    func->arguments_called = realloc(func->arguments_called, sizeof(char *) * func->number_of_arguments_called);
+    func->arguments_called_types = realloc(func->arguments_called_types, sizeof(char *) * func->number_of_arguments_called);
+    func->arguments_called[func->number_of_arguments_called - 1] = name;
+    func->arguments_called_types[func->number_of_arguments_called - 1] = type;
+    // printf("Argument called %s is of type %s\n", name, type);
 }
 
 // Add a new symbol to the symbol table

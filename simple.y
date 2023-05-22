@@ -104,12 +104,12 @@ function_arguments : function_arguments COMMA argument
                    | /* empty */
                    ;
 
-argument : INTEGER { addCalledArgument(functionTable, FunctionScope, $1, "int"); }
-         | FLOAT { addCalledArgument(functionTable, FunctionScope, $1, "float"); }
-         | TRUE { addCalledArgument(functionTable, FunctionScope, $1, "bool"); }
-         | FALSE { addCalledArgument(functionTable, FunctionScope, $1, "bool"); }
-         | STRING { addCalledArgument(functionTable, FunctionScope, $1, "string"); }
-         | IDENTIFIER 
+argument : INTEGER { addCalledArgument(symbolTable,functionTable, FunctionScope, $1, "int"); }
+         | FLOAT { addCalledArgument(symbolTable,functionTable, FunctionScope, $1, "float"); }
+         | TRUE { addCalledArgument(symbolTable,functionTable, FunctionScope, $1, "bool"); }
+         | FALSE { addCalledArgument(symbolTable,functionTable, FunctionScope, $1, "bool"); }
+         | STRING { addCalledArgument(symbolTable,functionTable, FunctionScope, $1, "string"); }
+         | IDENTIFIER { addCalledArgument(symbolTable,functionTable, FunctionScope, $1, "identifier"); }
          | argument PLUS argument 
          | argument MINUS argument 
          | argument TIMES argument 

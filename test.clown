@@ -9,7 +9,7 @@ int function test2 (int a2, float b2) {
     int d = 4;
     return a;
 }
-
 int x = 1;
-bool y = true;
-int z = y;
+float y = 2;
+
+int z = test(x, y);
