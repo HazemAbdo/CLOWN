@@ -257,8 +257,28 @@ void addSymbol(symbol_table_t *table, function_table_t *mapList, char *name, cha
         }
     }
 
+    int is_variable = 0;
+    if (value != NULL && strlen(value) >= 1)
+    {
+        // check if the value is a variable and if yes, check the type of the variable with the type of the variable
+        for (int i = 0; i < table->size; i++)
+        {
+            printf("Variable name: %s\n", table->symbols[i]->name);
+            printf("Variable type: %s\n", table->symbols[i]->type);
+            if (strcmp(table->symbols[i]->name, value) == 0)
+            {
+                if (strcmp(table->symbols[i]->type, type) != 0)
+                {
+                    fprintf(stderr, "Error: type of variable %s is not of type %s\n", value, type);
+                    exit(EXIT_FAILURE);
+                }
+                is_variable = 1;
+            }
+        }
+    }
+
     // Check if value has the correct type
-    if (value != NULL && is_function == 0)
+    if (value != NULL && is_function == 0 && is_variable ==0)
     {
         if (strcmp(sym->type, "int") == 0 && atoi(value) == 0)
         {
@@ -273,16 +293,6 @@ void addSymbol(symbol_table_t *table, function_table_t *mapList, char *name, cha
         else if (strcmp(sym->type, "String") == 0 && strlen(value) > 1)
         {
             fprintf(stderr, "Error: value for variable %s is not of type char\n", name);
-            exit(EXIT_FAILURE);
-        }
-        else if (strcmp(sym->type, "bool") == 0 && (strcmp(value, "true") != 0 || strcmp(value, "false") != 0))
-        {
-            fprintf(stderr, "Error: value for variable %s is not of type bool\n", name);
-            exit(EXIT_FAILURE);
-        }
-        else if (strcmp(sym->type, "void") == 0 && value != NULL)
-        {
-            fprintf(stderr, "Error: value for variable %s is not of type void\n", name);
             exit(EXIT_FAILURE);
         }
     }
@@ -365,6 +375,7 @@ void printSymbolTable(symbol_table_t *table)
     fclose(fp);
 }
 
+
 // Lookup a symbol in the symbol table and return its value
 char *lookupSymbol(symbol_table_stack_t *stack, char *name)
 {
@@ -409,7 +420,7 @@ symbol_table_t *popSymbolTable(symbol_table_stack_t *stack)
     stack->tables = realloc(stack->tables, stack->size * sizeof(symbol_table_t *));
 
     // write the symbol table to external file
-    printSymbolTable(table);
+    // printSymbolTable(table);
 
     return stack->tables[stack->size - 1];
 }
@@ -419,7 +430,6 @@ void printSymbolTableStack(symbol_table_stack_t *stack)
     int i;
     for (i = 0; i < stack->size; i++)
     {
-        printf("Symbol table %d\n", i);
         printSymbolTable(stack->tables[i]);
     }
 }

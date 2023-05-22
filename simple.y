@@ -72,8 +72,8 @@ statement : var_declaration
           | enum_declaration_list
          ;
 
-var_declaration :DATA_TYPE IDENTIFIER ASSIGN expression SEMICOLON   {addSymbol(symbolTable,functionTable, $2, $1,0, $4);}
-                    | DATA_TYPE IDENTIFIER SEMICOLON  {addSymbol(symbolTable,functionTable, $2, $1,0, NULL);}
+var_declaration :DATA_TYPE IDENTIFIER ASSIGN expression SEMICOLON   {addSymbol(symbolTable,functionTable, $2, $1,0, $4); printSymbolTableStack(symbolTableStack);}
+                    | DATA_TYPE IDENTIFIER SEMICOLON  {addSymbol(symbolTable,functionTable, $2, $1,0, NULL); printSymbolTableStack(symbolTableStack);}
                     | enum_assignment_statement
                       ;
 
@@ -83,11 +83,11 @@ DATA_TYPE : TYPE_STRING
          | TYPE_BOOL
          ;
 
-assignment_statement : IDENTIFIER ASSIGN expression SEMICOLON {updateSymbol(symbolTable, $1, $3);}
+assignment_statement : IDENTIFIER ASSIGN expression SEMICOLON {updateSymbol(symbolTable, $1, $3); printSymbolTableStack(symbolTableStack);}
                      ;
 
-function_declaration : DATA_TYPE FUNCTION IDENTIFIER LPAREN {addFunction(functionTable,$3,$1); symbolTable= pushSymbolTable(symbolTableStack); } function_parameters RPAREN LBRACE statement_list  RBRACE { symbolTable=popSymbolTable(symbolTableStack);}
-                    | TYPE_VOID FUNCTION IDENTIFIER LPAREN {addFunction(functionTable,$3,$1); symbolTable= pushSymbolTable(symbolTableStack); } function_parameters RPAREN LBRACE  statement_list  RBRACE { symbolTable=popSymbolTable(symbolTableStack);}
+function_declaration : DATA_TYPE FUNCTION IDENTIFIER LPAREN {addFunction(functionTable,$3,$1); symbolTable= pushSymbolTable(symbolTableStack); } function_parameters RPAREN LBRACE statement_list  RBRACE {printSymbolTableStack(symbolTableStack); symbolTable=popSymbolTable(symbolTableStack);}
+                    | TYPE_VOID FUNCTION IDENTIFIER LPAREN {addFunction(functionTable,$3,$1); symbolTable= pushSymbolTable(symbolTableStack); } function_parameters RPAREN LBRACE  statement_list  RBRACE { printSymbolTableStack(symbolTableStack);symbolTable=popSymbolTable(symbolTableStack);}
                    ;
 
 function_parameters : function_parameters COMMA DATA_TYPE IDENTIFIER {addSymbol(symbolTable, functionTable,$4, $3,0, NULL);addArgument(functionTable, $4, $3);}
@@ -128,7 +128,7 @@ argument :  INTEGER {addCalledArgument(functionTable,FunctionScope, $1, "int");}
             | NILL 
             ;
 
-const_declaration: CONST DATA_TYPE IDENTIFIER ASSIGN expression SEMICOLON {addSymbol(symbolTable,functionTable, $3, $2,1, $5);}
+const_declaration: CONST DATA_TYPE IDENTIFIER ASSIGN expression SEMICOLON {addSymbol(symbolTable,functionTable, $3, $2,1, $5);printSymbolTableStack(symbolTableStack);}
                  ;
 
 switch_statement: SWITCH LPAREN IDENTIFIER RPAREN LBRACE { symbolTable= pushSymbolTable(symbolTableStack); } switch_statement_details  RBRACE { symbolTable=popSymbolTable(symbolTableStack);}
@@ -267,7 +267,6 @@ int main() {
         exit(EXIT_FAILURE);
     }
     printf("Parsing successful!\n");
-    printSymbolTableStack(symbolTableStack);
     unInitalized_variables(symbolTable);
     freeSymbolTable(symbolTable);
     return 0;

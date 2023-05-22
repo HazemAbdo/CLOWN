@@ -1,5 +1,5 @@
 int a = 1;
-int function test (int a, int b) {
+int function test (int a, float b) {
     int c = 3;
     int d = 4;
     return a;
@@ -10,5 +10,6 @@ int function test2 (int a2, float b2) {
     return a;
 }
 
-int z = test(3, 2);
-int z2 = test2(4, 2.0);
+int x = 1;
+bool y = true;
+int z = y;
