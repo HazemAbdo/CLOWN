@@ -1,5 +1,11 @@
-int a = 4;
-if(a<5){
-int d = 10;
+int function add(int a,int b){
+    return a+b;
 }
-print(d);
+
+if(add(4,5)>10){
+    print("kaaaaaaaak");
+}elif(4<5){
+print("a");
+}else{
+print("b");
+}

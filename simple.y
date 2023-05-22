@@ -163,21 +163,19 @@ enum_assignment_statement : IDENTIFIER IDENTIFIER ASSIGN IDENTIFIER SEMICOLON
 
 print_statement : PRINT expression SEMICOLON 
                 ;
-
-if_statement : IF LPAREN expression RPAREN LBRACE { symbolTable=pushSymbolTable(symbolTableStack); } statement_list RBRACE { symbolTable=popSymbolTable(symbolTableStack); } %prec ELSE
-             | IF LPAREN expression RPAREN LBRACE { symbolTable=pushSymbolTable(symbolTableStack); } statement_list RBRACE { symbolTable=popSymbolTable(symbolTableStack); } elif_statement_list %prec ELSE
-             | IF LPAREN expression RPAREN LBRACE { symbolTable=pushSymbolTable(symbolTableStack); } statement_list RBRACE { symbolTable=popSymbolTable(symbolTableStack); } else_statement %prec ELSE
-             | IF LPAREN expression RPAREN LBRACE { symbolTable=pushSymbolTable(symbolTableStack); } statement_list RBRACE { symbolTable=popSymbolTable(symbolTableStack); } elif_statement_list else_statement %prec ELSE
+if_statement : IF LPAREN expression RPAREN LBRACE { symbolTable=pushSymbolTable(symbolTableStack); } statement_list RBRACE { symbolTable=popSymbolTable(symbolTableStack); } elif_statement_list else_statement %prec IF
              ;
 
 elif_statement_list : elif_statement_list elif_statement
                     | elif_statement
+                    | /* empty */
                     ;
 
 elif_statement : ELIF LPAREN expression RPAREN LBRACE { symbolTable=pushSymbolTable(symbolTableStack); } statement_list RBRACE { symbolTable=popSymbolTable(symbolTableStack); }
                ;
 
-else_statement : ELSE LBRACE { symbolTable=pushSymbolTable(symbolTableStack); } statement_list RBRACE { symbolTable=popSymbolTable(symbolTableStack); }
+else_statement : ELSE LBRACE { symbolTable=pushSymbolTable(symbolTableStack); } statement_list RBRACE { symbolTable=popSymbolTable(symbolTableStack); } %prec ELSE
+               | /* empty */
                ;
 
 while_statement : WHILE LPAREN expression RPAREN LBRACE { symbolTable=pushSymbolTable(symbolTableStack); } statement_list RBRACE { symbolTable=popSymbolTable(symbolTableStack); }
