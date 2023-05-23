@@ -1,5 +1,5 @@
 <div style="text-align:center;">
-    ![CLOWN Logo](assets/logo.png)
+    <img src="./assets/logo.png" alt="CLOWN Logo" />
 </div>
 
 # CLOWN
