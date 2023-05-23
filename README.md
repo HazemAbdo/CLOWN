@@ -1,3 +1,7 @@
+<p align="center">
+    <img src="./assets/logo.png" alt="CLOWN Logo" />
+</p>
+
 # CLOWN
 
 ### Programming doesn't have to be a joke - unless it's CLOWN
