@@ -232,22 +232,22 @@ expression : INTEGER    { pushQuad($1, 1); }
            | function_call
            | LPAREN expression RPAREN             %prec UMINUS  { $$=$2; }
            | IDENTIFIER   { lookupSymbol(symbolTableStack, $1); pushQuad($1, 1); }
-           | expression PLUS expression           %prec PLUS    { twoOperandsQuad($2); }
-           | expression MINUS expression          %prec MINUS   { twoOperandsQuad($2); }
-           | expression POWER expression          %prec POWER   { twoOperandsQuad($2); }
-           | expression TIMES expression          %prec TIMES   { twoOperandsQuad($2); }
-           | expression DIVIDE expression         %prec DIVIDE  { twoOperandsQuad($2); }
-           | expression MOD expression            %prec MOD     { twoOperandsQuad($2); }
-           | expression EQUAL expression          %prec EQUAL   { twoOperandsQuad($2); }
-           | expression NOTEQUAL expression       %prec EQUAL   { twoOperandsQuad($2); }
-           | expression GREATER expression        %prec GREATER { twoOperandsQuad($2); }
-           | expression GREATEREQUAL expression   %prec GREATER { twoOperandsQuad($2); }
-           | expression LESS expression           %prec LESS    { twoOperandsQuad($2); }
-           | expression LESSEQUAL expression      %prec LESS    { twoOperandsQuad($2); }
-           | expression OR expression             %prec OR      { twoOperandsQuad($2); }
-           | expression AND expression            %prec AND     { twoOperandsQuad($2); }
-           | NOT expression                       %prec NOT     { oneOperandQuad($1); }
-           | MINUS expression                     %prec UMINUS  { oneOperandQuad($1); }
+           | expression PLUS expression           %prec PLUS    { twoOperandsQuad($2);checkTwoOperends(symbolTable,$1,$3); }
+           | expression MINUS expression          %prec MINUS   { twoOperandsQuad($2);checkTwoOperends(symbolTable,$1,$3); }
+           | expression POWER expression          %prec POWER   { twoOperandsQuad($2);checkTwoOperends(symbolTable,$1,$3); }
+           | expression TIMES expression          %prec TIMES   { twoOperandsQuad($2);checkTwoOperends(symbolTable,$1,$3); }
+           | expression DIVIDE expression         %prec DIVIDE  { twoOperandsQuad($2);checkTwoOperends(symbolTable,$1,$3); }
+           | expression MOD expression            %prec MOD     { twoOperandsQuad($2);checkTwoOperends(symbolTable,$1,$3); }
+           | expression EQUAL expression          %prec EQUAL   { twoOperandsQuad($2);checkTwoOperends(symbolTable,$1,$3); }
+           | expression NOTEQUAL expression       %prec EQUAL   { twoOperandsQuad($2);checkTwoOperends(symbolTable,$1,$3); }
+           | expression GREATER expression        %prec GREATER { twoOperandsQuad($2);checkTwoOperends(symbolTable,$1,$3); }
+           | expression GREATEREQUAL expression   %prec GREATER { twoOperandsQuad($2);checkTwoOperends(symbolTable,$1,$3); }
+           | expression LESS expression           %prec LESS    { twoOperandsQuad($2);checkTwoOperends(symbolTable,$1,$3); }
+           | expression LESSEQUAL expression      %prec LESS    { twoOperandsQuad($2);checkTwoOperends(symbolTable,$1,$3); }
+           | expression OR expression             %prec OR      { twoOperandsQuad($2);checkTwoOperends(symbolTable,$1,$3); }
+           | expression AND expression            %prec AND     { twoOperandsQuad($2);checkTwoOperends(symbolTable,$1,$3); }
+           | NOT expression                       %prec NOT     { oneOperandQuad($1);$$=$2; }
+           | MINUS expression                     %prec UMINUS  { oneOperandQuad($1);$$=$2; }
            ;
 %%
 
