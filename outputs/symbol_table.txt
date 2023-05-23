@@ -5,4 +5,48 @@ Symbol Table Stack
 ======
 Symbol Table
 Name,Type,Const,Value,Initialized
-a,int,0,(null),0
+x,int,0,4,1
+
+
+Symbol Table Stack
+
+======
+Symbol Table
+Name,Type,Const,Value,Initialized
+x,int,0,4,1
+y,int,1,5,1
+
+
+Symbol Table Stack
+
+======
+Symbol Table
+Name,Type,Const,Value,Initialized
+x,int,0,4,1
+y,int,1,5,1
+z,int,0,x,1
+
+
+Symbol Table Stack
+
+======
+Symbol Table
+Name,Type,Const,Value,Initialized
+x,int,0,4,1
+y,int,1,5,1
+z,int,0,x,1
+var1,int,0,0,1
+
+
+Symbol Table Stack
+
+======
+Symbol Table
+Name,Type,Const,Value,Initialized
+x,int,0,4,1
+y,int,1,5,1
+z,int,0,x,1
+var1,int,0,=,1
+======
+Symbol Table
+Name,Type,Const,Value,Initialized

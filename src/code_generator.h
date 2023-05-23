@@ -7,6 +7,8 @@ extern int line_no;
 
 char *switchCaseVariable = NULL;
 
+int ifConditionsCount = 0;
+
 int currentLoopScope = 0;
 int loopsStack[1000];
 
@@ -27,12 +29,10 @@ char labelsStack[1000][20];
 //-------------------------------------------------------------------------------
 void pushQuad(char *val, int addToQuads)
 {
-    printf("val: %s\n", val);
     strcpy(quadsStack[quadsStackTop++], val);
     if (addToQuads == 1)
     {
         sprintf(quads[quadsCount++], "PUSH %s", val);
-        printf("pushQuad: %s\n", quads[quadsCount - 1]);
     }
 }
 
@@ -40,7 +40,6 @@ void popQuad(char *dst)
 {
     --quadsStackTop;
     sprintf(quads[quadsCount++], "POP %s", dst);
-    printf("popQuad: %s\n", quads[quadsCount - 1]);
 }
 
 void oneOperandQuad(char *opr)
@@ -57,8 +56,6 @@ void oneOperandQuad(char *opr)
         sprintf(quads[quadsCount++], "NOT %s, %s", op1, quadsStack[quadsStackTop - 1]);
     else if (strcmp(opr, "-") == 0)
         sprintf(quads[quadsCount++], "NEG %s, %s", op1, quadsStack[quadsStackTop - 1]);
-
-    printf("oneOperandQuad: %s\n", quads[quadsCount - 1]);
 }
 
 void twoOperandsQuad(char *opr)
@@ -101,8 +98,6 @@ void twoOperandsQuad(char *opr)
         sprintf(quads[quadsCount++], "AND %s, %s, %s", op1, op2, quadsStack[quadsStackTop - 1]);
     else if (strcmp(opr, "||") == 0)
         sprintf(quads[quadsCount++], "OR %s, %s, %s", op1, op2, quadsStack[quadsStackTop - 1]);
-
-    printf("twoOperandsQuad: %s\n", quads[quadsCount - 1]);
 }
 
 void printQuadruples()
@@ -130,13 +125,10 @@ void addLabel()
     char tempLabel[10];
     sprintf(tempLabel, "L%d", ++labelsCount);
     strcpy(labelsStack[labelsStackTop++], tempLabel);
-
-    printf("addLabel: %s\n", labelsStack[labelsStackTop - 1]);
 }
 
 void popLabels(int num)
 {
-    printf("\npopLabels\n");
     labelsStackTop -= num;
 }
 
@@ -155,8 +147,6 @@ void printLabel(int addLabelFlag, int labelOffset)
     {
         sprintf(quads[quadsCount++], "%s:", labelsStack[labelsStackTop - labelOffset]);
     }
-
-    printf("printLabel: %s\n", quads[quadsCount - 1]);
 }
 
 void openLoop()
@@ -171,20 +161,16 @@ void closeLoop()
 
 void JZ(int addLabelFlag)
 {
-    printf("\nJZ\n");
     if (addLabelFlag == 1)
     {
         addLabel();
     }
 
     sprintf(quads[quadsCount++], "JZ %s", labelsStack[labelsStackTop - 1]);
-
-    printf("JZ: %s\n", quads[quadsCount - 1]);
 }
 
 void JMP(int addLabelFlag, int labelOffset)
 {
-    printf("\nJMP\n");
     if (addLabelFlag == 1)
     {
         addLabel();
@@ -198,8 +184,6 @@ void JMP(int addLabelFlag, int labelOffset)
     {
         sprintf(quads[quadsCount++], "JMP %s", labelsStack[labelsStackTop - labelOffset]);
     }
-
-    printf("JMP: %s\n", quads[quadsCount - 1]);
 }
 
 void BREAK_JMP()

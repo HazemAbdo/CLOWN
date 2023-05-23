@@ -6,33 +6,39 @@
 
 ### Programming doesn't have to be a joke - unless it's CLOWN
 
+CLOWN is a simple programming language that is designed to be easy to learn and use. It is a high-level language and a mixture of C, Python, and JavaScript. It is statically typed, and supports functions, loops, and many other features.
+
+## Note:
+
+- This is a project for the course "CMP4060 Compilers and Languages" at the University of Cairo, Faculty of Engineering, Computer Engineering Department.
+- The compiler doesn't execute the code, it only checks for syntax errors and prints the intermediate assembly code (Quadruples).
+- Not all the features have quadruples generation (Functions, Enums, Break, Continue, and Return).
+- The compiler is not fully tested, so it may contain bugs.
+
 # Run The code (Ubuntu)
 
-- remove extern int yydebug; to simple.y if any
-- remove yydebug = 1; to main function in simple.y if any
+- Remove `extern int yydebug;` in `src/clown.y` if any
+- Remove `yydebug = 1;` in main function in `src/clown.y` if any
 
 ```
-flex -l -d simple.lex
-bison -l -d -v simple.y
-gcc -o parser simple.tab.c simple.tab.h lex.yy.c -lfl
-./parser < code.clown
+make all
+make run INPUT_FILE=inputs/code.clown
 ```
 
 # Run The code with debug (Ubuntu)
 
-- add extern int yydebug; to simple.y
-- add yydebug = 1; to main function in simple.y
+- Add `extern int yydebug;` to `src/clown.y`
+- Add `yydebug = 1;` to main function in `src/clown.y`
 
 ```
-flex -l -d simple.lex
-bison -l -d -v simple.y
-gcc -o parser -DYYDEBUG simple.tab.c simple.tab.h lex.yy.c -lfl
+make all
+make run INPUT_FILE=inputs/code.clown
 ```
 
-## Keywords
+## Keywords and Operators
 
 ```
-"print", "if", "else", "elif", "while", "for", "do", "break", "continue", "return", "=", "==", "!=", ">", ">=", "<", "<=", "+", "-", "*", "/", "^", "%", "||", "&&", "!", "(", ")", "{", "}", ";", "function", "const", "switch", "case", "default", "enum", "NULL", ":", ","
+"int", "float", "string", "bool", "print", "if", "else", "elif", "while", "for", "do", "break", "continue", "return", "=", "==", "!=", ">", ">=", "<", "<=", "+", "-", "*", "/", "^", "%", "||", "&&", "!", "(", ")", "{", "}", ";", "function", "const", "switch", "case", "default", "enum", "NULL", ":", ","
 ```
 
 ## Syntax
@@ -40,10 +46,10 @@ gcc -o parser -DYYDEBUG simple.tab.c simple.tab.h lex.yy.c -lfl
 ### print
 
 ```
-print ("Hello World");
+print("Hello World");
 print(a);
-print(a+b);
-print(1+2+3);
+print(a + b);
+print(1 + 2 + 3);
 ```
 
 ### if elif else
@@ -61,6 +67,7 @@ if (a == 1) {
 ### while
 
 ```
+int a = 0;
 while (a < 10) {
     print(a);
     a = a + 1;
@@ -70,7 +77,7 @@ while (a < 10) {
 ### for loop
 
 ```
-for (i = 0; i < 10; i = i + 1) {
+for (int i = 0; i < 10; i = i + 1) {
     print(i);
 }
 
@@ -79,6 +86,7 @@ for (i = 0; i < 10; i = i + 1) {
 ### do while
 
 ```
+int a = 0;
 do {
     print(a);
     a = a + 1;
@@ -88,6 +96,7 @@ do {
 ### break
 
 ```
+int a = 0;
 while (a < 10) {
     print(a);
     a = a + 1;
@@ -100,6 +109,7 @@ while (a < 10) {
 ### continue
 
 ```
+int a = 0;
 while (a < 10) {
     a = a + 1;
     if (a == 5) {
@@ -127,12 +137,13 @@ add(1, 2);
 ### const
 
 ```
-const a = 1;
+const int a = 1;
 ```
 
 ### switch case
 
 ```
+int a = 1;
 switch (a) {
     case 1:
         print("a is 1");
@@ -178,141 +189,87 @@ return NULL;
 ### Mathematical operations
 
 ```
-a = 1 + 2;
-b = 1 - 2;
-c = 1 * 2;
-d = 1 / 2;
-e = 1 ^ 2;
-f = 1 % 2;
-z = (a + b) * ((c - d))^e;
+int a = 1 + 2;
+int b = 1 - 2;
+int c = 1 * 2;
+float d = 1.0 / 2.0;
+int e = 5 ^ 2;
+int f = 5 % 2;
+int z = (a + b) * ((c - f) ^ e);
 ```
 
 ### Logical operations
 
 ```
-a = 5 > 2;
-b = 5 >= 2;
-c = 5 < 2;
-d = 5 <= 2;
-e = 5 == 2;
-f = 5 != 2;
-g = a && b;
-h = a || b;
-i = !a;
+bool a = 5 > 2;
+bool b = 5 >= 2;
+bool c = 5 < 2;
+bool d = 5 <= 2;
+bool e = 5 == 2;
+bool f = 5 != 2;
+bool g = a && b;
+bool h = a || b;
+bool i = !a;
 ```
 
-## Language Grammar
+### Quadruples
 
-```
-program : statement_list
-        ;
+|   Quadruple   |                                   Description                                   |
+|:-------------:|:-------------------------------------------------------------------------------:|
+| ADD s1, s2, R |           Pop the top 2 values of the stack (s1, s2) and push s1 + s2           |
+| SUB s1, s2, r |           Pop the top 2 values of the stack (s1, s2) and push s1 - s2           |
+| MUL s1, s2, r |           Pop the top 2 values of the stack (s1, s2) and push s1 * s2           |
+| DIV s1, s2, r |           Pop the top 2 values of the stack (s1, s2) and push s1 / s2           |
+| MOD s1, s2, r |           Pop the top 2 values of the stack (s1, s2) and push s1 % s2           |
+| LT s1, s2, r  | Pop the top 2 values of the stack (s1, s2) and push true if s1 < s2 else false  |
+| GT s1, s2, r  | Pop the top 2 values of the stack (s1, s2) and push true if s1 > s2 else false  |
+| LE s1, s2, r  | Pop the top 2 values of the stack (s1, s2) and push true if s1 <= s2 else false |
+| GE s1, s2, r  | Pop the top 2 values of the stack (s1, s2) and push true if s1 >= s2 else false |
+| EQ s1, s2, r  | Pop the top 2 values of the stack (s1, s2) and push true if s1 == s2 else false |
+| NE s1, s2, r  | Pop the top 2 values of the stack (s1, s2) and push true if s1 != s2 else false |
+|   NOT s1, r   |                Pop the top 2 values of the stack (s) and push !s                |
+| AND s1, s2, r |      Pop the top 2 values of the stack (s1, s2) and push true if s1 && s2       |
+|OR s1, s2, r|Pop the top 2 values of the stack (s1, s2) and push true if s1 || s2|
+|XOR s1, s2, r|Pop the top 2 values of the stack (s1, s2) and push s1 ^ s2|
+|PUSH value|Push value to the stack|
+|POP dst|Pop the top of the stack in into dst|
+|L<num>:|Add label with number num|
+|JMP L|Unconditional jump to L|
+|JZ L|Jump to L if stack top == 0|
 
-statement_list : statement
-               | statement_list statement
-               ;
+## Contributors
 
-statement : assignment_statement
-          | print_statement
-          | if_statement
-          | while_statement
-          | for_statement
-          | do_statement
-          | break_statement
-          | continue_statement
-          | return_statement
-          | error_statement
-          | function_declaration
-          | function_call
-          | const_declaration
-          | switch_statement
-         ;
+Thanks goes to these awesome people in the team.
 
-assignment_statement : IDENTIFIER ASSIGN expression SEMICOLON
-                    | IDENTIFIER ASSIGN function_call
-                      ;
-
-function_declaration : FUNCTION IDENTIFIER LPAREN function_parameters RPAREN LBRACE statement_list RBRACE
-                   ;
-
-function_parameters : function_parameters COMMA IDENTIFIER
-                    | IDENTIFIER
-                    ;
-
-function_call : IDENTIFIER LPAREN function_arguments RPAREN SEMICOLON
-                ;
-
-function_arguments : function_arguments COMMA expression
-                   | expression
-                   ;
-
-
-const_declaration: CONST assignment_statement
-                 ;
-
-switch_statement: SWITCH LPAREN IDENTIFIER RPAREN LBRACE switch_statement_details RBRACE
-                ;
-
-switch_statement_details: switch_statement_details switch_case
-                        | switch_case
-                        ;
-
-switch_case: CASE expression COLON statement_list
-              | DEFAULT COLON statement_list
-              ;
-
-print_statement : PRINT expression SEMICOLON
-                ;
-
-if_statement : IF LPAREN expression RPAREN LBRACE statement_list RBRACE %prec ELSE
-             | IF LPAREN expression RPAREN LBRACE statement_list RBRACE ELSE LBRACE statement_list RBRACE
-             ;
-
-while_statement : WHILE LPAREN expression RPAREN LBRACE statement_list RBRACE
-                 ;
-
-for_statement : FOR LPAREN for_init  expression SEMICOLON for_update RPAREN LBRACE statement_list RBRACE
-              ;
-
-for_init : assignment_statement
-         | SEMICOLON
-         ;
-
-for_update : assignment_statement
-           | SEMICOLON
-           ;
-
-do_statement : DO LBRACE statement_list RBRACE WHILE LPAREN expression RPAREN SEMICOLON
-             ;
-
-break_statement : BREAK SEMICOLON
-                ;
-
-continue_statement : CONTINUE SEMICOLON
-                   ;
-
-return_statement : RETURN expression SEMICOLON
-                 ;
-
-error_statement : ERROR SEMICOLON
-                ;
-
-expression : INTEGER
-           | STRING
-           | IDENTIFIER
-           | LPAREN expression RPAREN             %prec UMINUS
-           | expression PLUS expression           %prec PLUS
-           | expression MINUS expression          %prec MINUS
-           | expression TIMES expression          %prec TIMES
-           | expression DIVIDE expression         %prec DIVIDE
-           | expression EQUAL expression          %prec EQUAL
-           | expression NOTEQUAL expression       %prec EQUAL
-           | expression GREATER expression        %prec GREATER
-           | expression GREATEREQUAL expression   %prec GREATER
-           | expression LESS expression           %prec LESS
-           | expression LESSEQUAL expression      %prec LESS
-           | NOT expression                       %prec NOT
-           | expression OR expression             %prec OR
-           | expression AND expression            %prec AND
-           | MINUS expression                     %prec UMINUS
-           ;
-```
+<table>
+    <tr>
+        <td align="center">
+            <a href="https://github.com/abdullahlashawafi"  target="_black">
+                <img src="https://avatars.githubusercontent.com/u/53022307?v=4" width="150px;" alt="Abdullah Adel"/><br />
+                <sub><b>Abdullah Adel</b></sub>
+            </a>
+            <br />
+        </td>
+        <td align="center">
+            <a href="https://github.com/AhmedKhaled590"  target="_black">
+                <img src="https://avatars.githubusercontent.com/u/62337087?v=4" width="150px;" alt="Ahmed Khaled"/><br />
+                <sub><b>Ahmed Khaled</b></sub>
+            </a>
+            <br />
+        </td>
+        <td align="center">
+            <a href="https://github.com/HazemAbdo"  target="_black">
+                <img src="https://avatars.githubusercontent.com/u/59124058?v=4" width="150px;" alt="Hazem Abdo"/><br />
+                <sub><b>Hazem Abdo</b></sub>
+            </a>
+            <br />
+        </td>
+        <td align="center">
+            <a href="https://github.com/mhmdahmedfathi"  target="_black">
+                <img src="https://avatars.githubusercontent.com/u/52926511?v=4" width="150px;" alt="Mohamed Fathy"/><br />
+                <sub><b>Mohamed Fathy</b></sub>
+            </a>
+            <br />
+        </td>
+    </tr>
+ </table>

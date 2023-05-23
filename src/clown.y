@@ -32,7 +32,7 @@
 %token <string_value> OR AND NOT
 %token <string_value> PLUS MINUS TIMES DIVIDE POWER MOD UMINUS
 %token <string_value> NILL
-%token PRINT IF ELSE WHILE FOR DO BREAK CONTINUE RETURN ERROR SWITCH CASE COLON DEFAULT ELIF ENUM FUNCTION CONST SEMICOLON
+%token PRINT IF ELSE WHILE FOR DO BREAK CONTINUE RETURN ERROR SWITCH CASE COLON DEFAULT ELIF ENDIF ENUM FUNCTION CONST SEMICOLON
 %token LPAREN RPAREN LBRACE RBRACE
 
 %type <string_value> DATA_TYPE expression
@@ -178,14 +178,13 @@ enum_assignment_statement : IDENTIFIER IDENTIFIER ASSIGN IDENTIFIER SEMICOLON
 print_statement : PRINT expression SEMICOLON 
                 ;
 
-if_statement : IF LPAREN expression RPAREN LBRACE { symbolTable=pushSymbolTable(symbolTableStack); JZ(1); } if_statement_list RBRACE { symbolTable=popSymbolTable(symbolTableStack); } %prec IF { printLabel(0, 1); popLabels(1); }
-             | IF LPAREN expression RPAREN LBRACE { symbolTable=pushSymbolTable(symbolTableStack); addLabel(); JZ(1); } if_statement_list RBRACE { symbolTable=popSymbolTable(symbolTableStack); } elif_statement_list else_statement %prec IF { printLabel(0, 1); popLabels(2); }
+if_statement : IF LPAREN expression RPAREN LBRACE { symbolTable=pushSymbolTable(symbolTableStack); ifConditionsCount++; addLabel(); JZ(1); } if_statement_list RBRACE { symbolTable=popSymbolTable(symbolTableStack); } elif_statement_list else_statement %prec IF { printLabel(0, ifConditionsCount + 1); popLabels(2); ifConditionsCount = 0; }
              ;
 
-elif_statement : { JMP(1, -1); printLabel(0, 2); } ELIF LPAREN expression RPAREN LBRACE { symbolTable=pushSymbolTable(symbolTableStack); JZ(0); } if_statement_list RBRACE { symbolTable=popSymbolTable(symbolTableStack); }
+elif_statement : { ifConditionsCount++; JMP(1, -1); printLabel(0, 2); } ELIF LPAREN expression RPAREN LBRACE { symbolTable=pushSymbolTable(symbolTableStack); JZ(0); } if_statement_list RBRACE { symbolTable=popSymbolTable(symbolTableStack); }
                ;
 
-else_statement : { JMP(1, -1); printLabel(0, 2); } ELSE LBRACE { symbolTable=pushSymbolTable(symbolTableStack); } if_statement_list RBRACE { symbolTable=popSymbolTable(symbolTableStack); } %prec ELSE
+else_statement : { ifConditionsCount++; JMP(1, -1); printLabel(0, 2); } ELSE LBRACE { symbolTable=pushSymbolTable(symbolTableStack); } if_statement_list RBRACE { symbolTable=popSymbolTable(symbolTableStack); } %prec ELSE
                | /* empty */
                ;
 
@@ -199,11 +198,9 @@ elif_statement_list : elif_statement_list elif_statement
                     ;
 
 while_statement : WHILE { printLabel(1, 1); } LPAREN expression RPAREN { JZ(1); } LBRACE { symbolTable=pushSymbolTable(symbolTableStack); } statement_list RBRACE { symbolTable=popSymbolTable(symbolTableStack); JMP(0, 2); printLabel(0, 1); popLabels(2); }
-                | WHILE { printLabel(1, 1); } LPAREN expression RPAREN { JZ(1); } LBRACE { symbolTable=pushSymbolTable(symbolTableStack); } RBRACE { symbolTable=popSymbolTable(symbolTableStack); JMP(0, 2); printLabel(0, 1); popLabels(2); }
                 ;
 
-for_statement : FOR LPAREN for_init { printLabel(1, 1); } expression SEMICOLON { JZ(1); } for_update RPAREN LBRACE { symbolTable=pushSymbolTable(symbolTableStack); } statement_list RBRACE { symbolTable=popSymbolTable(symbolTableStack); JMP(0, 2); printLabel(0, 1); popLabels(2); }
-              | FOR LPAREN for_init { printLabel(1, 1); } expression SEMICOLON { JZ(1); } for_update RPAREN LBRACE { symbolTable=pushSymbolTable(symbolTableStack); } RBRACE { symbolTable=popSymbolTable(symbolTableStack); JMP(0, 2); printLabel(0, 1); popLabels(2); }
+for_statement : FOR LPAREN for_init { printLabel(1, 1); } expression SEMICOLON { JZ(1); } for_update RPAREN for_body
               ;
 
 for_init : var_declaration
@@ -214,6 +211,10 @@ for_init : var_declaration
 for_update : IDENTIFIER ASSIGN expression { popQuad($1); }
            | /* empty */
            ;
+
+for_body : LBRACE { symbolTable=pushSymbolTable(symbolTableStack); } statement_list RBRACE { symbolTable=popSymbolTable(symbolTableStack); JMP(0, 2); printLabel(0, 1); popLabels(2); }
+         | SEMICOLON
+         ;
 
 do_statement : DO LBRACE { symbolTable=pushSymbolTable(symbolTableStack); printLabel(1, 1); } statement_list RBRACE { symbolTable=popSymbolTable(symbolTableStack); } WHILE LPAREN expression RPAREN SEMICOLON { addLabel(); JZ(0); JMP(0, 2); printLabel(0, 1); popLabels(2); }
              | DO LBRACE { symbolTable=pushSymbolTable(symbolTableStack); printLabel(1, 1); } RBRACE { symbolTable=popSymbolTable(symbolTableStack); } WHILE LPAREN expression RPAREN SEMICOLON { addLabel(); JZ(0); JMP(0, 2); printLabel(0, 1); popLabels(2); }

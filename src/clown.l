@@ -17,6 +17,7 @@
 "if"        { return IF; }
 "else"      { return ELSE; }
 "elif"      { return ELIF; }
+"endif"     { return ENDIF; }
 "while"     { return WHILE; }
 "for"       { return FOR; }
 "do"        { return DO; }

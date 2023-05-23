@@ -6,14 +6,30 @@ PUSH x
 PUSH y
 ADD x, y, R0
 POP z
+PUSH 0
+POP var1
+L1:
+PUSH var1
+PUSH 10
+LT var1, 10, R1
+JZ L2
+PUSH var1
+PUSH var1
+PUSH 1
+ADD var1, 1, R2
+POP var1
+JMP L1
+L2:
 PUSH x
 PUSH y
-LT x, y, R1
-JZ L1
+LT x, y, R3
+JZ L4
 PUSH "Wow"
 PUSH "Wow"
 PUSH "Wow"
-L1:
+JMP L3
+L4:
+L3:
 PUSH "Out"
 PUSH "Out"
 PUSH "Out"
