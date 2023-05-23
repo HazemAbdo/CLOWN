@@ -139,16 +139,24 @@ argument : INTEGER      { addCalledArgument(symbolTable,functionTable, FunctionS
 const_declaration : CONST DATA_TYPE IDENTIFIER { pushQuad($3, 0); } ASSIGN expression SEMICOLON { addSymbol(symbolTable, functionTable, $3, $2, 1, $6); printSymbolTableStack(symbolTableStack); popQuad(quadsStack[quadsStackTop - 2]); }
                   ;
 
-switch_statement : SWITCH LPAREN IDENTIFIER RPAREN LBRACE { symbolTable=pushSymbolTable(symbolTableStack); } switch_statement_details RBRACE { symbolTable=popSymbolTable(symbolTableStack); }
+switch_statement : SWITCH LPAREN IDENTIFIER RPAREN LBRACE { switchCaseVariable = strdup($3); symbolTable=pushSymbolTable(symbolTableStack); } switch_statement_details RBRACE { symbolTable=popSymbolTable(symbolTableStack); }
                  ;
 
 switch_statement_details : switch_statement_details switch_case
                          | switch_case
                          ;
 
-switch_case : CASE expression COLON statement_list
+switch_case : CASE { pushQuad(switchCaseVariable, 1); } switch_case_value { sprintf(quads[quadsCount++], "EQ %s, %s, R%d", quadsStack[quadsStackTop - 2], quadsStack[quadsStackTop - 1], registersCount); sprintf(quadsStack[quadsStackTop++], "R%d", registersCount++); } COLON { JZ(1); } statement_list { printLabel(0, 1); }
             | DEFAULT COLON statement_list
             ;
+
+switch_case_value : INTEGER     { pushQuad(strdup($1), 1); }
+                  | FLOAT       { pushQuad(strdup($1), 1); }
+                  | TRUE        { pushQuad(strdup($1), 1); }
+                  | FALSE       { pushQuad(strdup($1), 1); }
+                  | STRING      { pushQuad(strdup($1), 1); }
+                  | IDENTIFIER  { pushQuad(strdup($1), 1); }
+                  ;
 
 enum_declaration_list : enum_declaration
                       ;
@@ -170,8 +178,16 @@ enum_assignment_statement : IDENTIFIER IDENTIFIER ASSIGN IDENTIFIER SEMICOLON
 print_statement : PRINT expression SEMICOLON 
                 ;
 
-if_statement : IF LPAREN expression RPAREN LBRACE { symbolTable=pushSymbolTable(symbolTableStack); addLabel(); JZ(1); } if_statement_list RBRACE { symbolTable=popSymbolTable(symbolTableStack); } elif_statement_list else_statement %prec IF { printLabel(1, -1); popLabels(1); }
+if_statement : IF LPAREN expression RPAREN LBRACE { symbolTable=pushSymbolTable(symbolTableStack); JZ(1); } if_statement_list RBRACE { symbolTable=popSymbolTable(symbolTableStack); } %prec IF { printLabel(0, 1); popLabels(1); }
+             | IF LPAREN expression RPAREN LBRACE { symbolTable=pushSymbolTable(symbolTableStack); addLabel(); JZ(1); } if_statement_list RBRACE { symbolTable=popSymbolTable(symbolTableStack); } elif_statement_list else_statement %prec IF { printLabel(0, 1); popLabels(2); }
              ;
+
+elif_statement : { JMP(1, -1); printLabel(0, 2); } ELIF LPAREN expression RPAREN LBRACE { symbolTable=pushSymbolTable(symbolTableStack); JZ(0); } if_statement_list RBRACE { symbolTable=popSymbolTable(symbolTableStack); }
+               ;
+
+else_statement : { JMP(1, -1); printLabel(0, 2); } ELSE LBRACE { symbolTable=pushSymbolTable(symbolTableStack); } if_statement_list RBRACE { symbolTable=popSymbolTable(symbolTableStack); } %prec ELSE
+               | /* empty */
+               ;
 
 if_statement_list : statement_list
                   | /* empty */
@@ -181,13 +197,6 @@ elif_statement_list : elif_statement_list elif_statement
                     | elif_statement
                     | /* empty */
                     ;
-
-elif_statement : { JMP(1, -1); printLabel(0, 2); } ELIF LPAREN expression RPAREN LBRACE { symbolTable=pushSymbolTable(symbolTableStack); JZ(0); } if_statement_list RBRACE { symbolTable=popSymbolTable(symbolTableStack); }
-               ;
-
-else_statement : { JMP(1, -1); printLabel(0, 2); } ELSE LBRACE { symbolTable=pushSymbolTable(symbolTableStack); } if_statement_list RBRACE { symbolTable=popSymbolTable(symbolTableStack); } %prec ELSE
-               | /* empty */
-               ;
 
 while_statement : WHILE { printLabel(1, 1); } LPAREN expression RPAREN { JZ(1); } LBRACE { symbolTable=pushSymbolTable(symbolTableStack); } statement_list RBRACE { symbolTable=popSymbolTable(symbolTableStack); JMP(0, 2); printLabel(0, 1); popLabels(2); }
                 | WHILE { printLabel(1, 1); } LPAREN expression RPAREN { JZ(1); } LBRACE { symbolTable=pushSymbolTable(symbolTableStack); } RBRACE { symbolTable=popSymbolTable(symbolTableStack); JMP(0, 2); printLabel(0, 1); popLabels(2); }
@@ -230,31 +239,30 @@ expression : INTEGER    { pushQuad($1, 1); }
            | STRING     { pushQuad($1, 1); }
            | NILL
            | function_call
-           | LPAREN expression RPAREN             %prec UMINUS  { $$=$2; }
+           | LPAREN expression RPAREN             %prec UMINUS  { $$ = $2; }
            | IDENTIFIER   { lookupSymbol(symbolTableStack, $1); pushQuad($1, 1); }
-           | expression PLUS expression           %prec PLUS    { twoOperandsQuad($2);checkTwoOperends(symbolTable,$1,$3); }
-           | expression MINUS expression          %prec MINUS   { twoOperandsQuad($2);checkTwoOperends(symbolTable,$1,$3); }
-           | expression POWER expression          %prec POWER   { twoOperandsQuad($2);checkTwoOperends(symbolTable,$1,$3); }
-           | expression TIMES expression          %prec TIMES   { twoOperandsQuad($2);checkTwoOperends(symbolTable,$1,$3); }
-           | expression DIVIDE expression         %prec DIVIDE  { twoOperandsQuad($2);checkTwoOperends(symbolTable,$1,$3); }
-           | expression MOD expression            %prec MOD     { twoOperandsQuad($2);checkTwoOperends(symbolTable,$1,$3); }
-           | expression EQUAL expression          %prec EQUAL   { twoOperandsQuad($2);checkTwoOperends(symbolTable,$1,$3); }
-           | expression NOTEQUAL expression       %prec EQUAL   { twoOperandsQuad($2);checkTwoOperends(symbolTable,$1,$3); }
-           | expression GREATER expression        %prec GREATER { twoOperandsQuad($2);checkTwoOperends(symbolTable,$1,$3); }
-           | expression GREATEREQUAL expression   %prec GREATER { twoOperandsQuad($2);checkTwoOperends(symbolTable,$1,$3); }
-           | expression LESS expression           %prec LESS    { twoOperandsQuad($2);checkTwoOperends(symbolTable,$1,$3); }
-           | expression LESSEQUAL expression      %prec LESS    { twoOperandsQuad($2);checkTwoOperends(symbolTable,$1,$3); }
-           | expression OR expression             %prec OR      { twoOperandsQuad($2);checkTwoOperends(symbolTable,$1,$3); }
-           | expression AND expression            %prec AND     { twoOperandsQuad($2);checkTwoOperends(symbolTable,$1,$3); }
-           | NOT expression                       %prec NOT     { oneOperandQuad($1);$$=$2; }
-           | MINUS expression                     %prec UMINUS  { oneOperandQuad($1);$$=$2; }
+           | expression PLUS expression           %prec PLUS    { twoOperandsQuad($2); checkTwoOperends(symbolTable,$1,$3); }
+           | expression MINUS expression          %prec MINUS   { twoOperandsQuad($2); checkTwoOperends(symbolTable,$1,$3); }
+           | expression POWER expression          %prec POWER   { twoOperandsQuad($2); checkTwoOperends(symbolTable,$1,$3); }
+           | expression TIMES expression          %prec TIMES   { twoOperandsQuad($2); checkTwoOperends(symbolTable,$1,$3); }
+           | expression DIVIDE expression         %prec DIVIDE  { twoOperandsQuad($2); checkTwoOperends(symbolTable,$1,$3); }
+           | expression MOD expression            %prec MOD     { twoOperandsQuad($2); checkTwoOperends(symbolTable,$1,$3); }
+           | expression EQUAL expression          %prec EQUAL   { twoOperandsQuad($2); checkTwoOperends(symbolTable,$1,$3); }
+           | expression NOTEQUAL expression       %prec EQUAL   { twoOperandsQuad($2); checkTwoOperends(symbolTable,$1,$3); }
+           | expression GREATER expression        %prec GREATER { twoOperandsQuad($2); checkTwoOperends(symbolTable,$1,$3); }
+           | expression GREATEREQUAL expression   %prec GREATER { twoOperandsQuad($2); checkTwoOperends(symbolTable,$1,$3); }
+           | expression LESS expression           %prec LESS    { twoOperandsQuad($2); checkTwoOperends(symbolTable,$1,$3); }
+           | expression LESSEQUAL expression      %prec LESS    { twoOperandsQuad($2); checkTwoOperends(symbolTable,$1,$3); }
+           | expression OR expression             %prec OR      { twoOperandsQuad($2); checkTwoOperends(symbolTable,$1,$3); }
+           | expression AND expression            %prec AND     { twoOperandsQuad($2); checkTwoOperends(symbolTable,$1,$3); }
+           | NOT expression                       %prec NOT     { oneOperandQuad($1); $$ = $2; }
+           | MINUS expression                     %prec UMINUS  { oneOperandQuad($1); $$ = $2; }
            ;
 %%
 
 void yyerror(char *s) {
     fprintf(stderr, "Syntax error in line %d: %s\n", yylineno, s);
     printf("Syntax error in line %d: %s\n", yylineno, s);
-    // exit(EXIT_FAILURE);
 }
 
 int main() {
@@ -281,7 +289,7 @@ int main() {
         printf("Parsing failed!\n");
         exit(EXIT_FAILURE);
     }
-    // printf("Parsing successful!\n");
+
     unInitalized_variables(symbolTable);
     freeSymbolTable(symbolTable);
     printQuadruples();

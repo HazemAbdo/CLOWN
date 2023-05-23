@@ -1,1 +1,1 @@
-Syntax error in line 4: syntax error
+Syntax error in line 10: syntax error

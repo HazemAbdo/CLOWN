@@ -5,6 +5,8 @@
 extern int yylineno;
 extern int line_no;
 
+char *switchCaseVariable = NULL;
+
 int currentLoopScope = 0;
 int loopsStack[1000];
 
@@ -25,10 +27,12 @@ char labelsStack[1000][20];
 //-------------------------------------------------------------------------------
 void pushQuad(char *val, int addToQuads)
 {
+    printf("val: %s\n", val);
     strcpy(quadsStack[quadsStackTop++], val);
     if (addToQuads == 1)
     {
         sprintf(quads[quadsCount++], "PUSH %s", val);
+        printf("pushQuad: %s\n", quads[quadsCount - 1]);
     }
 }
 

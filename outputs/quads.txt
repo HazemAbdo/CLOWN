@@ -6,21 +6,14 @@ PUSH x
 PUSH y
 ADD x, y, R0
 POP z
+PUSH x
+PUSH y
+LT x, y, R1
+JZ L1
+PUSH "Wow"
+PUSH "Wow"
+PUSH "Wow"
 L1:
-PUSH "Do While"
-PUSH x
-PUSH 5
-EQ x, 5, R1
-JZ L3
-JMP B0
-:
-PUSH x
-PUSH 10
-LT x, 10, R2
-JZ L5
-JMP L3
-L5:
-B1:
 PUSH "Out"
 PUSH "Out"
 PUSH "Out"
