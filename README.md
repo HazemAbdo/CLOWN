@@ -1,4 +1,4 @@
-<div style="text-align:center;">
+<div style="text-align:center">
     <img src="./assets/logo.png" alt="CLOWN Logo" />
 </div>
 
