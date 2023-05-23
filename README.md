@@ -1,6 +1,6 @@
-<div style="text-align:center">
+<p align="center">
     <img src="./assets/logo.png" alt="CLOWN Logo" />
-</div>
+</p>
 
 # CLOWN
 
