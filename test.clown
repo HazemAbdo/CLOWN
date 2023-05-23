@@ -1,11 +1,9 @@
-int function add(int a,int b){
-    return a+b;
-}
+int x = 4;
+const int y = 5;
 
-if(add(4,5)>10){
-    print("kaaaaaaaak");
-}elif(4<5){
-print("a");
-}else{
-print("b");
+int z = (x + y));
+
+int i = 0;
+if (i < z) {
+    i = i + 1;
 }

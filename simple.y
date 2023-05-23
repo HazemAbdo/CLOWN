@@ -25,7 +25,7 @@ int FunctionScope=0;
 %token <string_value> EQUAL NOTEQUAL GREATER GREATEREQUAL LESS LESSEQUAL COMMA ASSIGN
 %token <string_value> OR AND NOT
 %token <string_value> PLUS MINUS TIMES DIVIDE POWER MOD UMINUS
-%token <expression> NILL
+%token <string_value> NILL
 %token PRINT IF ELSE WHILE FOR DO BREAK CONTINUE RETURN ERROR SWITCH CASE COLON DEFAULT ELIF ENUM FUNCTION CONST SEMICOLON
 %token LPAREN RPAREN LBRACE RBRACE
 
@@ -84,7 +84,7 @@ DATA_TYPE : TYPE_STRING
           | TYPE_BOOL
           ;
 
-assignment_statement : IDENTIFIER ASSIGN expression SEMICOLON { updateSymbol(symbolTable, $1, $3); printSymbolTableStack(symbolTableStack); }
+assignment_statement : IDENTIFIER ASSIGN expression SEMICOLON { updateSymbol(symbolTableStack, $1, $3); printSymbolTableStack(symbolTableStack); }
                      ;
 
 function_declaration : DATA_TYPE FUNCTION IDENTIFIER LPAREN { addFunction(functionTable, $3, $1); symbolTable=pushSymbolTable(symbolTableStack); } function_parameters RPAREN LBRACE statement_list RBRACE { printSymbolTableStack(symbolTableStack); symbolTable=popSymbolTable(symbolTableStack); }
@@ -216,13 +216,13 @@ error_statement : ERROR SEMICOLON
 
 
 expression : INTEGER { $$ = $1; }
-           | FLOAT 
-           | TRUE 
-           | FALSE 
-           | STRING 
-           | NILL
-           | function_call
-           | LPAREN expression RPAREN             %prec UMINUS
+           | FLOAT { $$ = $1; }
+           | TRUE { $$ = $1; }
+           | FALSE { $$ = $1;}
+           | STRING { $$ = $1; }
+           | NILL { $$ = $1;}
+           | function_call 
+           | LPAREN expression RPAREN  {$$=$2;}           %prec UMINUS
            | IDENTIFIER   { lookupSymbol(symbolTableStack, $1); }
            | expression PLUS expression           %prec PLUS 
            | expression MINUS expression          %prec MINUS
@@ -245,6 +245,7 @@ expression : INTEGER { $$ = $1; }
 
 void yyerror(char *s) {
     fprintf(stderr, "Syntax error in line %d: %s\n", yylineno, s);
+    printf("Syntax error in line %d: %s\n", yylineno, s);
     // exit(EXIT_FAILURE);
 }
 
@@ -261,10 +262,10 @@ int main() {
     yydebug = 0;
     int res = yyparse();
     if (res != 0) {
-        fprintf(stderr, "Parsing failed!\n");
+        printf("Parsing failed!\n");
         exit(EXIT_FAILURE);
     }
-    printf("Parsing successful!\n");
+    // printf("Parsing successful!\n");
     unInitalized_variables(symbolTable);
     freeSymbolTable(symbolTable);
     return 0;
