@@ -263,6 +263,14 @@ int main() {
     // make stderr to file outputs/errors.txt
     freopen("outputs/errors.txt", "w", stderr);
 
+    FILE *f = fopen("outputs/symbol_table.txt", "w");
+    if (f == NULL)
+    {
+        printf("Error opening outputs/symbol_table.txt file!\n");
+        exit(1);
+    }
+    fclose(f);
+
     loopsStack[0] = 0;
     symbolTable = initSymbolTable();
     symbolTableStack = initSymbolTableStack(symbolTable);
