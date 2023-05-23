@@ -1,3 +1,7 @@
+<div style="text-align:center;">
+    ![CLOWN Logo](assets/logo.png)
+</div>
+
 # CLOWN
 
 ### Programming doesn't have to be a joke - unless it's CLOWN
