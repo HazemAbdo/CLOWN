@@ -348,6 +348,52 @@ void addSymbol(symbol_table_t *table, function_table_t *mapList, char *name, cha
     // printf("Table size after add: %d\n", table->size);
 }
 
+void checkTwoOperends(symbol_table_t *table, char *op1, char *op2)
+{
+    int i;
+    int op1_found = 0;
+    int op2_found = 0;
+    // check the type of the two operands
+    char *op1_type;
+    char *op2_type;
+    for (i = 0; i < table->size; i++)
+    {
+        if (strcmp(table->symbols[i]->name, op1) == 0)
+        {
+            op1_found = 1;
+            printf("Op1 found\n");
+            printf("Op1 type: %s\n", table->symbols[i]->type);
+            op1_type = table->symbols[i]->type;
+        }
+        if (strcmp(table->symbols[i]->name, op2) == 0)
+        {
+            op2_found = 1;
+            printf("Op2 found\n");
+            printf("Op2 type: %s\n", table->symbols[i]->type);
+            op2_type = table->symbols[i]->type;
+        }
+    }
+    // check if the operands is number or string
+    if (op1_found == 0 && atoi(op1) == 0 && strcmp(op1, "0") != 0 && strlen(op1) > 1)
+    {
+        fprintf(stderr, "Error: variable %s is not declared on line %d\n", op1, yylineno);
+        printf("Error: variable %s is not declared on line %d\n", op1, yylineno);
+    }
+    if (op2_found == 0 && atoi(op2) == 0 && strcmp(op2, "0") != 0 && strlen(op2) > 1)
+    {
+        fprintf(stderr, "Error: variable %s is not declared on line %d\n", op2, yylineno);
+        printf("Error: variable %s is not declared on line %d\n", op2, yylineno);
+    }
+    if (op1_found == 1 && op2_found == 1)
+    {
+        if (strcmp(op1_type, op2_type) != 0)
+        {
+            fprintf(stderr, "Error: operands %s and %s are not of the same type on line %d\n", op1, op2, yylineno);
+            printf("Error: operands %s and %s are not of the same type on line %d\n", op1, op2, yylineno);
+        }
+    }
+}
+
 void unInitalized_variables(symbol_table_t *table)
 {
     int i;
