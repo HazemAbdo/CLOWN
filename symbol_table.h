@@ -97,7 +97,6 @@ int getFunctionScope(function_table_t *table, char *name)
     return -1;
 }
 
-
 void checkArguments(function_table_t *table, int FunctionScope)
 {
     // first get the function
@@ -184,7 +183,7 @@ symbol_table_stack_t *initSymbolTableStack(symbol_table_t *table)
     return stack;
 }
 
-void addCalledArgument(symbol_table_t *symbol_table,function_table_t *table, int FunctionScope, char *name, char *type)
+void addCalledArgument(symbol_table_t *symbol_table, function_table_t *table, int FunctionScope, char *name, char *type)
 {
     // first get the function
     function_t *func = table->functions[FunctionScope];
@@ -294,9 +293,8 @@ void addSymbol(symbol_table_t *table, function_table_t *mapList, char *name, cha
         }
     }
 
-    
     // Check if value has the correct type
-    if (value != NULL && is_function == 0 && is_variable ==0)
+    if (value != NULL && is_function == 0 && is_variable == 0)
     {
         if (strcmp(sym->type, "int") == 0 && atoi(value) == 0 && strcmp(value, "0") != 0)
         {
@@ -380,7 +378,7 @@ void updateSymbol(symbol_table_t *table, char *name, char *value)
 void printSymbolTable(symbol_table_t *table)
 {
     FILE *fp;
-    fp = fopen("symbol_table.csv", "a");
+    fp = fopen("outputs/symbol_table.txt", "a");
     // print it to external file
     fprintf(fp, "======\n");
     fprintf(fp, "Symbol Table\n");
@@ -392,7 +390,6 @@ void printSymbolTable(symbol_table_t *table)
     }
     fclose(fp);
 }
-
 
 // Lookup a symbol in the symbol table and return its value
 char *lookupSymbol(symbol_table_stack_t *stack, char *name)
