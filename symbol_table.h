@@ -506,6 +506,14 @@ symbol_table_t *popSymbolTable(symbol_table_stack_t *stack)
 void printSymbolTableStack(symbol_table_stack_t *stack)
 {
     int i;
+    // print line in the file 
+    FILE *fp;
+    fp = fopen("outputs/symbol_table.txt", "a");
+    fprintf(fp, "\n");
+    fprintf(fp, "\n");
+    fprintf(fp, "Symbol Table Stack\n");
+    fprintf(fp, "\n");
+    fclose(fp);
     for (i = 0; i < stack->size; i++)
     {
         printSymbolTable(stack->tables[i]);
