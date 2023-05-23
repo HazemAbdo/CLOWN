@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+extern int yylineno;
 // define a map struct to save the name of the function and its return type and add array of arguments and their types and the number of arguments
 typedef struct function
 {
@@ -38,7 +38,8 @@ void addFunction(function_table_t *table, char *name, char *type)
     {
         if (strcmp(table->functions[i]->name, name) == 0)
         {
-            printf("Function %s already exists\n", name);
+            fprintf(stderr, "Function %s already exists on line %d\n", name, yylineno);
+            printf("Function %s already exists on line %d\n", name, yylineno);
             // return error
             return;
         }
@@ -62,7 +63,8 @@ void addArgument(function_table_t *table, char *name, char *type)
     {
         if (strcmp(func->arguments[i], name) == 0)
         {
-            printf("Argument %s already exists in function %s\n", name, func->name);
+            fprintf(stderr, "Argument %s already exists in function %s on line %d\n", name, func->name, yylineno);
+            printf("Argument %s already exists in function %s on line %d\n", name, func->name, yylineno);
             // return error
             return;
         }
@@ -102,17 +104,20 @@ void checkArguments(function_table_t *table, int FunctionScope)
     // first get the function
     function_t *func = table->functions[FunctionScope];
     printf("Checking arguments of function %s\n", func->name);
+
     // check if there is no arguments in the function return error
     if (func->number_of_arguments == 0)
     {
-        printf("Function %s has no arguments\n", func->name);
+        fprintf(stderr, "Function %s has no arguments on line %d\n", func->name, yylineno);
+        printf("Function %s has no arguments on line %d\n", func->name, yylineno);
         // return error
         return;
     }
     // check if the number of arguments is the same
     if (func->number_of_arguments != func->number_of_arguments_called)
     {
-        printf("Function %s has %d arguments but %d arguments were called\n", func->name, func->number_of_arguments, func->number_of_arguments_called);
+        fprintf(stderr, "Function %s has %d arguments but %d arguments were called on line %d\n", func->name, func->number_of_arguments, func->number_of_arguments_called, yylineno);
+        printf("Function %s has %d arguments but %d arguments were called on line %d\n", func->name, func->number_of_arguments, func->number_of_arguments_called, yylineno);
         // return error
         return;
     }
@@ -121,10 +126,13 @@ void checkArguments(function_table_t *table, int FunctionScope)
     for (int i = 0; i < func->number_of_arguments; i++)
     {
         printf("Argument %s has type %s\n", func->arguments[i], func->arguments_types[i]);
+
         printf("Argument called %s has type %s\n", func->arguments_called[i], func->arguments_called_types[i]);
+
         if (strcmp(func->arguments_types[i], func->arguments_called_types[i]) != 0)
         {
-            printf("Function %s has argument %s of type %s but %s was called with type %s\n", func->name, func->arguments[i], func->arguments_types[i], func->arguments_called[i], func->arguments_called_types[i]);
+            fprintf(stderr, "Function %s has argument %s of type %s but %s was called with type %s on line %d\n", func->name, func->arguments[i], func->arguments_types[i], func->arguments_called[i], func->arguments_called_types[i], yylineno);
+            printf("Function %s has argument %s of type %s but %s was called with type %s on line %d\n", func->name, func->arguments[i], func->arguments_types[i], func->arguments_called[i], func->arguments_called_types[i], yylineno);
             // return error
             return;
         }
@@ -192,7 +200,8 @@ void addCalledArgument(symbol_table_t *symbol_table, function_table_t *table, in
     // check if there is no arguments in the function return error
     if (func->number_of_arguments == 0)
     {
-        printf("Function %s has no arguments\n", func->name);
+        fprintf(stderr, "Function %s has no arguments on line %d\n", func->name, yylineno);
+        printf("Function %s has no arguments on line %d\n", func->name, yylineno);
         // return error
         return;
     }
@@ -221,8 +230,8 @@ void addCalledArgument(symbol_table_t *symbol_table, function_table_t *table, in
         }
         if (entered == 0)
         {
-            printf("Identifier %s not declared\n", name);
-            return;
+            fprintf(stderr, "Identifier %s not declared on line %d\n", name, yylineno);
+            printf("Identifier %s not declared on line %d\n", name, yylineno);
         }
     }
 
@@ -267,8 +276,8 @@ void addSymbol(symbol_table_t *table, function_table_t *mapList, char *name, cha
             {
                 if (strcmp(mapList->functions[i]->type, type) != 0)
                 {
-                    fprintf(stderr, "Error: return type of function %s is not of type %s\n", value, type);
-                    exit(EXIT_FAILURE);
+                    fprintf(stderr, "Error: return type of function %s is not of type %s on line %d\n", value, type, yylineno);
+                    printf("Error: return type of function %s is not of type %s on line %d\n", value, type, yylineno);
                 }
                 is_function = 1;
             }
@@ -285,8 +294,8 @@ void addSymbol(symbol_table_t *table, function_table_t *mapList, char *name, cha
             {
                 if (strcmp(table->symbols[i]->type, type) != 0)
                 {
-                    fprintf(stderr, "Error: type of variable %s is not of type %s\n", value, type);
-                    exit(EXIT_FAILURE);
+                    fprintf(stderr, "Error: type of variable %s is not of type %s on line %d\n", value, type, yylineno);
+                    printf("Error: type of variable %s is not of type %s on line %d\n", value, type, yylineno);
                 }
                 is_variable = 1;
             }
@@ -298,18 +307,18 @@ void addSymbol(symbol_table_t *table, function_table_t *mapList, char *name, cha
     {
         if (strcmp(sym->type, "int") == 0 && atoi(value) == 0 && strcmp(value, "0") != 0)
         {
-            fprintf(stderr, "Error: value for variable %s is not of type int\n", name);
-            exit(EXIT_FAILURE);
+            fprintf(stderr, "Error: value for variable %s is not of type int on line %d\n", name, yylineno);
+            printf("Error: value for variable %s is not of type int on line %d\n", name, yylineno);
         }
         else if (strcmp(sym->type, "float") == 0 && atof(value) == 0)
         {
-            fprintf(stderr, "Error: value for variable %s is not of type float\n", name);
-            exit(EXIT_FAILURE);
+            fprintf(stderr, "Error: value for variable %s is not of type float on line %d\n", name, yylineno);
+            printf("Error: value for variable %s is not of type float on line %d\n", name, yylineno);
         }
         else if (strcmp(sym->type, "String") == 0 && strlen(value) > 1)
         {
-            fprintf(stderr, "Error: value for variable %s is not of type char\n", name);
-            exit(EXIT_FAILURE);
+            fprintf(stderr, "Error: value for variable %s is not of type char on line %d\n", name, yylineno);
+            printf("Error: value for variable %s is not of type char on line %d\n", name, yylineno);
         }
     }
 
@@ -328,8 +337,8 @@ void addSymbol(symbol_table_t *table, function_table_t *mapList, char *name, cha
     {
         if (strcmp(table->symbols[i]->name, name) == 0)
         {
-            fprintf(stderr, "Error: redeclaration of variable %s\n", name);
-            exit(EXIT_FAILURE);
+            fprintf(stderr, "Error: redeclaration of variable %s on line %d\n", name, yylineno);
+            printf("Error: redeclaration of variable %s on line %d\n", name, yylineno);
         }
     }
 
@@ -346,33 +355,40 @@ void unInitalized_variables(symbol_table_t *table)
     {
         if (table->symbols[i]->isInitialized == 0)
         {
-            fprintf(stderr, "Error: variable %s is not initialized\n", table->symbols[i]->name);
-            exit(EXIT_FAILURE);
+            fprintf(stderr, "Error: variable %s is not initialized on line %d\n", table->symbols[i]->name, yylineno);
+            printf("Error: variable %s is not initialized on line %d\n", table->symbols[i]->name, yylineno);
         }
     }
 }
 
 // Update the value of an existing symbol in the symbol table
-void updateSymbol(symbol_table_t *table, char *name, char *value)
+void updateSymbol(symbol_table_stack_t *stack, char *name, char *value)
 {
     int i;
-
-    for (i = 0; i < table->size; i++)
+    printf("Updating symbol %s\n", name);
+    for (i = stack->size - 1; i >= 0; i--)
     {
-        if (strcmp(table->symbols[i]->name, name) == 0)
+        symbol_table_t *table = stack->tables[i];
+        printf("Table size: %d\n", table->size);
+        int j;
+        for (j = 0; j < table->size; j++)
         {
-            if (table->symbols[i]->isConst == 1)
+            if (strcmp(table->symbols[j]->name, name) == 0)
             {
-                fprintf(stderr, "Error: cannot update value of constant %s\n", name);
-                exit(EXIT_FAILURE);
+                if (table->symbols[i]->isConst == 1)
+                {
+                    fprintf(stderr, "Error: cannot update value of constant %s on line %d\n", name, yylineno);
+                    printf("Error: cannot update value of constant %s on line %d\n", name, yylineno);
+                }
+                table->symbols[j]->value = value;
+                table->symbols[j]->isInitialized = 1;
+                return;
             }
-            table->symbols[i]->value = value;
-            table->symbols[i]->isInitialized = 1;
-            return;
         }
     }
-    fprintf(stderr, "Error: undeclared variable %s \n", name);
-    exit(EXIT_FAILURE);
+
+    fprintf(stderr, "Error: undeclared variable %s on line %d\n", name, yylineno);
+    printf("Error: undeclared variable %s on line %d\n", name, yylineno);
 }
 
 void printSymbolTable(symbol_table_t *table)
@@ -398,6 +414,7 @@ char *lookupSymbol(symbol_table_stack_t *stack, char *name)
     for (i = stack->size - 1; i >= 0; i--)
     {
         symbol_table_t *table = stack->tables[i];
+        printf("Table size: %d\n", table->size);
         int j;
         for (j = 0; j < table->size; j++)
         {
@@ -407,8 +424,8 @@ char *lookupSymbol(symbol_table_stack_t *stack, char *name)
             }
         }
     }
-    fprintf(stderr, "Error: symbol %s not found in symbol table\n", name);
-    exit(EXIT_FAILURE);
+    fprintf(stderr, "Error: symbol %s not found in symbol table on line %d\n", name, yylineno);
+    printf("Error: symbol %s not found in symbol table on line %d\n", name, yylineno);
 }
 
 // Push a new symbol table onto the top of the stack
@@ -428,7 +445,7 @@ symbol_table_t *popSymbolTable(symbol_table_stack_t *stack)
     if (stack->size == 0)
     {
         fprintf(stderr, "Error: symbol table stack underflow\n");
-        exit(EXIT_FAILURE);
+        printf("Error: symbol table stack underflow\n");
     }
     symbol_table_t *table = stack->tables[stack->size - 1];
     stack->size--;

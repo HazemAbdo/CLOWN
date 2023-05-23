@@ -1,15 +1,9 @@
-int a = 1;
-int function test (int a, float b) {
-    int c = 3;
-    int d = 4;
-    return a;
-}
-int function test2 (int a2, float b2) {
-    int c = 3;
-    int d = 4;
-    return a;
-}
-int x = 1;
-float y = 2;
+int x = 4;
+const int y = 5;
 
-int z = test(x, y);
+int z = (x + y));
+
+int i = 0;
+if (i < z) {
+    i = i + 1;
+}

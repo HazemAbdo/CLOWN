@@ -31,7 +31,7 @@
 %token <string_value> EQUAL NOTEQUAL GREATER GREATEREQUAL LESS LESSEQUAL COMMA ASSIGN
 %token <string_value> OR AND NOT
 %token <string_value> PLUS MINUS TIMES DIVIDE POWER MOD UMINUS
-%token <expression> NILL
+%token <string_value> NILL
 %token PRINT IF ELSE WHILE FOR DO BREAK CONTINUE RETURN ERROR SWITCH CASE COLON DEFAULT ELIF ENUM FUNCTION CONST SEMICOLON
 %token LPAREN RPAREN LBRACE RBRACE
 
@@ -90,7 +90,7 @@ DATA_TYPE : TYPE_STRING
           | TYPE_BOOL
           ;
 
-assignment_statement : IDENTIFIER { pushQuad($1, 0); } ASSIGN expression SEMICOLON { popQuad(quadsStack[quadsStackTop - 2]); updateSymbol(symbolTable, $1, $3); printSymbolTableStack(symbolTableStack); }
+assignment_statement : IDENTIFIER { pushQuad($1, 0); } ASSIGN expression SEMICOLON { popQuad(quadsStack[quadsStackTop - 2]); updateSymbol(symbolTableStack, $1, $3); printSymbolTableStack(symbolTableStack); }
                      ;
 
 function_declaration : DATA_TYPE FUNCTION IDENTIFIER LPAREN { addFunction(functionTable, $3, $1); symbolTable=pushSymbolTable(symbolTableStack); } function_parameters RPAREN LBRACE statement_list RBRACE { printSymbolTableStack(symbolTableStack); symbolTable=popSymbolTable(symbolTableStack); }
@@ -230,7 +230,7 @@ expression : INTEGER    { pushQuad($1, 1); }
            | STRING     { pushQuad($1, 1); }
            | NILL
            | function_call
-           | LPAREN expression RPAREN             %prec UMINUS
+           | LPAREN expression RPAREN             %prec UMINUS  { $$=$2; }
            | IDENTIFIER   { lookupSymbol(symbolTableStack, $1); pushQuad($1, 1); }
            | expression PLUS expression           %prec PLUS    { twoOperandsQuad($2); }
            | expression MINUS expression          %prec MINUS   { twoOperandsQuad($2); }
@@ -253,11 +253,23 @@ expression : INTEGER    { pushQuad($1, 1); }
 
 void yyerror(char *s) {
     fprintf(stderr, "Syntax error in line %d: %s\n", yylineno, s);
-    exit(EXIT_FAILURE);
+    printf("Syntax error in line %d: %s\n", yylineno, s);
+    // exit(EXIT_FAILURE);
 }
 
 int main() {
     mkdir("outputs", 0777);
+
+    // make stderr to file outputs/errors.txt
+    freopen("outputs/errors.txt", "w", stderr);
+
+    FILE *f = fopen("outputs/symbol_table.txt", "w");
+    if (f == NULL)
+    {
+        printf("Error opening outputs/symbol_table.txt file!\n");
+        exit(1);
+    }
+    fclose(f);
 
     loopsStack[0] = 0;
     symbolTable = initSymbolTable();
@@ -266,10 +278,10 @@ int main() {
     yydebug = 0;
     int res = yyparse();
     if (res != 0) {
-        fprintf(stderr, "Parsing failed!\n");
+        printf("Parsing failed!\n");
         exit(EXIT_FAILURE);
     }
-    printf("Parsing successful!\n");
+    // printf("Parsing successful!\n");
     unInitalized_variables(symbolTable);
     freeSymbolTable(symbolTable);
     printQuadruples();
