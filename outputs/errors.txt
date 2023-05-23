@@ -1,1 +1,1 @@
-Syntax error in line 4: syntax error
+Error: variable a is not initialized on line 2

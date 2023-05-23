@@ -1,9 +1,1 @@
-int x = 4;
-const int y = 5;
-
-int z = (x + y));
-
-int i = 0;
-if (i < z) {
-    i = i + 1;
-}
+int a;
